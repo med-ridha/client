@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "184617874927",
+    "project_id": "juridoc-b18e9",
+    "storage_bucket": "juridoc-b18e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:184617874927:android:61a652dc9b8929fbf2f21a",
+        "android_client_info": {
+          "package_name": "com.example.juridoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "184617874927-djd56epn66i03mbunlu68mokfdv2q32o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcdq7vJnuFUh6_6E7ygCbuKbAA4gqgb5A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "184617874927-djd56epn66i03mbunlu68mokfdv2q32o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
