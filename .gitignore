@@ -8,10 +8,10 @@
 .buildlog/
 .history
 .svn/
-.SVG/
-.images/
-.spon/
-.assets/
+SVG/
+images/
+spon/
+assets/
 
 # IntelliJ related
 *.iml
