@@ -7,9 +7,7 @@ class PrimaryButton extends StatelessWidget {
   final ButtonStyle flatButtonStyle = TextButton.styleFrom(
     backgroundColor: kPrimaryColor,
     minimumSize: Size(88, 36),
-    textStyle: TextStyle(
-        fontSize: 19 
-    ),
+    textStyle: TextStyle(fontSize: 19),
     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(2.0)),
@@ -26,7 +24,7 @@ class PrimaryButton extends StatelessWidget {
             child: TextButton(
                 style: flatButtonStyle,
                 onPressed: func ?? () {},
-                child: Text(buttonText, style: TextStyle(color: Colors.white))))
-        );
+                child:
+                    Text(buttonText, style: TextStyle(color: Colors.white)))));
   }
 }

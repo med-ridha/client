@@ -6,14 +6,25 @@ import 'package:juridoc/screens/profile.dart';
 import 'package:juridoc/screens/Home_content.dart';
 
 class HomeScreen extends StatefulWidget {
-
+  int startPage = 0;
+  HomeScreen(this.startPage) : super();
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState(startPage);
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  int startPage = 0;
+  HomeScreenState(this.startPage);
   int _currentPage = 0;
   final _pageController = PageController();
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _currentPage = startPage;
+      _pageController.initialPage = _currentPage;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +58,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           selectedIndex: _currentPage,
           onTap: (int index) {
             _pageController.animateToPage(index,
-                curve: Curves.ease, duration: Duration(milliseconds: 250));
+                curve: Curves.fastLinearToSlowEaseIn,
+                duration: Duration(milliseconds: 750));
             setState(() => _currentPage = index);
           },
           items: <BottomBarItem>[

@@ -17,9 +17,9 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  // String LoginUrl = 'http://10.0.2.2:42069/login'; emulator
+  // String verifyEmailURL = 'http://10.0.2.2:42069/verifyEmail'; emulator
   String verifyEmailURL = 'http://192.168.1.11:42069/verifyEmail'; // real
-  // String checkTokenURL = 'http://10.0.2.2:42069/checkToken'; emulator
+  // String createUserURL = 'http://10.0.2.2:42069/createUser'; emulator
   String createUserURL = 'http://192.168.1.11:42069/createUser'; // real
 
   int etap = 0;
@@ -106,7 +106,7 @@ class _SignUpFormState extends State<SignUpForm> {
     _etap0FormKey.currentState!.save();
     if (!validateName(_name!) ||
         !validateSurname(_surname!) ||
-        !validatephoneNumber(_phoneNumber!)) return;
+        !validatePhoneNumber(_phoneNumber!)) return;
     setState(() {
       etap = 1;
     });
@@ -115,7 +115,7 @@ class _SignUpFormState extends State<SignUpForm> {
   void etap1() {
     _etap1FormKey.currentState!.save();
     if (!validateNomS(_nomStructure!) ||
-        !validatePhoneS(_phoneStructure!) ||
+        !validatePhoneNumber(_phoneStructure!) ||
         !validateAdressS(_adressStructure!) ||
         !validateNumF(_numFiscal!)) return;
     setState(() {
@@ -173,6 +173,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildName() {
     return TextFormField(
         focusNode: _nameFocusNode,
+        initialValue: _name,
         decoration: InputDecoration(
             icon: Icon(Icons.person),
             hintText: 'Prénom',
@@ -193,6 +194,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildSurname() {
     return TextFormField(
         focusNode: _surnameFocusNode,
+        initialValue: _surname,
         decoration: InputDecoration(
             icon: Icon(Icons.people),
             hintText: 'Nom de famille',
@@ -214,17 +216,11 @@ class _SignUpFormState extends State<SignUpForm> {
     return TextFormField(
         focusNode: _phoneNumberFocusNode,
         keyboardType: TextInputType.phone,
+        initialValue: _phoneNumber,
         decoration: InputDecoration(
             icon: Icon(Icons.phone),
             hintText: 'Numéro de téléphone',
             border: InputBorder.none),
-        validator: (String? value) {
-          if (value!.isEmpty) {
-            return 'phone number is Required';
-          }
-
-          return null;
-        },
         onSaved: (String? value) {
           _phoneNumber = value;
         },
@@ -251,6 +247,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildNomStructure() {
     return TextFormField(
         focusNode: _nomSFocusNode,
+        initialValue: _nomStructure,
         decoration: InputDecoration(
             icon: Icon(Icons.other_houses),
             border: InputBorder.none,
@@ -271,6 +268,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildPhoneStructure() {
     return TextFormField(
         focusNode: _phoneSFocusNode,
+        initialValue: _phoneStructure,
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
             icon: Icon(Icons.contact_phone),
@@ -305,6 +303,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildAdressStructure() {
     return TextFormField(
         focusNode: _adressSFocusNode,
+        initialValue: _adressStructure,
         decoration: InputDecoration(
             icon: Icon(Icons.navigation),
             border: InputBorder.none,
@@ -325,6 +324,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildNumFiscal() {
     return TextFormField(
         focusNode: _numFFocusNode,
+        initialValue: _numFiscal,
         decoration: InputDecoration(
             icon: Icon(Icons.onetwothree),
             border: InputBorder.none,
@@ -342,6 +342,7 @@ class _SignUpFormState extends State<SignUpForm> {
   Widget _buildEmail() {
     return TextFormField(
       focusNode: _emailFNode,
+      initialValue: _email,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         icon: Icon(Icons.email),
@@ -672,14 +673,7 @@ class _SignUpFormState extends State<SignUpForm> {
         });
         final user = userModuleFromJson(result.body);
         await UserPrefs.clear();
-        await UserPrefs.setName(user.name);
-        await UserPrefs.setSurname(user.surname);
-        await UserPrefs.setEmail(user.email);
-        await UserPrefs.setPhoneNumber(user.phoneNumber);
-        await UserPrefs.setNomStructure(user.nomStructure);
-        await UserPrefs.setPhoneStructure(user.phoneStructure);
-        await UserPrefs.setNumFiscal(user.numFiscal);
-        await UserPrefs.setAdressStructure(user.adressStructure);
+        await UserPrefs.save(user);
         await UserPrefs.setIsLogedIn(true);
         setState(() {
           waiting = false;
@@ -693,7 +687,7 @@ class _SignUpFormState extends State<SignUpForm> {
           Navigator.pushAndRemoveUntil<void>(
               context,
               MaterialPageRoute<void>(
-                  builder: (BuildContext context) => HomeScreen()),
+                  builder: (BuildContext context) => HomeScreen(0)),
               ModalRoute.withName('/homescreen'));
         });
       } else if (result.statusCode == 401) {
@@ -711,6 +705,7 @@ class _SignUpFormState extends State<SignUpForm> {
       });
       await createUser();
     }
+
     int n = etap + 1;
     return Container(
         child: Column(
@@ -748,7 +743,6 @@ class _SignUpFormState extends State<SignUpForm> {
                 : SizedBox(height: height * 0.0435)),
       ],
     ));
-
   }
 
   Widget _buildErrorPopupDialog(
@@ -801,7 +795,7 @@ class _SignUpFormState extends State<SignUpForm> {
     return true;
   }
 
-  bool validatephoneNumber(String phoneNumber) {
+  bool validatePhoneNumber(String phoneNumber) {
     if (phoneNumber.isEmpty) {
       _phoneNumberFocusNode.requestFocus();
       setState(() {
@@ -845,42 +839,6 @@ class _SignUpFormState extends State<SignUpForm> {
     }
     setState(() {
       _nomSIsError = false;
-    });
-
-    return true;
-  }
-
-  bool validatePhoneS(String phoneS) {
-    if (phoneS.isEmpty) {
-      _phoneSFocusNode.requestFocus();
-      setState(() {
-        _phoneSIsError = true;
-      });
-      return false;
-    }
-    List<String> args = phoneS.split('');
-    for (int i = 0; i < args.length; i++) {
-      try {
-        double.parse(args[i]);
-      } catch (error) {
-        _phoneSFocusNode.requestFocus();
-        setState(() {
-          _phoneSIsError = true;
-        });
-        showError("phone number must contains only numbers");
-        return false;
-      }
-    }
-    if (phoneS.length != 8) {
-      _phoneSFocusNode.requestFocus();
-      setState(() {
-        _phoneSIsError = true;
-      });
-      showError("phone number must be 8 numbers");
-      return false;
-    }
-    setState(() {
-      _phoneSIsError = false;
     });
 
     return true;

@@ -31,13 +31,13 @@ class AppBarState extends State<AppBarUI> {
               children: [Image.asset('images/Logo.png')],
             ),
             SizedBox(width: width - 320),
-            Row(children: [stuff(context)]),
+            Row(children: [rightSideButtons(context)]),
           ])),
     );
   }
 }
 
-Widget stuff(BuildContext context) {
+Widget rightSideButtons(BuildContext context) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(30),

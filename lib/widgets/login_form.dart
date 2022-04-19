@@ -212,19 +212,12 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
       if (tokenResult.statusCode == 200) {
         final user = userModuleFromJson(tokenResult.body);
         await UserPrefs.clear();
-        await UserPrefs.setName(user.name);
-        await UserPrefs.setSurname(user.surname);
-        await UserPrefs.setEmail(user.email);
-        await UserPrefs.setPhoneNumber(user.phoneNumber);
-        await UserPrefs.setNomStructure(user.nomStructure);
-        await UserPrefs.setPhoneStructure(user.phoneStructure);
-        await UserPrefs.setNumFiscal(user.numFiscal);
-        await UserPrefs.setAdressStructure(user.adressStructure);
+        await UserPrefs.save(user);
         await UserPrefs.setIsLogedIn(true);
         Navigator.pushAndRemoveUntil<void>(
             context,
             MaterialPageRoute<void>(
-                builder: (BuildContext context) => HomeScreen()),
+                builder: (BuildContext context) => HomeScreen(0)),
             ModalRoute.withName('/homescreen'));
       } else if (tokenResult.statusCode == 400) {
         showError("invalid token");
@@ -253,9 +246,11 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         "email": _email,
         "password": _password,
       };
+
       setState(() {
         waiting = true;
       });
+
       var result = await http.post(
         Uri.parse(loginUrl),
         headers: <String, String>{
@@ -276,11 +271,13 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         }
       } else if (result.statusCode == 401) {
         showError("Email doesn't exists");
+        _emailFocusNode.requestFocus();
         setState(() {
           _emailIsError = true;
         });
       } else if (result.statusCode == 402) {
-        showError("wong password");
+        showError("wrong password");
+        _passwordFocusNode.requestFocus();
         setState(() {
           _passwordIsError = true;
         });

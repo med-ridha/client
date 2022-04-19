@@ -1,196 +1,453 @@
+import 'dart:convert';
+
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:juridoc/module/UserModule.dart';
+import 'package:juridoc/screens/home.dart';
+import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/theme.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:juridoc/widgets/passwordIcon.dart';
 import 'package:juridoc/widgets/primary_button.dart';
-import 'package:number_inc_dec/number_inc_dec.dart';
+import 'package:juridoc/widgets/secondary_button.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class EditProfile extends StatefulWidget {
   @override
   EditProfileState createState() => EditProfileState();
 }
 
-class EditProfileState extends State<EditProfile>
-    with TickerProviderStateMixin {
-
+class EditProfileState extends State<EditProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // String updateURL = 'http://10.0.2.2:42069/updateUser'; emulator
+  String updateURL = 'http://192.168.1.11:42069/updateUser'; // real
 
   String? _name;
-  String? _email;
-  String? _phoneNumber;
+  bool _nameIsError = false;
+  late FocusNode _nameFocusNode;
   String? _surname;
+  bool _surnameIsError = false;
+  late FocusNode _surnameFocusNode;
+  String? _phoneNumber;
+  bool _phoneNumberIsError = false;
+  late FocusNode _phoneNumberFocusNode;
+
   String? _nomStructure;
+  bool _nomSIsError = false;
+  late FocusNode _nomSFocusNode;
   String? _phoneStructure;
+  bool _phoneSIsError = false;
+  late FocusNode _phoneSFocusNode;
   String? _adressStructure;
+  bool _adressSIsError = false;
+  late FocusNode _adressSFocusNode;
   String? _numFiscal;
+  bool _numFIsError = false;
+  late FocusNode _numFFocusNode;
+
+  String? _password;
+  bool _passwordIsError = false;
+  late FocusNode _passwordFNode;
+
+  String? _newPassword;
+  bool _newPasswordIsError = false;
+  late FocusNode _newPasswordFNode;
+
+  String? _confirmPassword;
+  bool _confirmPIsError = false;
+  late FocusNode _confirmPFNode;
+
+  bool waiting = false;
+  bool _isObscure = true;
 
   @override
   void initState() {
     super.initState();
     _name = UserPrefs.getName() ?? '';
     _surname = UserPrefs.getSurname() ?? '';
-    _email = UserPrefs.getEmail() ?? '';
     _phoneNumber = UserPrefs.getPhoneNumber() ?? '';
     _nomStructure = UserPrefs.getNomStructure() ?? '';
     _phoneStructure = UserPrefs.getPhoneStructure() ?? '';
     _adressStructure = UserPrefs.getAdressStructure() ?? '';
     _numFiscal = UserPrefs.getNumFiscal() ?? '';
-    print(_numFiscal);
+    _nameFocusNode = FocusNode();
+    _surnameFocusNode = FocusNode();
+    _phoneNumberFocusNode = FocusNode();
+    _nomSFocusNode = FocusNode();
+    _phoneSFocusNode = FocusNode();
+    _adressSFocusNode = FocusNode();
+    _numFFocusNode = FocusNode();
+    _passwordFNode = FocusNode();
+    _newPasswordFNode = FocusNode();
+    _confirmPFNode = FocusNode();
   }
 
-  Widget _buildEmail(String? email) {
-    return TextFormField(
-      initialValue: email,
-      decoration: InputDecoration(labelText: 'Email'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Email is Required';
-        }
-        if (!RegExp(
-                r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-            .hasMatch(value)) {
-          return 'Please enter a valid email Address';
-        }
-        return null;
-      },
-      onSaved: (String? value) {
-        _email = value;
-      },
-    );
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _surnameFocusNode.dispose();
+    _phoneNumberFocusNode.dispose();
+    _nomSFocusNode.dispose();
+    _phoneSFocusNode.dispose();
+    _adressSFocusNode.dispose();
+    _numFFocusNode.dispose();
+    _passwordFNode.dispose();
+    _newPasswordFNode.dispose();
+    _confirmPFNode.dispose();
+    super.dispose();
   }
 
-  Widget _buildSurname(String? surname) {
+  Widget _buildName() {
     return TextFormField(
-      initialValue: surname,
-      decoration: InputDecoration(labelText: 'Nom de famille'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Nom de famille is Required';
-        }
-
-        return null;
-      },
-      onSaved: (String? value) {
-        if (value == null) return;
-        _surname = value;
-      },
-    );
+        focusNode: _nameFocusNode,
+        initialValue: _name,
+        decoration: InputDecoration(
+            icon: Icon(Icons.person),
+            hintText: 'Prénom',
+            border: InputBorder.none),
+        onSaved: (String? value) {
+          _name = value;
+        },
+        onFieldSubmitted: (String? value) {
+          _surnameFocusNode.requestFocus();
+        },
+        onChanged: (String? value) {
+          setState(() {
+            _nameIsError = false;
+          });
+        });
   }
 
-  Widget _buildPhoneNumber(String? phoneNumber) {
+  Widget _buildSurname() {
     return TextFormField(
-      initialValue: phoneNumber,
-      decoration: InputDecoration(labelText: 'Numéro de téléphone'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'phone number is Required';
-        }
-
-        return null;
-      },
-      onSaved: (String? value) {
-        if (value == null) return;
-        _phoneNumber = value;
-      },
-    );
+        focusNode: _surnameFocusNode,
+        initialValue: _surname,
+        decoration: InputDecoration(
+            icon: Icon(Icons.people),
+            hintText: 'Nom de famille',
+            border: InputBorder.none),
+        onSaved: (String? value) {
+          _surname = value;
+        },
+        onFieldSubmitted: (String? value) {
+          _phoneNumberFocusNode.requestFocus();
+        },
+        onChanged: (String? value) {
+          setState(() {
+            _surnameIsError = false;
+          });
+        });
   }
 
-  Widget _buildNomStructure(String? nomStructure) {
+  Widget _buildPhoneNumber() {
     return TextFormField(
-      initialValue: nomStructure,
-      decoration: InputDecoration(labelText: 'Nom de votre structure'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Nom de votre structure is Required';
-        }
-
-        return null;
-      },
-      onSaved: (String? value) {
-        if (value == null) return;
-        _nomStructure = value;
-      },
-    );
+        focusNode: _phoneNumberFocusNode,
+        keyboardType: TextInputType.phone,
+        initialValue: _phoneNumber,
+        decoration: InputDecoration(
+            icon: Icon(Icons.phone),
+            hintText: 'Numéro de téléphone',
+            border: InputBorder.none),
+        onSaved: (String? value) {
+          _phoneNumber = value;
+        },
+        onChanged: (String? value) {
+          bool com = false;
+          List<String> args = value!.split('');
+          for (int i = 0; i < args.length; i++) {
+            try {
+              double.parse(args[i]);
+              com = true;
+            } catch (error) {
+              com = false;
+            }
+          }
+          if (value.length < 8) com = false;
+          if (com) {
+            setState(() {
+              _phoneNumberIsError = false;
+            });
+          }
+        });
   }
 
-  Widget _buildAdressStructure(String? adressStructure) {
+  Widget _buildNomStructure() {
     return TextFormField(
-      initialValue: adressStructure,
-      decoration: InputDecoration(labelText: 'Adresse de votre structure'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Adresse de votre structure is Required';
-        }
-
-        return null;
-      },
-      onSaved: (String? value) {
-        if (value == null) return;
-        _adressStructure = value;
-      },
-    );
+        focusNode: _nomSFocusNode,
+        initialValue: _nomStructure,
+        decoration: InputDecoration(
+            icon: Icon(Icons.other_houses),
+            border: InputBorder.none,
+            hintText: 'Nom de votre structure'),
+        onSaved: (String? value) {
+          _nomStructure = value;
+        },
+        onFieldSubmitted: (String? value) {
+          _phoneSFocusNode.requestFocus();
+        },
+        onChanged: (String? value) {
+          setState(() {
+            _nomSIsError = false;
+          });
+        });
   }
 
-  Widget _buildPhoneStructure(String? phoneStructure) {
+  Widget _buildPhoneStructure() {
     return TextFormField(
-      initialValue: phoneStructure,
-      decoration: InputDecoration(labelText: 'Téléphone de votre structure'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Téléphone de votre structure is Required';
-        }
-
-        return null;
-      },
-      onSaved: (String? value) {
-        if (value == null) return;
-        _phoneStructure = value;
-      },
-    );
+        focusNode: _phoneSFocusNode,
+        initialValue: _phoneStructure,
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+            icon: Icon(Icons.contact_phone),
+            border: InputBorder.none,
+            hintText: 'Téléphone de votre structure'),
+        onSaved: (String? value) {
+          _phoneStructure = value;
+        },
+        onFieldSubmitted: (String? value) {
+          _adressSFocusNode.requestFocus();
+        },
+        onChanged: (String? value) {
+          bool com = false;
+          List<String> args = value!.split('');
+          for (int i = 0; i < args.length; i++) {
+            try {
+              double.parse(args[i]);
+              com = true;
+            } catch (error) {
+              com = false;
+            }
+          }
+          if (value.length < 8) com = false;
+          if (com) {
+            setState(() {
+              _phoneSIsError = false;
+            });
+          }
+        });
   }
 
-  Widget _buildNumFiscal(String? numFiscal) {
+  Widget _buildAdressStructure() {
     return TextFormField(
-      initialValue: numFiscal,
+        focusNode: _adressSFocusNode,
+        initialValue: _adressStructure,
+        decoration: InputDecoration(
+            icon: Icon(Icons.navigation),
+            border: InputBorder.none,
+            hintText: 'Adresse de votre structure'),
+        onSaved: (String? value) {
+          _adressStructure = value;
+        },
+        onFieldSubmitted: (String? value) {
+          _numFFocusNode.requestFocus();
+        },
+        onChanged: (String? value) {
+          setState(() {
+            _adressSIsError = false;
+          });
+        });
+  }
+
+  Widget _buildNumFiscal() {
+    return TextFormField(
+        focusNode: _numFFocusNode,
+        initialValue: _numFiscal,
+        decoration: InputDecoration(
+            icon: Icon(Icons.onetwothree),
+            border: InputBorder.none,
+            hintText: 'Numéro d identification fiscale'),
+        onSaved: (String? value) {
+          _numFiscal = value;
+        },
+        onChanged: (String? value) {
+          setState(() {
+            _numFIsError = false;
+          });
+        });
+  }
+
+  Widget _buildPassword() {
+    return TextFormField(
+      obscureText: _isObscure,
+      focusNode: _passwordFNode,
       decoration: InputDecoration(
-          labelText:
-              'Numéro d identification fiscale: (Exp: 1234567/Y/Z/T/000) '),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Numéro d identification fiscale is Required';
+        border: InputBorder.none,
+        icon: Icon(Icons.password_sharp),
+        hintText: "mot de passe",
+      ),
+      onChanged: (String? value) {
+        if (value!.length >= 8) {
+          setState(() {
+            _passwordIsError = false;
+          });
         }
-
-        return null;
+        _password = value;
+      },
+      onFieldSubmitted: (String? value) {
+        _newPasswordFNode.requestFocus();
       },
       onSaved: (String? value) {
-        if (value == null) return;
-        _numFiscal = value;
+        _password = value;
       },
     );
   }
 
-  Widget _buildName(String? name) {
+  Widget _buildNewPassword() {
     return TextFormField(
-      initialValue: name,
-      decoration: InputDecoration(labelText: 'Prénom'),
-      validator: (String? value) {
-        if (value!.isEmpty) {
-          return 'Name is Required';
+      obscureText: _isObscure,
+      focusNode: _newPasswordFNode,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        icon: Icon(Icons.password_sharp),
+        hintText: "nouveau mot de passe",
+      ),
+      onChanged: (String? value) {
+        if (value!.length >= 8) {
+          setState(() {
+            _newPasswordIsError = false;
+          });
         }
-
-        return null;
+        _newPassword = value;
+      },
+      onFieldSubmitted: (String? value) {
+        _confirmPFNode.requestFocus();
       },
       onSaved: (String? value) {
-        _name = value;
+        _newPassword = value;
       },
     );
+  }
+
+  Widget _buildConfirmPassword() {
+    return TextFormField(
+      focusNode: _confirmPFNode,
+      obscureText: _isObscure,
+      decoration: InputDecoration(
+        icon: Icon(Icons.password_sharp),
+        hintText: "confirmer mot de passe",
+        border: InputBorder.none,
+      ),
+      onChanged: (String? value) {
+        _confirmPassword = value;
+        if (_confirmPassword == _password) {
+          setState(() {
+            _confirmPIsError = false;
+          });
+        }
+      },
+      onSaved: (String? value) {
+        _confirmPassword = value;
+      },
+    );
+  }
+
+  void update() async {
+    _formKey.currentState!.save();
+
+    if (!validateName(_name!) ||
+        !validateSurname(_surname!) ||
+        !validatePhoneNumber(_phoneNumber!)) return;
+
+    if (!validateNomS(_nomStructure!) ||
+        !validatePhoneNumber(_phoneStructure!) ||
+        !validateAdressS(_adressStructure!) ||
+        !validateNumF(_numFiscal!)) return;
+
+    if (!validatePassword(_password!) ||
+        !validateNewPassword(_newPassword!) ||
+        !validateConfirmP(_confirmPassword!, _newPassword)) return;
+
+    setState(() {
+      waiting = true;
+    });
+
+    Map<String, String?> data = {
+      "email": UserPrefs.getEmail(),
+      "name": _name!.trim(),
+      "surname": _surname!.trim(),
+      "phoneNumber": _phoneNumber!.trim(),
+      "nomStructure": _nomStructure!.trim(),
+      "password": _password!,
+      "newPassword": _newPassword!,
+      "phoneStructure": _phoneStructure!.trim(),
+      "numFiscal": _numFiscal!.trim(),
+      "adressStructure": _adressStructure!.trim(),
+    };
+
+    //api call
+    var result = await http.post(
+      Uri.parse(updateURL),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(data),
+    );
+
+    setState(() {
+      waiting = false;
+    });
+
+    if (result.statusCode == 200) {
+      final user = userModuleFromJson(result.body);
+      await UserPrefs.save(user);
+      showSimpleNotification(Text("Information updated ", style: TextStyle()),
+          duration: Duration(seconds: 1),
+          foreground: Colors.white,
+          background: Colors.greenAccent);
+      setState(() {
+        _formKey.currentState!.reset();
+      });
+      
+      Future.delayed(Duration(seconds: 1), () {
+       Navigator.pushAndRemoveUntil<void>(
+           context,
+           MaterialPageRoute<void>(
+               builder: (BuildContext context) => HomeScreen(2)),
+           ModalRoute.withName('/homescreen'));
+      });
+    } else if (result.statusCode == 401) {
+      showError("Wrong password");
+    } else {
+      print(result.body);
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => _buildErrorPopupDialog(
+              context,
+              "internal server error",
+              "something went wrong in the server side please try again later"));
+    }
+  }
+
+  Widget _buildErrorPopupDialog(
+      BuildContext context, String title, String message) {
+    return new AlertDialog(
+        title: Text(title),
+        backgroundColor: Colors.red,
+        content: new Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(message),
+          ],
+        ),
+        actions: <Widget>[
+          new TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
+          )
+        ]);
   }
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return Stack(key: UniqueKey(), fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -214,8 +471,13 @@ class EditProfileState extends State<EditProfile>
               children: [
                 AppBarUI(),
                 SizedBox(
-                  height: 30,
+                  height: 10,
                 ),
+                Container(
+                    height: height * 0.05,
+                    child: (waiting)
+                        ? SpinKitDualRing(size: 40, color: Colors.green)
+                        : null),
                 Form(
                   key: _formKey,
                   child: Column(children: [
@@ -230,13 +492,31 @@ class EditProfileState extends State<EditProfile>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            abonnemnt(context),
-                            _buildName(_name),
-                            SizedBox(height: 20),
-                            _buildSurname(_surname),
-                            SizedBox(height: 20),
-                            _buildPhoneNumber(_phoneNumber),
-                            SizedBox(height: 20),
+                            Row(
+                              children: [
+                                title(context, 'SVG/door-lock.svg',
+                                    "Mot de passe", 0.045),
+                                SizedBox(width: width * 0.38),
+                                PasswordIcon(() {
+                                  setState(() {
+                                    _isObscure = !_isObscure;
+                                  });
+                                }),
+                              ],
+                            ),
+                            SizedBox(height: height * 0.01),
+                            RoundedTextFieldContainer(
+                                child: _buildPassword(),
+                                error: _passwordIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildNewPassword(),
+                                error: _newPasswordIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildConfirmPassword(),
+                                error: _confirmPIsError),
+                            SizedBox(height: height * 0.02),
                           ],
                         ),
                       ),
@@ -255,15 +535,23 @@ class EditProfileState extends State<EditProfile>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            abonnemnt(context),
-                            _buildNomStructure(_phoneStructure),
-                            SizedBox(height: 20),
-                            _buildPhoneStructure(_phoneStructure),
-                            SizedBox(height: 20),
-                            _buildAdressStructure(_adressStructure),
-                            SizedBox(height: 20),
-                            _buildNumFiscal(_numFiscal),
-                            SizedBox(height: 20),
+                            title(context, 'SVG/id.svg', "Donnees personnelles",
+                                0.045),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            RoundedTextFieldContainer(
+                                child: _buildName(), error: _nameIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildSurname(), error: _surnameIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildPhoneNumber(),
+                                error: _phoneNumberIsError),
+                            SizedBox(
+                              height: height * 0.02,
+                            ),
                           ],
                         ),
                       ),
@@ -282,93 +570,57 @@ class EditProfileState extends State<EditProfile>
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                             abonnemnt(context),
-                             _buildEmail(_email),
-                             SizedBox(height: 20),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            title(context, 'SVG/case.svg',
+                                "Donnees professionnelles", 0.035),
+                            RoundedTextFieldContainer(
+                                child: _buildNomStructure(),
+                                error: _nomSIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildPhoneStructure(),
+                                error: _phoneSIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildAdressStructure(),
+                                error: _adressSIsError),
+                            SizedBox(height: 15),
+                            RoundedTextFieldContainer(
+                                child: _buildNumFiscal(), error: _numFIsError),
+                            SizedBox(
+                              height: height * 0.02,
+                            ),
                           ],
                         ),
                       ),
                     ),
                     SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () async {
-                        if (!_formKey.currentState!.validate()) {
-                          return;
-                        }
-
-                        _formKey.currentState!.save();
-
-                        print(_name);
-                        print(_email);
-                        print(_phoneNumber);
-                        print(_surname);
-                        // Map<String, String?> data = {
-                        //   "email": _email,
-                        // };
-
-                        // final Future<SharedPreferences> _prefs =
-                        //     SharedPreferences.getInstance();
-                        // final SharedPreferences prefs = await _prefs;
-
-                        // await prefs.setString("name", _name!);
-                        // await prefs.setString("surname", _surname!);
-                        // await prefs.setString("phoneNumber", _phoneNumber!);
-                        // await prefs.setString("email", _email!);
-                        // await prefs.setString("nomStructure", _nomStructure!);
-                        // await prefs.setString("password", _password!);
-                        // await prefs.setString("phoneStructure", _phoneStructure!);
-                        // await prefs.setString("numFiscal", _numFiscal!);
-                        // await prefs.setString("codeVoucher", _codeVoucher!);
-                        // await prefs.setString("adressStructure", _adressStructure!);
-                        // await prefs.setBool("newsletter", _newsletter);
-
-                        // //api call
-                        // if (_termsandconditions) {
-                        //   var result = await http.post(
-                        //     Uri.parse('http://10.0.2.2:42069/verifyEmail'),
-                        //     headers: <String, String>{
-                        //       'Content-Type': 'application/json; charset=UTF-8',
-                        //     },
-                        //     body: jsonEncode(data),
-                        //   );
-                        //   if (result.statusCode == 200) {
-                        //     showDialog(
-                        //         context: context,
-                        //         builder: (BuildContext context) =>
-                        //             _buildSuccessPopupDialog(
-                        //               context,
-                        //               "one more step",
-                        //               "you must verify your email before using our services",
-                        //             ));
-                        //   } else if (result.statusCode == 401) {
-                        //     print(result.body);
-                        //     showDialog(
-                        //         context: context,
-                        //         builder: (BuildContext context) =>
-                        //             _buildErrorPopupDialog(
-                        //                 context, "email", "email already existes"));
-                        //   } else {
-                        //     print(result.body);
-                        //     showDialog(
-                        //         context: context,
-                        //         builder: (BuildContext context) => _buildErrorPopupDialog(
-                        //             context,
-                        //             "internal server error",
-                        //             "something went wrong in the server side please try again later"));
-                        //   }
-                        // } else {
-                        //   showDialog(
-                        //       context: context,
-                        //       builder: (BuildContext context) => _buildErrorPopupDialog(
-                        //           context,
-                        //           "required",
-                        //           "terms and conditions are required to complete the creation of your account"));
-
-                        //   print("terms not accepted!");
-                        // }
-                      },
-                      child: PrimaryButton(
-                        buttonText: 'créer un compte',
+                    Container(
+                      width: width * 0.8,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {},
+                            child: PrimaryButton(
+                              func: update,
+                              buttonText: 'Enregistrer',
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          GestureDetector(
+                            onTap: () {},
+                            child: SecondaryButton(
+                                func: () {
+                                  _formKey.currentState!.reset();
+                                },
+                                buttonText: 'Cancel',
+                                icon: Icon(Icons.refresh_sharp)),
+                          )
+                        ],
                       ),
                     )
                   ]),
@@ -381,25 +633,28 @@ class EditProfileState extends State<EditProfile>
     ]);
   }
 
-  Widget abonnemnt(BuildContext context) {
+  Widget title(
+      BuildContext context, String image, String text, double boxWidth) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           SvgPicture.asset(
-            "SVG/id.svg",
-            height: 55,
-            width: 55,
+            image,
+            height: height * 0.05,
+            width: width * 0.05,
           ),
           SizedBox(
-            width: 15,
+            width: width * boxWidth,
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                "Données personnelles",
+                text,
                 style:
                     const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
@@ -410,12 +665,170 @@ class EditProfileState extends State<EditProfile>
     );
   }
 
-  OutlineInputBorder myfocusborder() {
-    return OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        borderSide: BorderSide(
-          color: Colors.greenAccent,
-          width: 3,
-        ));
+  bool validateName(String name) {
+    if (name.isEmpty) {
+      _nameFocusNode.requestFocus();
+      setState(() {
+        _nameIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _nameIsError = false;
+    });
+    return true;
+  }
+
+  bool validateSurname(String surname) {
+    if (surname.isEmpty) {
+      _surnameFocusNode.requestFocus();
+      setState(() {
+        _surnameIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _surnameIsError = false;
+    });
+    return true;
+  }
+
+  bool validatePhoneNumber(String phoneNumber) {
+    if (phoneNumber.isEmpty) {
+      _phoneNumberFocusNode.requestFocus();
+      setState(() {
+        _phoneNumberIsError = true;
+      });
+      return false;
+    }
+    List<String> args = phoneNumber.split('');
+    for (int i = 0; i < args.length; i++) {
+      try {
+        double.parse(args[i]);
+      } catch (error) {
+        setState(() {
+          _phoneNumberIsError = true;
+        });
+        showError("phone number must contains only numbers");
+        return false;
+      }
+    }
+    if (phoneNumber.length != 8) {
+      setState(() {
+        _phoneNumberIsError = true;
+      });
+      showError("phone number must be 8 numbers");
+      return false;
+    }
+    setState(() {
+      _phoneNumberIsError = false;
+    });
+
+    return true;
+  }
+
+  bool validateNomS(String nomS) {
+    if (nomS.isEmpty) {
+      _nomSFocusNode.requestFocus();
+      setState(() {
+        _nomSIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _nomSIsError = false;
+    });
+
+    return true;
+  }
+
+  bool validateAdressS(String adressS) {
+    if (adressS.isEmpty) {
+      _adressSFocusNode.requestFocus();
+      setState(() {
+        _adressSIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _adressSIsError = false;
+    });
+
+    return true;
+  }
+
+  bool validateNumF(String numF) {
+    if (numF.isEmpty) {
+      _numFFocusNode.requestFocus();
+      setState(() {
+        _numFIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _numFIsError = false;
+    });
+
+    return true;
+  }
+
+  bool validatePassword(String password) {
+    if (password.isEmpty) {
+      _passwordFNode.requestFocus();
+      showError("Password is required");
+      setState(() {
+        _passwordIsError = true;
+      });
+      return false;
+    }
+    if (password.length < 8) {
+      _passwordFNode.requestFocus();
+      showError("password should be atleast 8 characters long");
+      setState(() {
+        _passwordIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _passwordIsError = false;
+    });
+    return true;
+  }
+
+  bool validateNewPassword(String newPassword) {
+    if (newPassword.length >= 1 && newPassword.length < 8) {
+      _newPasswordFNode.requestFocus();
+      showError("Password should be atleast 8 characters long");
+      setState(() {
+        _newPasswordIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _newPasswordIsError = false;
+    });
+    return true;
+  }
+
+  bool validateConfirmP(String password, confirmPassword) {
+    if (password.length >= 1 && password != confirmPassword) {
+      _confirmPFNode.requestFocus();
+      showError("Passwords doesn't match");
+      setState(() {
+        _confirmPIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _confirmPIsError = false;
+    });
+    return true;
+  }
+
+  void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent);
   }
 }

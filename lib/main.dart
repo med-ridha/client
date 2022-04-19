@@ -45,7 +45,7 @@ class InitState extends State<Init> {
     if (logedIn == null) {
       return Future.value(new OnboardingScreen());
     } else {
-      return Future.value(new HomeScreen());
+      return Future.value(new HomeScreen(0));
     }
   }
 
@@ -68,7 +68,7 @@ class InitState extends State<Init> {
               loaderColor: Color(0xFF00a3af)),
           initialRoute: '/',
           routes: {
-            '/homescreen': (context) => HomeScreen(),
+            '/homescreen': (context) => HomeScreen(0),
             '/loginscreen': (context) => LogInScreen()
           }),
     );

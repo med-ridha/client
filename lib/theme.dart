@@ -130,7 +130,7 @@ TextStyle titleText3 = TextStyle(
 TextStyle titleText4 = TextStyle(
   color: kPrimaryColor, fontSize: 30, fontWeight: FontWeight.w500 , ) ;
 TextStyle titleText5 = TextStyle(
-  color: kPrimaryColor, fontSize: 18, fontWeight: FontWeight.w500 , ) ;
+  color: kPrimaryColor, fontSize: 26, fontWeight: FontWeight.w500 , ) ;
 
 TextStyle textButton = TextStyle(
   color: kPrimaryColor,
