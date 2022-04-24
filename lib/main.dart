@@ -1,4 +1,3 @@
-// @dart=2.9
 import 'package:flutter/material.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
@@ -25,24 +24,24 @@ class MyApp extends StatelessWidget {
 }
 
 class Init extends StatefulWidget {
-  const Init({Key key}) : super(key: key);
+  const Init({Key? key}) : super(key: key);
 
   @override
   InitState createState() => InitState();
 }
 
 class InitState extends State<Init> {
-  bool logedIn;
+  bool logedIn = false;
 
   @override
   void initState() {
     super.initState();
-    logedIn = UserPrefs.getIsLogedIn();
+    logedIn = UserPrefs.getIsLogedIn()!;
   }
 
   Future<Widget> loadFromFuture() async {
     await Future.delayed(Duration(seconds: 1));
-    if (logedIn == null) {
+    if (!logedIn) {
       return Future.value(new OnboardingScreen());
     } else {
       return Future.value(new HomeScreen(0));

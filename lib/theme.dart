@@ -8,16 +8,6 @@ const kZambeziColor = Color(0xFF5B5B5B);
 const kBlackColor = Color(0xFF272726);
 const kTextFieldColor = Color(0xFF979797);
 
-
-
-
-
-
-
-
-
-
-
 const kDefaultPadding = EdgeInsets.symmetric(horizontal: 30);
 
 class DesignCourseAppTheme {
@@ -116,21 +106,33 @@ class DesignCourseAppTheme {
 TextStyle titleText =
     TextStyle(color: kPrimaryColor, fontSize: 18, fontWeight: FontWeight.w700);
 TextStyle titleText1 =
-TextStyle(color: kPrimaryColor, fontSize: 15, fontWeight: FontWeight.w700);
+    TextStyle(color: kPrimaryColor, fontSize: 15, fontWeight: FontWeight.w700);
 TextStyle titleText2 =
-TextStyle(color: kWhiteColor, fontSize: 15, fontWeight: FontWeight.w700);
+    TextStyle(color: kWhiteColor, fontSize: 15, fontWeight: FontWeight.w700);
 TextStyle subTitle = TextStyle(
     color: kSecondaryColor, fontSize: 18, fontWeight: FontWeight.w500);
 TextStyle subTitle1 = TextStyle(
     color: kSecondaryColor, fontSize: 14, fontWeight: FontWeight.w500);
 TextStyle subTitle2 = TextStyle(
-    color: kBlackColor, fontSize: 14, fontWeight: FontWeight.w500 , ) ;
+  color: kBlackColor,
+  fontSize: 14,
+  fontWeight: FontWeight.w500,
+);
 TextStyle titleText3 = TextStyle(
-  color: kBlackColor, fontSize: 30, fontWeight: FontWeight.w500 , ) ;
+  color: kBlackColor,
+  fontSize: 30,
+  fontWeight: FontWeight.w500,
+);
 TextStyle titleText4 = TextStyle(
-  color: kPrimaryColor, fontSize: 30, fontWeight: FontWeight.w500 , ) ;
+  color: kPrimaryColor,
+  fontSize: 30,
+  fontWeight: FontWeight.w500,
+);
 TextStyle titleText5 = TextStyle(
-  color: kPrimaryColor, fontSize: 26, fontWeight: FontWeight.w500 , ) ;
+  color: kPrimaryColor,
+  fontSize: 26,
+  fontWeight: FontWeight.w500,
+);
 
 TextStyle textButton = TextStyle(
   color: kPrimaryColor,
