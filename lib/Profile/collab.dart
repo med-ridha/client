@@ -10,7 +10,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/module/service.dart';
 import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
+import 'package:juridoc/widgets/addButton.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/remove_button.dart';
@@ -24,29 +26,33 @@ class Collab extends StatefulWidget {
 }
 
 class CollabState extends State<Collab> with TickerProviderStateMixin {
-  // String addToCollabURL = 'http://10.0.2.2:42069/addToCollab'; emulator
-  String addToCollabURL = 'http://192.168.1.11:42069/addToCollab'; // real
+  String addToCollabURL = Service.url + 'addToCollab'; // real
 
   bool waiting = false;
   bool emailWaiting = false;
   bool empty = false;
   bool isAdd = false;
+  bool isCreate = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? _email;
   bool _emailIsError = false;
-  Map<String, dynamic> listCollabs = HashMap();
-
+  String? _name;
+  bool _nameIsError = false;
+  final GlobalKey<FormState> _nameKey = GlobalKey<FormState>();
+  List<dynamic> listCollabs = [];
   late FocusNode _emailFocusNode;
+  late FocusNode _nameFocusNode;
 
   @override
   void initState() {
     super.initState();
     _emailFocusNode = FocusNode();
+    _nameFocusNode = FocusNode();
     setState(() {
       waiting = true;
     });
     UserModule.getCollabs().then((res) {
-      if (res.length == 0) {
+      if (res == null || res.length == 0) {
         setState(() {
           empty = true;
           waiting = false;
@@ -63,7 +69,25 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
   @override
   void dispose() {
     _emailFocusNode.dispose();
+    _nameFocusNode.dispose();
     super.dispose();
+  }
+
+  Widget _buildName() {
+    return TextFormField(
+        focusNode: _nameFocusNode,
+        decoration: InputDecoration(
+            icon: Icon(Icons.person),
+            hintText: 'name',
+            border: InputBorder.none),
+        onSaved: (String? value) {
+          _name = value;
+        },
+        onChanged: (String? value) {
+          setState(() {
+            _nameIsError = false;
+          });
+        });
   }
 
   Widget _buildEmail() {
@@ -84,6 +108,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
           setState(() {
             _emailIsError = false;
           });
+          _email = value.trim();
           return null;
         }
       },
@@ -197,28 +222,79 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                         Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: (empty)
-                                ? [Text("empty")]
+                                ? [
+                                    Text("you are not a part of any collab"),
+                                    SizedBox(height: 20),
+                                    AddButton(func: () {
+                                      setState(() {
+                                        isCreate = !isCreate;
+                                      });
+                                    })
+                                  ]
                                 : [
-                                    for (String item in listCollabs.keys)
+                                    for (Map<String, dynamic> item
+                                        in listCollabs)
                                       Container(
                                         child: Column(
                                           children: [
                                             collabWidget(
                                                 context,
-                                                listCollabs[item]["fullName"],
-                                                item,
-                                                listCollabs[item]
-                                                    ["phoneNumber"]),
+                                                //listCollabs[item]["fullName"],
+                                                item['fullName'],
+                                                item['email'],
+                                                item['phoneNumber']),
                                             SizedBox(height: height * 0.03)
                                           ],
                                         ),
                                       )
                                   ]),
-                        SizedBox(height: height * 0.02)
+                        SizedBox(height: height * 0.02),
                       ],
                     ),
                   ),
                 ),
+                SizedBox(height: height * 0.05),
+                (isCreate)
+                    ? Container(
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50),
+                          color: Colors.white,
+                        ),
+                        child: Form(
+                            key: _nameKey,
+                            child: Container(
+                              alignment: Alignment.center,
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SizedBox(height: height * 0.01),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        RoundedTextFieldContainer(
+                                            customWidth: width * 0.8,
+                                            child: _buildName(),
+                                            error: _nameIsError),
+                                        Container(
+                                            width: width * 0.1,
+                                            height: width * 0.1,
+                                            child: (emailWaiting)
+                                                ? SpinKitDualRing(
+                                                    size: 35,
+                                                    color: Colors.green)
+                                                : SendButton(
+                                                    func: createCollab)),
+                                      ],
+                                    ),
+                                    SizedBox(height: height * 0.01)
+                                  ],
+                                ),
+                              ),
+                            )))
+                    : Container(),
               ],
             ),
           ),
@@ -229,7 +305,6 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
 
   Widget collabWidget(
       BuildContext context, String name, String email, String phone) {
-    final height = MediaQuery.of(context).size.height;
     return GestureDetector(
         onTap: () {},
         child: Container(
@@ -263,7 +338,35 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                         style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.bold),
                       ),
-                      RemoveButton(func: () {})
+                      RemoveButton(func: () async {
+                        String text = "";
+                        if (UserPrefs.getEmail() == email) {
+                          text =
+                              "this is you, you will be removed from your own collab, are you sure?";
+                        } else {
+                          text = "are you sure";
+                        }
+                        showAlertDialog(context, text, () async {
+                          bool result = await UserModule.deleteCollab(email);
+                          if (result) {
+                            UserModule.getCollabs().then((res) {
+                              if (res == null || res.length == 0) {
+                                setState(() {
+                                  empty = true;
+                                  waiting = false;
+                                });
+                              } else {
+                                listCollabs = res;
+                              }
+                              setState(() {
+                                waiting = false;
+                              });
+                            });
+                          } else {
+                            showError('something went wrong');
+                          }
+                        });
+                      }),
                     ],
                   ),
                   Divider(
@@ -305,9 +408,56 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
             )));
   }
 
+  Future<void> createCollab() async {
+    _nameKey.currentState!.validate();
+    _nameKey.currentState!.save();
+    if (!validateName(_name!)) {
+      return;
+    }
+
+    setState(() {
+      emailWaiting = true;
+    });
+
+    String email = UserPrefs.getEmail() ?? "";
+
+    bool result = await UserModule.createCollab(email, _name!);
+
+    setState(() {
+      emailWaiting = false;
+    });
+    if (result) {
+      showSimpleNotification(Text("collab created", style: TextStyle()),
+          duration: Duration(seconds: 2),
+          foreground: Colors.white,
+          background: Colors.greenAccent);
+      UserModule.getCollabs().then((res) {
+        if (res == null || res.length == 0) {
+          print(res);
+          setState(() {
+            empty = true;
+            waiting = false;
+          });
+        } else {
+          isCreate = false;
+          empty = false;
+          listCollabs = res;
+        }
+        setState(() {
+          waiting = false;
+        });
+      });
+    } else {
+      showError("something went wrong");
+    }
+  }
+
   Future<void> addCollab() async {
     _formKey.currentState!.validate();
-    if (validateEmail(_email!)) return;
+    _formKey.currentState!.save();
+    if (!validateEmail(_email!)) {
+      return;
+    }
 
     print(_email);
 
@@ -338,6 +488,19 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
           duration: Duration(seconds: 2),
           foreground: Colors.white,
           background: Colors.greenAccent);
+      UserModule.getCollabs().then((res) {
+        if (res.length == 0) {
+          setState(() {
+            empty = true;
+            waiting = false;
+          });
+        } else {
+          listCollabs = res;
+        }
+        setState(() {
+          waiting = false;
+        });
+      });
     } else if (result.statusCode == 405) {
       showError("User already in a collab");
     } else if (result.statusCode == 404) {
@@ -371,10 +534,53 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
     return true;
   }
 
+  bool validateName(String name) {
+    if (name.isEmpty) {
+      _nameFocusNode.requestFocus();
+      setState(() {
+        _nameIsError = true;
+      });
+      return false;
+    }
+    setState(() {
+      _nameIsError = false;
+    });
+    return true;
+  }
+
   void showError(String error) {
     showSimpleNotification(Text(error, style: TextStyle()),
         duration: Duration(seconds: 3),
         foreground: Colors.white,
         background: Colors.redAccent);
+  }
+
+  showAlertDialog(BuildContext context, String text, Future<void> func()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Warning"),
+          content: Text(text),
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+            TextButton(
+              child: Text("Continue"),
+              onPressed: () {
+                func();
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

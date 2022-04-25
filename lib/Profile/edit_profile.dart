@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/module/UserModule.dart';
+import 'package:juridoc/module/service.dart';
 import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
@@ -12,6 +13,7 @@ import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/passwordIcon.dart';
 import 'package:juridoc/widgets/primary_button.dart';
+import 'package:juridoc/widgets/secondBarUI.dart';
 import 'package:juridoc/widgets/secondary_button.dart';
 import 'package:overlay_support/overlay_support.dart';
 
@@ -22,8 +24,7 @@ class EditProfile extends StatefulWidget {
 
 class EditProfileState extends State<EditProfile> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // String updateURL = 'http://10.0.2.2:42069/updateUser'; emulator
-  String updateURL = 'http://192.168.1.11:42069/updateUser'; // real
+  String updateURL = Service.url + 'updateUser';
 
   String? _name;
   bool _nameIsError = false;
@@ -400,13 +401,13 @@ class EditProfileState extends State<EditProfile> {
       setState(() {
         _formKey.currentState!.reset();
       });
-      
+
       Future.delayed(Duration(seconds: 1), () {
-       Navigator.pushAndRemoveUntil<void>(
-           context,
-           MaterialPageRoute<void>(
-               builder: (BuildContext context) => HomeScreen(2)),
-           ModalRoute.withName('/homescreen'));
+        Navigator.pushAndRemoveUntil<void>(
+            context,
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => HomeScreen(2)),
+            ModalRoute.withName('/homescreen'));
       });
     } else if (result.statusCode == 401) {
       showError("Wrong password");
@@ -473,6 +474,14 @@ class EditProfileState extends State<EditProfile> {
                 SizedBox(
                   height: 10,
                 ),
+                Container(
+                    height: 60,
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white,
+                    ),
+                    child: SecondBarUi("Profile", false)),
                 Container(
                     height: height * 0.05,
                     child: (waiting)

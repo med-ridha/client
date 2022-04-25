@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/module/service.dart';
 import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
@@ -17,10 +18,8 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  // String verifyEmailURL = 'http://10.0.2.2:42069/verifyEmail'; emulator
-  String verifyEmailURL = 'http://192.168.1.11:42069/verifyEmail'; // real
-  // String createUserURL = 'http://10.0.2.2:42069/createUser'; emulator
-  String createUserURL = 'http://192.168.1.11:42069/createUser'; // real
+  String verifyEmailURL = Service.url+'verifyEmail'; // real
+  String createUserURL = Service.url+'createUser'; // real
 
   int etap = 0;
   final GlobalKey<FormState> _etap0FormKey = GlobalKey<FormState>();

@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_svg/svg.dart';
+import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/module/service.dart';
 import 'package:juridoc/theme.dart';
+import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
-import 'package:juridoc/screens/Cart2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:number_inc_dec/number_inc_dec.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class Cart1 extends StatefulWidget {
   @override
@@ -12,11 +18,24 @@ class Cart1 extends StatefulWidget {
 }
 
 class Cart1State extends State<Cart1> with TickerProviderStateMixin {
-  final dateController = TextEditingController();
+  double montant = 0;
+  List<String> modules = [];
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String createAbonnURL = Service.url + 'users/createAbonn';
+
+  late FocusNode _creditFNode;
+  bool _creditIsError = false;
+  String? _creditCard;
+
+  @override
+  void initState() {
+    _creditFNode = FocusNode();
+    super.initState();
+  }
 
   @override
   void dispose() {
-    dateController.dispose();
+    _creditFNode.dispose();
     super.dispose();
   }
 
@@ -24,17 +43,8 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
   List<String> items = [
     '1 Ans',
     '2 Ans',
-    '3 ans',
+    '3 Ans',
   ];
-
-  TextEditingController username = TextEditingController();
-  TextEditingController password = TextEditingController();
-  @override
-  void initState() {
-    username.text = ""; //innitail value of text field
-    password.text = "";
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +70,14 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AppBarUI(),
                 SizedBox(
                   height: 30,
                 ),
                 Container(
-                  height: 650,
-                  width: 360,
+                  width: width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
@@ -75,17 +85,36 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         abonnemnt(context),
-                        Texr1(context),
-                        date(context),
-                        Texr2(context),
+                        SizedBox(height: height * 0.02),
+                        text1(context),
                         duree(context),
-                        Texr3(context),
-                        inc(context),
-                        Texr4(context),
-                        code(context),
+                        SizedBox(height: height * 0.02),
+                        text2(context),
+                        checkbox(context),
+                        SizedBox(height: height * 0.02),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Total: " + montant.toString(),
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                  )),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: height * 0.02),
+                        Form(
+                            key: _formKey,
+                            child: RoundedTextFieldContainer(
+                                child: buildCreditCard(),
+                                error: _creditIsError)),
+                        SizedBox(height: height * 0.02),
                         button1(context),
+                        SizedBox(height: height * 0.01),
                       ],
                     ),
                   ),
@@ -98,42 +127,61 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
     ]);
   }
 
+  Widget checkbox(BuildContext context) {
+    return CheckboxGroup(
+        labels: <String>[
+          "Fiscal",
+          "Social",
+          "Investissement",
+          "banque-Finances-Assurances",
+          "Bibus",
+          "Collectivites locales",
+          "Veille Juridique",
+        ],
+        onSelected: (List<String> checked) {
+          setState(() {
+            montant = 0;
+          });
+          for (String item in checked) montant += 333;
+          setState(() {
+            print(montant);
+            modules = checked;
+          });
+          print(checked.toString());
+        });
+  }
+
   Widget abonnemnt(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Image.asset(
-            "images/one.png",
-            height: 55,
-            width: 55,
-          ),
           SizedBox(
             width: 15,
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
                 "Abonnement",
                 style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               Text(
                 "Merci de préciser la durée de votre",
                 style: const TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.normal),
+                    fontSize: 18, fontWeight: FontWeight.normal),
               ),
               Text(
                 "abonnement et le nombre de",
                 style: const TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.normal),
+                    fontSize: 18, fontWeight: FontWeight.normal),
               ),
               Text(
-                "licence à acheter.",
+                "module acheter.",
                 style: const TextStyle(
-                    fontSize: 11, fontWeight: FontWeight.normal),
+                    fontSize: 18, fontWeight: FontWeight.normal),
               ),
             ],
           ),
@@ -142,55 +190,24 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
     );
   }
 
-  Widget Texr1(BuildContext context) {
+  Widget text1(BuildContext context) {
     return Text(
-      "Date début d'abonnement",
+      "Duree d'abonnement",
       style: const TextStyle(
           fontSize: 21, fontWeight: FontWeight.normal, color: kSecondaryColor),
     );
   }
 
-  Widget date(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-            ]),
-        width: 360.0,
-        child: Center(
-            child: TextField(
-          controller: dateController,
-          decoration: InputDecoration(
-              icon: Icon(
-                Icons.calendar_today,
-                color: Colors.black,
-              ), //icon of text field
-              labelText: "Choisir votre date",
-              labelStyle: TextStyle(color: Colors.black)),
-          readOnly: true,
-          onTap: () async {
-            var date = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100));
-            dateController.text = date.toString().substring(0, 10);
-          },
-        )));
-  }
-
-  Widget Texr2(BuildContext context) {
+  Widget text2(BuildContext context) {
     return Text(
-      "Date début d'abonnement",
+      "Choisir un ou plusieur",
       style: const TextStyle(
           fontSize: 21, fontWeight: FontWeight.normal, color: kSecondaryColor),
     );
   }
 
   Widget duree(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
@@ -199,7 +216,7 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
           boxShadow: [
             BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
           ]),
-      width: 360.0,
+      width: width,
       child: Center(
         child: DropdownButtonHideUnderline(
           child: DropdownButton2(
@@ -254,7 +271,7 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
             iconEnabledColor: Colors.black,
             iconDisabledColor: Colors.grey,
             buttonHeight: 50,
-            buttonWidth: 360,
+            buttonWidth: width,
             buttonPadding: const EdgeInsets.only(left: 14, right: 14),
             buttonDecoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),
@@ -284,70 +301,77 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
     );
   }
 
-  Widget Texr3(BuildContext context) {
-    return Text(
-      "Nombre d'utilisateurs",
-      style: const TextStyle(
-          fontSize: 21, fontWeight: FontWeight.normal, color: kSecondaryColor),
-    );
-  }
-
-  Widget inc(BuildContext context) {
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-            ]),
-        width: 360.0,
-        child: NumberInputWithIncrementDecrement(
-          controller: TextEditingController(),
-        ));
-  }
-
-  Widget Texr4(BuildContext context) {
-    return Text(
-      "Code ou Voucher",
-      style: const TextStyle(
-          fontSize: 21, fontWeight: FontWeight.normal, color: kSecondaryColor),
-    );
-  }
-
-  Widget code(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: 360.0,
-      child: Column(
-        children: [
-          TextField(
-              controller: password,
-              decoration: InputDecoration(
-                labelText: "Code",
-                focusedBorder: myfocusborder(),
-              )),
-        ],
+  Widget buildCreditCard() {
+    return TextFormField(
+      focusNode: _creditFNode,
+      initialValue: _creditCard,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        icon: Icon(Icons.credit_card),
+        border: InputBorder.none,
+        iconColor: Colors.purple,
+        errorStyle: TextStyle(fontSize: 16.0),
+        hintText: 'Credit Card',
       ),
+      onChanged: (String? value) {
+        if (value!.length == 16) {
+          setState(() {
+            _creditIsError = false;
+          });
+          return null;
+        }
+      },
+      onSaved: (String? value) {
+        _creditCard = value;
+      },
     );
   }
 
   Widget button1(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return GestureDetector(
-        onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => Cart2()));
+        onTap: () async {
+          _formKey.currentState!.save();
+          if (selectedValue == null) {
+            showError("you need to choose une duree");
+            return;
+          }
+
+          if (modules.length == 0) {
+            showError("please select atleast one module!!");
+            return;
+          }
+
+          if (!validateCreditCard(_creditCard!)) {
+            return;
+          }
+
+          Map<String, String?> data = {
+            "email": UserPrefs.getEmail(),
+            "montant": montant.toString(),
+            "modules": modules.toString(),
+            "duree": selectedValue!.split(' ')[0]
+          };
+          var result = await http.post(Uri.parse(createAbonnURL),
+              headers: <String, String>{
+                'Content-Type': 'application/json; charset=UTF-8',
+              },
+              body: jsonEncode(data));
+          if (result.statusCode == 200) {
+            showSimpleNotification(Text("abonnement success", style: TextStyle()),
+                duration: Duration(seconds: 3),
+                foreground: Colors.white,
+                background: Colors.greenAccent);
+            Map<String, dynamic> response = json.decode(result.body);
+            UserPrefs.setListAbonn(response['message']);
+          } else {
+            showError("something went wrong!");
+          }
         },
         child: Container(
             alignment: Alignment.center,
             height: 60,
-            width: 360,
+            width: width,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -369,7 +393,7 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
                         height: 5,
                       ),
                       Text(
-                        "Etape Suivante",
+                        "Submit order",
                         style: const TextStyle(
                             fontSize: 23,
                             fontWeight: FontWeight.bold,
@@ -382,14 +406,44 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
             )));
   }
 
-  OutlineInputBorder myfocusborder() {
-    return OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        borderSide: BorderSide(
-          color: Colors.greenAccent,
-          width: 3,
-        ));
+  bool validateCreditCard(String creditCard) {
+    if (creditCard.isEmpty) {
+      _creditFNode.requestFocus();
+      setState(() {
+        _creditIsError = true;
+      });
+      return false;
+    }
+    List<String> args = creditCard.split('');
+    for (int i = 0; i < args.length; i++) {
+      try {
+        double.parse(args[i]);
+      } catch (error) {
+        setState(() {
+          _creditIsError = true;
+        });
+        showError("credit card must contains only numbers");
+        return false;
+      }
+    }
+    if (creditCard.length != 16) {
+      showError("credit card should be 16 numbers long");
+      setState(() {
+        _creditIsError = true;
+      });
+      _creditFNode.requestFocus();
+      return false;
+    }
+    setState(() {
+      _creditIsError = false;
+    });
+    return true;
   }
 
-//create a function like this so that you can use it wherever you want
+  void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent);
+  }
 }

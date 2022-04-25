@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/theme.dart';
 
 class RemoveButton extends StatelessWidget {
@@ -7,8 +8,7 @@ class RemoveButton extends StatelessWidget {
   RemoveButton({this.func});
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
+    return UserPrefs.getIsCollabOwner()? Container(
       child: Container(
         width: 35,
         height: 35,
@@ -20,6 +20,6 @@ class RemoveButton extends StatelessWidget {
             onPressed: func,
             icon: Icon(Icons.person_remove_sharp, size: 25)),
       ),
-    );
+    ):Container();
   }
 }

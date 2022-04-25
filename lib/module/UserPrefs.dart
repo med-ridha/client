@@ -13,9 +13,10 @@ class UserPrefs {
   static const _keyAdressStructure = "adressStructure";
   static const _keyNumFiscal = "numFiscal";
   static const _keyFavored = "favored";
-  static const _keyCollabId = "collabId";
   static const _keyAbonnement = "abonnement";
+  static const _keyCollabId = "collabId";
   static const _keyIsLogedIn = "IsLogedIn";
+  static const _keyIsCollabOwner = "IsCollabOwner";
 
   static Future save(UserModule user) async {
     await UserPrefs.setName(user.name!);
@@ -33,10 +34,20 @@ class UserPrefs {
 
   static Future clear() async => await _prefs!.clear();
 
+  static Future setListAbonn(List<String> value) async =>
+      await _prefs!.setStringList(_keyAbonnement, value);
+
+  static List<String> getListAbonn() => _prefs!.getStringList(_keyAbonnement) ?? [];
+
+  static Future setIsCollabOwner(bool value) async =>
+      await _prefs!.setBool(_keyIsCollabOwner, value);
+
+  static bool getIsCollabOwner() => _prefs!.getBool(_keyIsCollabOwner) ?? false;
+
   static Future setIsLogedIn(bool value) async =>
       await _prefs!.setBool(_keyIsLogedIn, value);
 
-  static bool? getIsLogedIn() => _prefs!.getBool(_keyIsLogedIn);
+  static bool? getIsLogedIn() => _prefs!.getBool(_keyIsLogedIn) ?? false;
 
   static Future setCollabId(String value) async =>
       await _prefs!.setString(_keyCollabId, value);

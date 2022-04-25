@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/addButton.dart';
 import 'package:juridoc/widgets/back_button.dart';
@@ -23,7 +24,7 @@ class SecondBarUi extends StatelessWidget {
           SizedBox(width: width * 0.1),
           title(),
           SizedBox(width: width * 0.1),
-          (add) ? AddButton(func: func) : SizedBox(width: width * 0.092),
+          (add && UserPrefs.getIsCollabOwner()) ? AddButton(func: func) : SizedBox(width: width * 0.092),
         ],
       ),
     );

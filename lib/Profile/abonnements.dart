@@ -2,16 +2,23 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
+import 'package:juridoc/widgets/secondBarUI.dart';
 
 class Abonnements extends StatefulWidget {
   @override
   AbonnementsState createState() => AbonnementsState();
 }
 
-class AbonnementsState extends State<Abonnements> with TickerProviderStateMixin {
-  String? selectedValue;
+class AbonnementsState extends State<Abonnements>
+    with TickerProviderStateMixin {
+  @override
+  void initState() {
+    super.initState();
+    UserModule.getAbonns();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,17 +56,7 @@ class AbonnementsState extends State<Abonnements> with TickerProviderStateMixin 
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text1()
-                      ],
-                    ),
-                  ),
+                  child: SecondBarUi('Mes abonnements', false),
                 ),
                 SizedBox(
                   height: 30,
@@ -143,7 +140,7 @@ class AbonnementsState extends State<Abonnements> with TickerProviderStateMixin 
       delay: const Duration(milliseconds: 600),
       duration: const Duration(milliseconds: 600),
       child: Text(
-        "Mes abonnements",
+        "",
         style: titleText5,
       ),
     );

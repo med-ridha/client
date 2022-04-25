@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/module/service.dart';
 import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
@@ -18,10 +19,8 @@ class LogInForm extends StatefulWidget {
 }
 
 class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
-  // String LoginUrl = 'http://10.0.2.2:42069/login'; emulator
-  String loginUrl = 'http://192.168.1.11:42069/login'; // real
-  // String checkTokenURL = 'http://10.0.2.2:42069/checkToken'; emulator
-  String checkTokenURL = 'http://192.168.1.11:42069/checkToken'; // real
+  String loginUrl = Service.url+'login';
+  String checkTokenURL = Service.url+'checkToken'; 
 
   String? _email;
   String? _password;

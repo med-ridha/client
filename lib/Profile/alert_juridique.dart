@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:juridoc/theme.dart';
+import 'package:juridoc/widgets/secondBarUI.dart';
 
 class Alert extends StatefulWidget {
   @override
@@ -54,17 +55,7 @@ class AlertState extends State<Alert> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text1()
-                      ],
-                    ),
-                  ),
+                  child: SecondBarUi("Alerte juridique", false),
                 ),
                 SizedBox(
                   height: 30,
@@ -109,16 +100,6 @@ class AlertState extends State<Alert> with TickerProviderStateMixin {
   }
 
 
-  Widget Text1() {
-    return FadeInUp(
-      delay: const Duration(milliseconds: 300),
-      duration: const Duration(milliseconds: 300),
-      child: Text(
-        "Alerte juridique",
-        style: titleText5,
-      ),
-    );
-  }
 
   Widget Text2() {
     return FadeInUp(

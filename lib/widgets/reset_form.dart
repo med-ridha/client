@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/module/service.dart';
 import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/screens/welcome/login.dart';
 import 'package:juridoc/theme.dart';
@@ -19,12 +20,10 @@ class ResetForm extends StatefulWidget {
 }
 
 class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
-  // String verifyEmailURL = 'http://10.0.2.2:42069/checkEmail'; emulator
-  String verifyEmailURL = 'http://192.168.1.11:42069/checkEmail'; // real
-  // String checkTokenURL = 'http://10.0.2.2:42069/checkToken'; emulator
-  String checkTokenURL = 'http://192.168.1.11:42069/checkToken'; // real
-  // String newPasswordURL = 'http://10.0.2.2:42069/newPassword'; emulator
-  String newPasswordURL = 'http://192.168.1.11:42069/newPassword'; // real
+  String verifyEmailURL = Service.url+'checkEmail'; 
+  String checkTokenURL = Service.url+'checkToken'; 
+  String newPasswordURL = Service.url+'newPassword'; 
+
   int etap = 0;
   String? _email;
   String? _password;
