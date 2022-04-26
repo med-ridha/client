@@ -8,8 +8,11 @@ class SecondBarUi extends StatelessWidget {
   void Function()? func;
   String titleString;
   bool add;
+  bool? like;
+  double? fontSize;
 
-  SecondBarUi(this.titleString, this.add, {this.func});
+
+  SecondBarUi(this.titleString, this.add, {this.func, this.fontSize, this.like});
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -25,6 +28,7 @@ class SecondBarUi extends StatelessWidget {
           title(),
           SizedBox(width: width * 0.1),
           (add && UserPrefs.getIsCollabOwner()) ? AddButton(func: func) : SizedBox(width: width * 0.092),
+          (like == true && UserPrefs.getIsCollabOwner()) ? AddButton(func: func) : SizedBox(width: width * 0.092),
         ],
       ),
     );
@@ -36,7 +40,7 @@ class SecondBarUi extends StatelessWidget {
         titleString,
         style: TextStyle(
           color: kPrimaryColor,
-          fontSize: 24,
+          fontSize: fontSize ?? 24,
           fontWeight: FontWeight.w500,
         ),
       ),

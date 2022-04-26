@@ -19,8 +19,8 @@ class LogInForm extends StatefulWidget {
 }
 
 class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
-  String loginUrl = Service.url+'login';
-  String checkTokenURL = Service.url+'checkToken'; 
+  String loginUrl = Service.url + 'login';
+  String checkTokenURL = Service.url + 'checkToken';
 
   String? _email;
   String? _password;
@@ -213,11 +213,18 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         await UserPrefs.clear();
         await UserPrefs.save(user);
         await UserPrefs.setIsLogedIn(true);
-        Navigator.pushAndRemoveUntil<void>(
-            context,
-            MaterialPageRoute<void>(
-                builder: (BuildContext context) => HomeScreen(0)),
-            ModalRoute.withName('/homescreen'));
+        await UserModule.getModules();
+        showSimpleNotification(Text("welcome", style: TextStyle()),
+            duration: Duration(seconds: 3),
+            foreground: Colors.white,
+            background: Colors.greenAccent);
+        await Future.delayed(Duration(seconds: 2), () {
+          Navigator.pushAndRemoveUntil<void>(
+              context,
+              MaterialPageRoute<void>(
+                  builder: (BuildContext context) => HomeScreen(0)),
+              ModalRoute.withName('/homescreen'));
+        });
       } else if (tokenResult.statusCode == 400) {
         showError("invalid token");
         setState(() {

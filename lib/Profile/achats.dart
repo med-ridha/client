@@ -3,8 +3,10 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
+import 'package:juridoc/widgets/secondBarUI.dart';
 
 class Achats extends StatefulWidget {
   @override
@@ -12,12 +14,20 @@ class Achats extends StatefulWidget {
 }
 
 class AchatsState extends State<Achats> with TickerProviderStateMixin {
-  String? selectedValue;
+  List<dynamic> listAbonn = [];
+  @override
+  void initState() {
+    super.initState();
+    UserModule.getAbonns().then((result) => {
+          setState(() {
+            listAbonn = result;
+          })
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -50,23 +60,12 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text1()
-                      ],
-                    ),
-                  ),
+                  child: SecondBarUi("Mes Achats", false),
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 Container(
-                  height: 400,
                   width: width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
@@ -84,7 +83,7 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
                         SizedBox(
                           height: 20,
                         ),
-                        Table1(context),
+                        table(context),
                         SizedBox(
                           height: 20,
                         ),
@@ -104,7 +103,7 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SvgPicture.asset(
             "SVG/cash.svg",
@@ -115,7 +114,7 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
             width: 15,
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
                 "Historique de mes achats",
@@ -154,78 +153,42 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
     );
   }
 
-  Widget Text1() {
-    return FadeInUp(
-      delay: const Duration(milliseconds: 600),
-      duration: const Duration(milliseconds: 600),
-      child: Text(
-        "Mes achats",
-        style: titleText5,
-      ),
-    );
-  }
-
-  Widget Table1(BuildContext context) {
+  Widget table(BuildContext context) {
     return Container(
       color: Colors.white,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columns: <DataColumn>[
-              DataColumn(
-                label: Text('ID'),
-              ),
-              DataColumn(
-                label: Text('Abonnement'),
-              ),
-              DataColumn(
-                label: Text('Total TTC	'),
-              ),
-              DataColumn(
-                label: Text('Méthode de paiement	'),
-              ),
-              DataColumn(
-                label: Text('Statut'),
-              ),
-              DataColumn(
-                label: Text('Action'),
-              ),
-            ],
-            rows: <DataRow>[
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                  DataCell(Text('')),
-                ],
-              ),
-            ],
-          ),
+          child: (listAbonn.length > 0)
+              ? DataTable(
+                  columns: <DataColumn>[
+                    DataColumn(
+                      label: Text('purchase ID'),
+                    ),
+                    DataColumn(
+                      label: Text('Total TTC'),
+                    ),
+                    DataColumn(
+                      label: Text('Méthode de paiement'),
+                    ),
+                    DataColumn(
+                      label: Text("Date d'achat"),
+                    ),
+                  ],
+                  rows: <DataRow>[
+                    for (Map<String, dynamic> item in listAbonn)
+                        DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text(item['_id'])),
+                            DataCell(Text(item['montant'].toString())),
+                            DataCell(Text('Credit card')),
+                            DataCell(Text(item['dateStart'].split("T")[0])),
+                          ],
+                        ),
+                  ],
+                )
+              : Text("you don't have any purchases"),
         ),
       ),
     );

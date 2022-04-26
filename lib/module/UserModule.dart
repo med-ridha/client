@@ -105,7 +105,6 @@ class UserModule {
       if (UserPrefs.getEmail() == email) UserPrefs.setCollabId("");
       return true;
     } else {
-      print(result.body);
       return false;
     }
   }
@@ -130,9 +129,6 @@ class UserModule {
         UserPrefs.setIsCollabOwner(false);
       }
       for (Map<String, dynamic> item in collabs['listUsers']) {
-        for (String it in item.values) {
-          print(it);
-        }
       }
       return collabs['listUsers'];
     } else {
@@ -140,10 +136,11 @@ class UserModule {
     }
   }
 
-  static Future<List<dynamic>?>? getAbonns() async {
-    Map<String, dynamic> collabs = HashMap();
+  static Future<List<dynamic>> getAbonns() async {
+    List<dynamic> abonns = [];
     String? email = UserPrefs.getEmail();
     String getCollabURL = Service.url + 'users/abonns/$email'; // real
+
     var result = await http.get(
       Uri.parse(getCollabURL),
       headers: <String, String>{
@@ -153,22 +150,32 @@ class UserModule {
 
     if (result.statusCode == 200) {
       Map<String, dynamic> col = json.decode(result.body);
-      print(col);
-     // collabs = col['message'];
-     // if (collabs['collab']['creator'] == UserPrefs.getEmail()) {
-     //   UserPrefs.setIsCollabOwner(true);
-     // } else {
-     //   UserPrefs.setIsCollabOwner(false);
-     // }
-     // for (Map<String, dynamic> item in collabs['listUsers']) {
-     //   for (String it in item.values) {
-     //     print(it);
-     //   }
-     // }
-     // return collabs['listUsers'];
-    } else {
-     // return collabs['listUsers'];
+      abonns = col['message'];
     }
-    return null;
+    return abonns;
+  }
+
+  static Future<List<String>> getModules() async {
+    String? email = UserPrefs.getEmail();
+    String getCollabURL = Service.url + 'users/abonns/$email'; // real
+    var result = await http.get(
+      Uri.parse(getCollabURL),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+    List<String> listModules = [];
+    if (result.statusCode == 200) {
+      Map<String, dynamic> col = json.decode(result.body);
+      for (Map<String, dynamic> item in col['message']) {
+        for (String module in item['modules']) {
+          if (listModules.contains(module)) continue;
+          listModules.add(module);
+        }
+      }
+    }
+    
+    UserPrefs.setModulesHasAccessTo(listModules);
+    return listModules;
   }
 }

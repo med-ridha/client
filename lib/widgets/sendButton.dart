@@ -3,8 +3,9 @@ import 'package:juridoc/theme.dart';
 
 class SendButton extends StatelessWidget {
   void Function()? func;
+  IconData? icon;
 
-  SendButton({this.func});
+  SendButton({this.func, this.icon});
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -17,7 +18,7 @@ class SendButton extends StatelessWidget {
             padding: EdgeInsets.zero,
             color: Colors.white,
             onPressed: func,
-            icon: Icon(Icons.send, color: Colors.white, size: 30)),
+            icon: Icon(icon ?? Icons.send, color: Colors.white, size: 30)),
       ),
     );
   }

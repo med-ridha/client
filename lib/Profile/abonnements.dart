@@ -1,8 +1,11 @@
+import 'dart:collection';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:juridoc/module/UserModule.dart';
+import 'package:juridoc/screens/Cart.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:juridoc/widgets/secondBarUI.dart';
@@ -14,10 +17,15 @@ class Abonnements extends StatefulWidget {
 
 class AbonnementsState extends State<Abonnements>
     with TickerProviderStateMixin {
+  List<dynamic> listAbonns = [];
   @override
   void initState() {
     super.initState();
-    UserModule.getAbonns();
+    UserModule.getAbonns().then((result) {
+      setState(() {
+        listAbonns = result;
+      });
+    });
   }
 
   @override
@@ -56,13 +64,17 @@ class AbonnementsState extends State<Abonnements>
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: SecondBarUi('Mes abonnements', false),
+                  child: SecondBarUi('Mes abonnements', true, func: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => Cart()));
+                  }),
                 ),
                 SizedBox(
                   height: 30,
                 ),
                 Container(
-                  height: 400,
                   width: width,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
@@ -80,7 +92,7 @@ class AbonnementsState extends State<Abonnements>
                         SizedBox(
                           height: 20,
                         ),
-                        Table1(context),
+                        table(context),
                         SizedBox(
                           height: 20,
                         ),
@@ -100,7 +112,7 @@ class AbonnementsState extends State<Abonnements>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SvgPicture.asset(
             "SVG/cash.svg",
@@ -111,13 +123,8 @@ class AbonnementsState extends State<Abonnements>
             width: 15,
           ),
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                "Historique des accès payants",
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-              ),
               Text(
                 "Vous trouverez ci-dessous votre",
                 style: const TextStyle(
@@ -135,29 +142,15 @@ class AbonnementsState extends State<Abonnements>
     );
   }
 
-  Widget Text1() {
-    return FadeInUp(
-      delay: const Duration(milliseconds: 600),
-      duration: const Duration(milliseconds: 600),
-      child: Text(
-        "",
-        style: titleText5,
-      ),
-    );
-  }
-
-  Widget Table1(BuildContext context) {
+  Widget table(BuildContext context) {
     return Container(
       color: Colors.white,
       child: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: DataTable(
+          child: (listAbonns.length > 0)?DataTable(
             columns: <DataColumn>[
-              DataColumn(
-                label: Text('Abonnement'),
-              ),
               DataColumn(
                 label: Text('Module'),
               ),
@@ -169,32 +162,17 @@ class AbonnementsState extends State<Abonnements>
               ),
             ],
             rows: <DataRow>[
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('#1691')),
-                  DataCell(Text('Module Fiscal')),
-                  DataCell(Text('08/02/2022')),
-                  DataCell(Text('08/08/2022')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('#1691')),
-                  DataCell(Text('Module Social')),
-                  DataCell(Text('08/02/2022')),
-                  DataCell(Text('08/08/2022')),
-                ],
-              ),
-              DataRow(
-                cells: <DataCell>[
-                  DataCell(Text('#1691')),
-                  DataCell(Text('Module Bibus')),
-                  DataCell(Text('08/02/2022')),
-                  DataCell(Text('08/08/2022')),
-                ],
-              ),
+              for (Map<String, dynamic> item in listAbonns)
+                for (String it in item['modules'])
+                  DataRow(
+                    cells: <DataCell>[
+                      DataCell(Text(it)),
+                      DataCell(Text(item['dateStart'].split("T")[0])),
+                      DataCell(Text(item['dateFinish'].split("T")[0])),
+                    ],
+                  ),
             ],
-          ),
+          ): Text("you don't have any"),
         ),
       ),
     );

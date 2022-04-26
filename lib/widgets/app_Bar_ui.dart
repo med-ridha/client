@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:juridoc/screens/Cart.dart';
 import 'package:juridoc/Profile/alert_juridique.dart';
+import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/screens/modules.dart';
 import 'package:juridoc/screens/favoris.dart';
 
@@ -15,7 +16,7 @@ class AppBarState extends State<AppBarUI> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Padding(
-      padding: EdgeInsets.only(top: height * 0.02 ),
+      padding: EdgeInsets.only(top: height * 0.02),
       child: Container(
           height: 50,
           width: width,
@@ -28,7 +29,17 @@ class AppBarState extends State<AppBarUI> {
           child: Row(children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [Image.asset('images/Logo.png')],
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => HomeScreen(0)));
+                  },
+                  child: Image.asset('images/Logo.png'),
+                )
+              ],
             ),
             SizedBox(width: width - 320),
             Row(children: [rightSideButtons(context)]),
@@ -56,7 +67,7 @@ Widget rightSideButtons(BuildContext context) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Cart1()));
+                        builder: (BuildContext context) => Cart()));
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

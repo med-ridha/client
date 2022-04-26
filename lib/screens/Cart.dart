@@ -1,23 +1,27 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:juridoc/Profile/abonnements.dart';
+import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/module/service.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:juridoc/widgets/secondBarUI.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-class Cart1 extends StatefulWidget {
+class Cart extends StatefulWidget {
   @override
-  Cart1State createState() => Cart1State();
+  CartState createState() => CartState();
 }
 
-class Cart1State extends State<Cart1> with TickerProviderStateMixin {
+class CartState extends State<Cart> with TickerProviderStateMixin {
   double montant = 0;
   List<String> modules = [];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -26,10 +30,16 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
   late FocusNode _creditFNode;
   bool _creditIsError = false;
   String? _creditCard;
+  List<String> listModules = [];
+
+  bool done = false;
 
   @override
   void initState() {
     _creditFNode = FocusNode();
+    UserModule.getModules().then((result) => {
+          setState(() => {listModules = result})
+        });
     super.initState();
   }
 
@@ -73,6 +83,17 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 AppBarUI(),
+                SizedBox(
+                  height: 30,
+                ),
+                Container(
+                    height: 60,
+                    width: width,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: Colors.white,
+                    ),
+                    child: SecondBarUi("Abonnement", false)),
                 SizedBox(
                   height: 30,
                 ),
@@ -138,6 +159,7 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
           "Collectivites locales",
           "Veille Juridique",
         ],
+        disabled: listModules,
         onSelected: (List<String> checked) {
           setState(() {
             montant = 0;
@@ -163,11 +185,6 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                "Abonnement",
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
               Text(
                 "Merci de préciser la durée de votre",
                 style: const TextStyle(
@@ -331,41 +348,60 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
         onTap: () async {
-          _formKey.currentState!.save();
-          if (selectedValue == null) {
-            showError("you need to choose une duree");
-            return;
-          }
+          if (!done) {
+            _formKey.currentState!.save();
+            if (selectedValue == null) {
+              showError("you need to choose une duree");
+              return;
+            }
 
-          if (modules.length == 0) {
-            showError("please select atleast one module!!");
-            return;
-          }
+            if (modules.length == 0) {
+              showError("please select atleast one module!!");
+              return;
+            }
 
-          if (!validateCreditCard(_creditCard!)) {
-            return;
-          }
+            if (!validateCreditCard(_creditCard!)) {
+              return;
+            }
 
-          Map<String, String?> data = {
-            "email": UserPrefs.getEmail(),
-            "montant": montant.toString(),
-            "modules": modules.toString(),
-            "duree": selectedValue!.split(' ')[0]
-          };
-          var result = await http.post(Uri.parse(createAbonnURL),
-              headers: <String, String>{
-                'Content-Type': 'application/json; charset=UTF-8',
-              },
-              body: jsonEncode(data));
-          if (result.statusCode == 200) {
-            showSimpleNotification(Text("abonnement success", style: TextStyle()),
-                duration: Duration(seconds: 3),
-                foreground: Colors.white,
-                background: Colors.greenAccent);
-            Map<String, dynamic> response = json.decode(result.body);
-            UserPrefs.setListAbonn(response['message']);
-          } else {
-            showError("something went wrong!");
+            Map<String, String?> data = {
+              "email": UserPrefs.getEmail(),
+              "montant": montant.toString(),
+              "modules": modules.toString(),
+              "duree": selectedValue!.split(' ')[0]
+            };
+            var result = await http.post(Uri.parse(createAbonnURL),
+                headers: <String, String>{
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(data));
+            if (result.statusCode == 200) {
+              setState(() {
+                done = true;
+              });
+              Map<String, dynamic> response = json.decode(result.body);
+              print(response);
+              List<String> listAbonn =
+                  List<String>.from(response['message'].map((x) => x));
+              UserPrefs.setListAbonn(listAbonn);
+              await UserModule.getModules();
+              await Future.delayed(Duration(seconds: 2), () {
+                showSimpleNotification(
+                    Text("abonnement success", style: TextStyle()),
+                    duration: Duration(seconds: 3),
+                    foreground: Colors.white,
+                    background: Colors.greenAccent);
+                setState(() {
+                  done = false;
+                });
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => Abonnements()));
+              });
+            } else {
+              showError("something went wrong!");
+            }
           }
         },
         child: Container(
@@ -392,13 +428,15 @@ class Cart1State extends State<Cart1> with TickerProviderStateMixin {
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        "Submit order",
-                        style: const TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
+                      (!done)
+                          ? Text(
+                              "Submit order",
+                              style: const TextStyle(
+                                  fontSize: 23,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )
+                          : SpinKitDualRing(size: 35, color: Colors.green),
                     ],
                   ),
                 ],
