@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:juridoc/theme.dart';
 
-class AddButton extends StatelessWidget {
+class LikeButton extends StatelessWidget {
   void Function()? func;
-  IconData? icon;
-  Color? color;
+  IconData icon;
 
-  AddButton({this.func, this.icon, this.color});
+  LikeButton(this.icon, {this.func});
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -20,7 +19,7 @@ class AddButton extends StatelessWidget {
         padding: EdgeInsets.zero,
             color: Colors.white,
             onPressed: func,
-            icon: Icon(icon, size: 40, color: color ?? null)),
+            icon: Icon(icon, size: 40)),
       ),
     );
   }

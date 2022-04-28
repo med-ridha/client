@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -47,9 +48,38 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         ));
   }
 
+  void showErrorSlide(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent,
+        autoDismiss: false,
+        slideDismissDirection: DismissDirection.horizontal);
+  }
+
+  Future<void> checkConnection() async {
+    try {
+      await http.post(
+        Uri.parse(Service.url + "/checkStatus"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showErrorSlide(
+            "network is unreachable, please make sure you are connected to the internet");
+      }
+      if (e.osError!.errorCode == 111) {
+        showErrorSlide("connection refused, couldn't reach the server");
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    checkConnection();
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
     _tokenFocusNode = FocusNode();
@@ -198,45 +228,55 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
       setState(() {
         waiting = true;
       });
-      var tokenResult = await http.post(
-        Uri.parse(checkTokenURL),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(data),
-      );
-      setState(() {
-        waiting = false;
-      });
-      if (tokenResult.statusCode == 200) {
-        final user = userModuleFromJson(tokenResult.body);
-        await UserPrefs.clear();
-        await UserPrefs.save(user);
-        await UserPrefs.setIsLogedIn(true);
-        await UserModule.getModules();
-        showSimpleNotification(Text("welcome", style: TextStyle()),
-            duration: Duration(seconds: 3),
-            foreground: Colors.white,
-            background: Colors.greenAccent);
-        await Future.delayed(Duration(seconds: 2), () {
-          Navigator.pushAndRemoveUntil<void>(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => HomeScreen(0)),
-              ModalRoute.withName('/homescreen'));
-        });
-      } else if (tokenResult.statusCode == 400) {
-        showError("invalid token");
+      try {
+        var tokenResult = await http.post(
+          Uri.parse(checkTokenURL),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(data),
+        );
         setState(() {
-          _tokenIsError = true;
+          waiting = false;
         });
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => _buildErrorPopupDialog(
+        if (tokenResult.statusCode == 200) {
+          final user = userModuleFromJson(tokenResult.body);
+          await UserPrefs.clear();
+          await UserPrefs.save(user);
+          await UserPrefs.setIsLogedIn(true);
+          await UserModule.getModules();
+          showSimpleNotification(Text("welcome", style: TextStyle()),
+              duration: Duration(seconds: 3),
+              foreground: Colors.white,
+              background: Colors.greenAccent);
+          await Future.delayed(Duration(seconds: 2), () {
+            Navigator.pushAndRemoveUntil<void>(
                 context,
-                "internal server error",
-                "something went wrong in the server side please try again later"));
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => HomeScreen(0)),
+                ModalRoute.withName('/homescreen'));
+          });
+        } else if (tokenResult.statusCode == 400) {
+          showError("invalid token");
+          setState(() {
+            _tokenIsError = true;
+          });
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => _buildErrorPopupDialog(
+                  context,
+                  "internal server error",
+                  "something went wrong in the server side please try again later"));
+        }
+      } on SocketException catch (e) {
+        if (e.osError!.errorCode == 101) {
+          showErrorSlide(
+              "network is unreachable, please make sure you are connected to the internet");
+        }
+        if (e.osError!.errorCode == 111) {
+          showErrorSlide("connection refused, couldn't reach the server");
+        }
       }
     }
 
@@ -256,45 +296,54 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
       setState(() {
         waiting = true;
       });
+      try {
+        var result = await http.post(
+          Uri.parse(loginUrl),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(data),
+        );
 
-      var result = await http.post(
-        Uri.parse(loginUrl),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(data),
-      );
+        setState(() {
+          waiting = false;
+        });
 
-      setState(() {
-        waiting = false;
-      });
-
-      if (result.statusCode == 200) {
-        if (login) {
+        if (result.statusCode == 200) {
+          if (login) {
+            setState(() {
+              login = false;
+            });
+          }
+        } else if (result.statusCode == 401) {
+          showError("Email doesn't exists");
+          _emailFocusNode.requestFocus();
           setState(() {
-            login = false;
+            _emailIsError = true;
           });
+        } else if (result.statusCode == 402) {
+          showError("wrong password");
+          _passwordFocusNode.requestFocus();
+          setState(() {
+            _passwordIsError = true;
+          });
+        } else {
+          print(result.body);
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => _buildErrorPopupDialog(
+                  context,
+                  "internal server error",
+                  "something went wrong in the server side please try again later"));
         }
-      } else if (result.statusCode == 401) {
-        showError("Email doesn't exists");
-        _emailFocusNode.requestFocus();
-        setState(() {
-          _emailIsError = true;
-        });
-      } else if (result.statusCode == 402) {
-        showError("wrong password");
-        _passwordFocusNode.requestFocus();
-        setState(() {
-          _passwordIsError = true;
-        });
-      } else {
-        print(result.body);
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => _buildErrorPopupDialog(
-                context,
-                "internal server error",
-                "something went wrong in the server side please try again later"));
+      } on SocketException catch (e) {
+        if (e.osError!.errorCode == 101) {
+          showErrorSlide(
+              "network is unreachable, please make sure you are connected to the internet");
+        }
+        if (e.osError!.errorCode == 111) {
+          showErrorSlide("connection refused, couldn't reach the server");
+        }
       }
     }
 

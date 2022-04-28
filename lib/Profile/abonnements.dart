@@ -32,6 +32,7 @@ class AbonnementsState extends State<Abonnements>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    double safePadding = MediaQuery.of(context).padding.top;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -48,60 +49,86 @@ class AbonnementsState extends State<Abonnements>
       Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-            child: Column(
-              children: [
-                AppBarUI(),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  height: 60,
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: SecondBarUi('Mes abonnements', true, func: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (BuildContext context) => Cart()));
-                  }),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        abonnemnt(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        table(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ],
+          child: Column(
+            children: [
+              Container(
+                height: safePadding,
+                width: width,
+                decoration: BoxDecoration(
+                    color: Colors.white70,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                    ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: Column(
+                  children: [
+                    Container(
+                      child: AppBarUI(),
                     ),
-                  ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child:
+                                SecondBarUi('Mes abonnements', true, func: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          Cart()));
+                            }),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  abonnemnt(context),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  table(context),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       )
@@ -149,30 +176,32 @@ class AbonnementsState extends State<Abonnements>
         scrollDirection: Axis.vertical,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: (listAbonns.length > 0)?DataTable(
-            columns: <DataColumn>[
-              DataColumn(
-                label: Text('Module'),
-              ),
-              DataColumn(
-                label: Text('Du'),
-              ),
-              DataColumn(
-                label: Text('Au'),
-              ),
-            ],
-            rows: <DataRow>[
-              for (Map<String, dynamic> item in listAbonns)
-                for (String it in item['modules'])
-                  DataRow(
-                    cells: <DataCell>[
-                      DataCell(Text(it)),
-                      DataCell(Text(item['dateStart'].split("T")[0])),
-                      DataCell(Text(item['dateFinish'].split("T")[0])),
-                    ],
-                  ),
-            ],
-          ): Text("you don't have any"),
+          child: (listAbonns.length > 0)
+              ? DataTable(
+                  columns: <DataColumn>[
+                    DataColumn(
+                      label: Text('Module'),
+                    ),
+                    DataColumn(
+                      label: Text('Du'),
+                    ),
+                    DataColumn(
+                      label: Text('Au'),
+                    ),
+                  ],
+                  rows: <DataRow>[
+                    for (Map<String, dynamic> item in listAbonns)
+                      for (String it in item['modules'])
+                        DataRow(
+                          cells: <DataCell>[
+                            DataCell(Text(it)),
+                            DataCell(Text(item['dateStart'].split("T")[0])),
+                            DataCell(Text(item['dateFinish'].split("T")[0])),
+                          ],
+                        ),
+                  ],
+                )
+              : Text("you don't have any"),
         ),
       ),
     );

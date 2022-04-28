@@ -29,6 +29,8 @@ class UserPrefs {
     await UserPrefs.setNumFiscal(user.numFiscal!);
     await UserPrefs.setAdressStructure(user.adressStructure!);
     await UserPrefs.setCollabId(user.collabId ?? "");
+    await UserPrefs.setListFavorit(user.favored ?? []);
+    await UserPrefs.setListAbonn(user.abonnement ?? []);
   }
 
   static Future init() async => _prefs = await SharedPreferences.getInstance();
@@ -38,12 +40,20 @@ class UserPrefs {
   static Future setModulesHasAccessTo(List<String> value) async =>
       await _prefs!.setStringList(_keyModulesHasAccessTo, value);
 
-  static List<String> getModulesHasAccessTo() => _prefs!.getStringList(_keyModulesHasAccessTo) ?? [];
+  static List<String> getModulesHasAccessTo() =>
+      _prefs!.getStringList(_keyModulesHasAccessTo) ?? [];
+
+  static Future setListFavorit(List<String> value) async =>
+      await _prefs!.setStringList(_keyFavored, value);
+
+  static List<String> getListFavorit() =>
+      _prefs!.getStringList(_keyFavored) ?? [];
 
   static Future setListAbonn(List<String> value) async =>
       await _prefs!.setStringList(_keyAbonnement, value);
 
-  static List<String> getListAbonn() => _prefs!.getStringList(_keyAbonnement) ?? [];
+  static List<String> getListAbonn() =>
+      _prefs!.getStringList(_keyAbonnement) ?? [];
 
   static Future setIsCollabOwner(bool value) async =>
       await _prefs!.setBool(_keyIsCollabOwner, value);

@@ -33,8 +33,8 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromRGBO(4, 9, 35, 1),
-              Color.fromRGBO(39, 105, 171, 1),
+              Color.fromRGBO(8, 3, 85, 0),
+              Color.fromRGBO(39, 105, 171, 0),
             ],
             begin: FractionalOffset.bottomCenter,
             end: FractionalOffset.topCenter,

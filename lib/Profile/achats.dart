@@ -28,6 +28,7 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    double safePadding = MediaQuery.of(context).padding.top;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -44,55 +45,74 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
       Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-            child: Column(
-              children: [
-                AppBarUI(),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  height: 60,
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: SecondBarUi("Mes Achats", false),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        abonnemnt(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        table(context),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ],
+          child: Column(
+            children: [
+              Container(
+                height: safePadding,
+                width: width,
+                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: Column(
+                  children: [
+                    AppBarUI(),
+                    SizedBox(
+                      height: 15,
                     ),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: SecondBarUi("Mes Achats", false),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Container(
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  abonnemnt(context),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  table(context),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                    )
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       )
@@ -178,14 +198,14 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
                   ],
                   rows: <DataRow>[
                     for (Map<String, dynamic> item in listAbonn)
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text(item['_id'])),
-                            DataCell(Text(item['montant'].toString())),
-                            DataCell(Text('Credit card')),
-                            DataCell(Text(item['dateStart'].split("T")[0])),
-                          ],
-                        ),
+                      DataRow(
+                        cells: <DataCell>[
+                          DataCell(Text(item['_id'])),
+                          DataCell(Text(item['montant'].toString())),
+                          DataCell(Text('Credit card')),
+                          DataCell(Text(item['dateStart'].split("T")[0])),
+                        ],
+                      ),
                   ],
                 )
               : Text("you don't have any purchases"),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
@@ -40,7 +42,7 @@ class InitState extends State<Init> {
   }
 
   Future<Widget> loadFromFuture() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(Duration(seconds: 2));
     if (!logedIn) {
       return Future.value(new OnboardingScreen());
     } else {
@@ -50,7 +52,7 @@ class InitState extends State<Init> {
 
   @override
   Widget build(BuildContext context) {
-    return OverlaySupport(
+    return OverlaySupport.global(
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(fontFamily: 'Poppins'),

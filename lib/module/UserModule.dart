@@ -4,11 +4,13 @@
 
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/module/service.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 UserModule userModuleFromJson(String str) =>
     UserModule.fromJson(json.decode(str));
@@ -128,8 +130,7 @@ class UserModule {
       } else {
         UserPrefs.setIsCollabOwner(false);
       }
-      for (Map<String, dynamic> item in collabs['listUsers']) {
-      }
+      for (Map<String, dynamic> item in collabs['listUsers']) {}
       return collabs['listUsers'];
     } else {
       return collabs['listUsers'];
@@ -174,8 +175,92 @@ class UserModule {
         }
       }
     }
-    
+
     UserPrefs.setModulesHasAccessTo(listModules);
     return listModules;
+  }
+
+  static Future<bool> removeFromFavorite(String documentId) async {
+    String email = UserPrefs.getEmail() ?? '';
+    String addToFavoriteURL = Service.url + 'documents/removeFromFavorite'; // real
+    Map<String, String> data = {
+      "email": email,
+      "documentId": documentId,
+    };
+    try {
+      var result = await http.post(Uri.parse(addToFavoriteURL),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode(data));
+      if (result.statusCode == 200) {
+        Map<String, dynamic> col = json.decode(result.body);
+        print(col['message']);
+        UserPrefs.setListFavorit(
+            List<String>.from(col['message'].map((x) => x)));
+        return true;
+      } else {
+        return false;
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
+      print(e);
+      return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+  static Future<bool> addToFavorite(String documentId) async {
+    String email = UserPrefs.getEmail() ?? '';
+    String addToFavoriteURL = Service.url + 'documents/addToFavorite'; // real
+    Map<String, String> data = {
+      "email": email,
+      "documentId": documentId,
+    };
+    try {
+      var result = await http.post(Uri.parse(addToFavoriteURL),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: json.encode(data));
+      if (result.statusCode == 200) {
+        Map<String, dynamic> col = json.decode(result.body);
+        print(col['message']);
+        UserPrefs.setListFavorit(
+            List<String>.from(col['message'].map((x) => x)));
+        return true;
+      } else {
+        return false;
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
+      print(e);
+      return false;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent,
+        autoDismiss: false,
+        slideDismissDirection: DismissDirection.down);
   }
 }

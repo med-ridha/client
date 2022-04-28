@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/screens/Cart.dart';
 import 'package:juridoc/Profile/alert_juridique.dart';
 import 'package:juridoc/screens/home.dart';
@@ -16,12 +17,12 @@ class AppBarState extends State<AppBarUI> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Padding(
-      padding: EdgeInsets.only(top: height * 0.02),
+      padding: EdgeInsets.only(top: 0),
       child: Container(
           height: 50,
           width: width,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              //borderRadius: BorderRadius.all(Radius.circular(20.0)),
               color: Colors.white,
               boxShadow: [
                 BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
@@ -41,7 +42,7 @@ class AppBarState extends State<AppBarUI> {
                 )
               ],
             ),
-            SizedBox(width: width - 320),
+            SizedBox(width: width * 0.38),
             Row(children: [rightSideButtons(context)]),
           ])),
     );
@@ -131,8 +132,12 @@ Widget rightSideButtons(BuildContext context) {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Favoris()));
-              }, // button pressed
+                        builder: (BuildContext context) => Favoris(
+                            UserPrefs.getListFavorit(),
+                            UserPrefs.getEmail() ?? '',
+                            UserPrefs.getName() ?? ''
+                            )));
+              },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

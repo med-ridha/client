@@ -524,7 +524,6 @@ class _SignUpFormState extends State<SignUpForm> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-
     Form getForm() {
       switch (etap) {
         case 0:
@@ -706,42 +705,45 @@ class _SignUpFormState extends State<SignUpForm> {
     }
 
     int n = etap + 1;
-    return Container(
-        child: Column(
-      children: [
-        getForm(),
-        GestureDetector(
-          child: PrimaryButton(
-            func: (etap == 0)
-                ? etap0
-                : (etap == 1)
-                    ? etap1
-                    : (etap == 2)
-                        ? etap2
-                        : etap3,
-            buttonText: (etap <= 2) ? 'Suivant ($n / 4) ' : 'Submit',
-          ),
-        ),
-        SizedBox(height: /*10*/ height * 0.04),
-        Container(
-            decoration: BoxDecoration(
-              color: kTextFieldColor,
-              borderRadius: BorderRadius.circular(50),
+    return WillPopScope(
+    onWillPop: () async {return (etap == 0)?true:false;},
+      child: Container(
+          child: Column(
+        children: [
+          getForm(),
+          GestureDetector(
+            child: PrimaryButton(
+              func: (etap == 0)
+                  ? etap0
+                  : (etap == 1)
+                      ? etap1
+                      : (etap == 2)
+                          ? etap2
+                          : etap3,
+              buttonText: (etap <= 2) ? 'Suivant ($n / 4) ' : 'Submit',
             ),
-            child: (etap > 0)
-                ? IconButton(
-                    splashColor: Colors.red,
-                    splashRadius: 30,
-                    iconSize: 30,
-                    onPressed: () {
-                      setState(() {
-                        etap--;
-                      });
-                    },
-                    icon: Icon(Icons.arrow_back_ios_sharp))
-                : SizedBox(height: height * 0.0435)),
-      ],
-    ));
+          ),
+          SizedBox(height: /*10*/ height * 0.04),
+          Container(
+              decoration: BoxDecoration(
+                color: kTextFieldColor,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: (etap > 0)
+                  ? IconButton(
+                      splashColor: Colors.red,
+                      splashRadius: 30,
+                      iconSize: 30,
+                      onPressed: () {
+                        setState(() {
+                          etap--;
+                        });
+                      },
+                      icon: Icon(Icons.arrow_back_ios_sharp))
+                  : SizedBox(height: height * 0.0435)),
+        ],
+      )),
+    );
   }
 
   Widget _buildErrorPopupDialog(

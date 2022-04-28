@@ -60,6 +60,7 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    double safePadding = MediaQuery.of(context).padding.top;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -76,72 +77,89 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
       Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppBarUI(),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                    height: 60,
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white,
-                    ),
-                    child: SecondBarUi("Abonnement", false)),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        abonnemnt(context),
-                        SizedBox(height: height * 0.02),
-                        text1(context),
-                        duree(context),
-                        SizedBox(height: height * 0.02),
-                        text2(context),
-                        checkbox(context),
-                        SizedBox(height: height * 0.02),
-                        Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Total: " + montant.toString(),
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                  )),
-                            ],
+          child: Column(
+            children: [
+              Container(
+                height: safePadding,
+                width: width,
+                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AppBarUI(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            height: 60,
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: SecondBarUi("Abonnement", false)),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                abonnemnt(context),
+                                SizedBox(height: height * 0.02),
+                                text1(context),
+                                duree(context),
+                                SizedBox(height: height * 0.02),
+                                text2(context),
+                                checkbox(context),
+                                SizedBox(height: height * 0.02),
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text("Total: " + montant.toString(),
+                                          style: TextStyle(
+                                            fontSize: 24,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: height * 0.02),
+                                Form(
+                                    key: _formKey,
+                                    child: RoundedTextFieldContainer(
+                                        child: buildCreditCard(),
+                                        error: _creditIsError)),
+                                SizedBox(height: height * 0.02),
+                                button1(context),
+                                SizedBox(height: height * 0.01),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(height: height * 0.02),
-                        Form(
-                            key: _formKey,
-                            child: RoundedTextFieldContainer(
-                                child: buildCreditCard(),
-                                error: _creditIsError)),
-                        SizedBox(height: height * 0.02),
-                        button1(context),
-                        SizedBox(height: height * 0.01),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       )
@@ -154,8 +172,8 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
           "Fiscal",
           "Social",
           "Investissement",
-          "banque-Finances-Assurances",
-          "Bibus",
+          "Banque-Finances-Assurances",
+          "BIBUS",
           "Collectivites locales",
           "Veille Juridique",
         ],

@@ -28,6 +28,7 @@ class _HomeContentState extends State<HomeContent>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    double safePadding = MediaQuery.of(context).padding.top;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -48,64 +49,81 @@ class _HomeContentState extends State<HomeContent>
         Scaffold(
           backgroundColor: Colors.transparent,
           body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-              child: Column(
-                children: [
-                  AppBarUI(),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
+            child: Column(
+              children: [
+                Container(
+                  height: safePadding,
+                  width: width,
+                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                  ]),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    child: Column(
+                      children: [
+                        AppBarUI(),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8),
+                              child: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  getText(),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  getText1(),
+                                  getSearchBarUI(),
+                                ],
+                              ),
+                            ),
                           ),
-                          getText(),
-                          SizedBox(
-                            height: 20,
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                children: [
+                                  juridoc(),
+                                  juridoc1(),
+                                  text(),
+                                  juridoc2(),
+                                ],
+                              ),
+                            ),
                           ),
-                          getText1(),
-                          getSearchBarUI(),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Container(
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Column(
-                        children: [
-                          juridoc(),
-                          juridoc1(),
-                          text(),
-                          juridoc2(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              ],
             ),
           ),
         )

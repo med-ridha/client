@@ -198,6 +198,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    double safePadding = MediaQuery.of(context).padding.top;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -214,55 +215,74 @@ class AdvancedSearchState extends State<AdvancedSearch>
       Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-            child: Column(
-              children: [
-                AppBarUI(),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  width: width ,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+          child: Column(
+            children: [
+              Container(
+                height: safePadding,
+                width: width,
+                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                child: Column(
+                  children: [
+                    Column(
                       children: [
-                        abonnemnt(context),
-                        Text2(context),
-                        Text1(context),
-                        checkbox(context),
-                        Text3(context),
-                        Text9(context),
-                        duree(context),
-                        Text10(context),
-                        widgetnumero(context),
-                        Text4(context),
-                        widgetannee(context),
-                        Text5(context),
-                        duree1(context),
-                        Text6(context),
-                        duree2(context),
-                        Text7(context),
-                        duree3(context),
-                        Text8(context),
-                        rang(context),
+                        AppBarUI(),
                         SizedBox(
-                          height: 10,
+                          height: 30,
                         ),
-                        button1(context),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  abonnemnt(context),
+                                  Text2(context),
+                                  Text1(context),
+                                  checkbox(context),
+                                  Text3(context),
+                                  Text9(context),
+                                  duree(context),
+                                  Text10(context),
+                                  widgetnumero(context),
+                                  Text4(context),
+                                  widgetannee(context),
+                                  Text5(context),
+                                  duree1(context),
+                                  Text6(context),
+                                  duree2(context),
+                                  Text7(context),
+                                  duree3(context),
+                                  Text8(context),
+                                  rang(context),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  button1(context),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       )

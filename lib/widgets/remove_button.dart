@@ -4,21 +4,22 @@ import 'package:juridoc/theme.dart';
 
 class RemoveButton extends StatelessWidget {
   void Function()? func;
+  String? email;
+  IconData? icon;
+  double? size;
 
-  RemoveButton({this.func});
+  RemoveButton({this.func, this.email, this.icon, this.size});
   @override
   Widget build(BuildContext context) {
-    return UserPrefs.getIsCollabOwner()? Container(
+    return (UserPrefs.getIsCollabOwner() || UserPrefs.getEmail() == email)? Container(
       child: Container(
-        width: 35,
-        height: 35,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(80), color: Colors.redAccent),
         child: IconButton(
             padding: EdgeInsets.zero,
             color: Colors.white,
             onPressed: func,
-            icon: Icon(Icons.person_remove_sharp, size: 25)),
+            icon: Icon(icon ?? Icons.person_remove_sharp, size: size ?? 25)),
       ),
     ):Container();
   }

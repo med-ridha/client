@@ -16,6 +16,7 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    double safePadding = MediaQuery.of(context).padding.top;
 
     return Stack(fit: StackFit.expand, children: [
       Container(
@@ -33,35 +34,48 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
       Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-            child: Column(
-              children: [
-                AppBarUI(),
-                Text1(),
+          child: Column(
+            children: [
                 Container(
-                  height: 1100,
+                  height: safePadding,
                   width: width,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Colors.white,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
+                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                  ]),
+                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  child: Column(
+                    children: [
+                      AppBarUI(),
+                      Text1(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Text2(),
+                                fiscal(context),
+                              ],
+                            ),
+                          ),
                         ),
-                        Text2(),
-                        fiscal(context),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
       ),

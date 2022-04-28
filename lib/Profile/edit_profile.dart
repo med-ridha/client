@@ -448,198 +448,251 @@ class EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    double safePadding = MediaQuery.of(context).padding.top;
 
-    return Stack(key: UniqueKey(), fit: StackFit.expand, children: [
-      Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(4, 9, 35, 1),
-              Color.fromRGBO(39, 105, 171, 1),
-            ],
-            begin: FractionalOffset.bottomCenter,
-            end: FractionalOffset.topCenter,
-          ),
-        ),
-      ),
-      Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 30),
-            child: Column(
-              children: [
-                AppBarUI(),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                    height: 60,
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.white,
-                    ),
-                    child: SecondBarUi("Profile", false)),
-                Container(
-                    height: height * 0.05,
-                    child: (waiting)
-                        ? SpinKitDualRing(size: 40, color: Colors.green)
-                        : null),
-                Form(
-                  key: _formKey,
-                  child: Column(children: [
-                    Container(
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                title(context, 'SVG/door-lock.svg',
-                                    "Mot de passe", 0.045),
-                                SizedBox(width: width * 0.38),
-                                PasswordIcon(() {
-                                  setState(() {
-                                    _isObscure = !_isObscure;
-                                  });
-                                }),
-                              ],
-                            ),
-                            SizedBox(height: height * 0.01),
-                            RoundedTextFieldContainer(
-                                child: _buildPassword(),
-                                error: _passwordIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildNewPassword(),
-                                error: _newPasswordIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildConfirmPassword(),
-                                error: _confirmPIsError),
-                            SizedBox(height: height * 0.02),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            title(context, 'SVG/id.svg', "Donnees personnelles",
-                                0.045),
-                            SizedBox(
-                              height: height * 0.01,
-                            ),
-                            RoundedTextFieldContainer(
-                                child: _buildName(), error: _nameIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildSurname(), error: _surnameIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildPhoneNumber(),
-                                error: _phoneNumberIsError),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                      width: width,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: height * 0.01,
-                            ),
-                            title(context, 'SVG/case.svg',
-                                "Donnees professionnelles", 0.035),
-                            RoundedTextFieldContainer(
-                                child: _buildNomStructure(),
-                                error: _nomSIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildPhoneStructure(),
-                                error: _phoneSIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildAdressStructure(),
-                                error: _adressSIsError),
-                            SizedBox(height: 15),
-                            RoundedTextFieldContainer(
-                                child: _buildNumFiscal(), error: _numFIsError),
-                            SizedBox(
-                              height: height * 0.02,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      width: width * 0.8,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: PrimaryButton(
-                              func: update,
-                              buttonText: 'Enregistrer',
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          GestureDetector(
-                            onTap: () {},
-                            child: SecondaryButton(
-                                func: () {
-                                  _formKey.currentState!.reset();
-                                },
-                                buttonText: 'Cancel',
-                                icon: Icon(Icons.refresh_sharp)),
-                          )
-                        ],
-                      ),
-                    )
-                  ]),
-                ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Stack(key: UniqueKey(), fit: StackFit.expand, children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(4, 9, 35, 1),
+                Color.fromRGBO(39, 105, 171, 1),
               ],
+              begin: FractionalOffset.bottomCenter,
+              end: FractionalOffset.topCenter,
             ),
           ),
         ),
-      )
-    ]);
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: safePadding,
+                  width: width,
+                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                  ]),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    child: Column(
+                      children: [
+                        AppBarUI(),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            child: Column(children: [
+                              Container(
+                                  height: 60,
+                                  width: width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.white,
+                                  ),
+                                  child: SecondBarUi("Profile", false)),
+                              Container(
+                                  height: height * 0.05,
+                                  child: (waiting)
+                                      ? SpinKitDualRing(
+                                          size: 40, color: Colors.green)
+                                      : null),
+                              Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        width: width,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  title(
+                                                      context,
+                                                      'SVG/door-lock.svg',
+                                                      "Mot de passe",
+                                                      0.045),
+                                                  SizedBox(width: width * 0.38),
+                                                  PasswordIcon(() {
+                                                    setState(() {
+                                                      _isObscure = !_isObscure;
+                                                    });
+                                                  }),
+                                                ],
+                                              ),
+                                              SizedBox(height: height * 0.01),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildPassword(),
+                                                  error: _passwordIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildNewPassword(),
+                                                  error: _newPasswordIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child:
+                                                      _buildConfirmPassword(),
+                                                  error: _confirmPIsError),
+                                              SizedBox(height: height * 0.02),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Container(
+                                        width: width,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              title(
+                                                  context,
+                                                  'SVG/id.svg',
+                                                  "Donnees personnelles",
+                                                  0.045),
+                                              SizedBox(
+                                                height: height * 0.01,
+                                              ),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildName(),
+                                                  error: _nameIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildSurname(),
+                                                  error: _surnameIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildPhoneNumber(),
+                                                  error: _phoneNumberIsError),
+                                              SizedBox(
+                                                height: height * 0.02,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Container(
+                                        width: width,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Colors.white,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              SizedBox(
+                                                height: height * 0.01,
+                                              ),
+                                              title(
+                                                  context,
+                                                  'SVG/case.svg',
+                                                  "Donnees professionnelles",
+                                                  0.035),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildNomStructure(),
+                                                  error: _nomSIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildPhoneStructure(),
+                                                  error: _phoneSIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child:
+                                                      _buildAdressStructure(),
+                                                  error: _adressSIsError),
+                                              SizedBox(height: 15),
+                                              RoundedTextFieldContainer(
+                                                  child: _buildNumFiscal(),
+                                                  error: _numFIsError),
+                                              SizedBox(
+                                                height: height * 0.02,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 20),
+                                      Container(
+                                        width: width * 0.8,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {},
+                                              child: PrimaryButton(
+                                                func: update,
+                                                buttonText: 'Enregistrer',
+                                              ),
+                                            ),
+                                            SizedBox(height: 20),
+                                            GestureDetector(
+                                              onTap: () {},
+                                              child: SecondaryButton(
+                                                  func: () {
+                                                    _formKey.currentState!
+                                                        .reset();
+                                                  },
+                                                  buttonText: 'Cancel',
+                                                  icon: Icon(
+                                                      Icons.refresh_sharp)),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ))
+                            ]),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        )
+      ]),
+    );
   }
 
   Widget title(
