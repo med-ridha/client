@@ -239,39 +239,39 @@ class _HomeContentState extends State<HomeContent>
               moduleWidget(
                 context,
                 "Social",
-                "images/social.png",
+                "images/Social.png",
                 ModuleModule.getNum("Social", listModules).toString(),
               ),
               moduleWidget(
                 context,
                 "Investissement",
-                "images/investissement.png",
+                "images/Investissement.png",
                 ModuleModule.getNum("Investissement", listModules).toString(),
               ),
               moduleWidget(
                 context,
                 "Banque-Finances-Assurances",
-                "images/banque.png",
+                "images/Banque-Finances-Assurances.png",
                 ModuleModule.getNum("Banque-Finances-Assurances", listModules)
                     .toString(),
               ),
               moduleWidget(
                 context,
                 "BIBUS",
-                "images/Bibus.png",
+                "images/BIBUS.png",
                 ModuleModule.getNum("BIBUS", listModules).toString(),
               ),
               moduleWidget(
                 context,
                 "Collectivités locales",
-                "images/local.png",
+                "images/Collectivites locales.png",
                 ModuleModule.getNum("Collectivites locales", listModules)
                     .toString(),
               ),
               moduleWidget(
                 context,
                 "Veille Juridique",
-                "images/observatoire.png",
+                "images/Veille Juridique.png",
                 ModuleModule.getNum("Veille Juridique", listModules).toString(),
               ),
             ],

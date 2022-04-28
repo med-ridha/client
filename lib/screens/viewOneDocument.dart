@@ -28,6 +28,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
   String module;
   bool isFavorite = false;
   bool waiting = false;
+  bool isFrench = true;
   List<String> listModules = [];
   ViewOneDocumentState(this.document, this.category, this.module);
 
@@ -90,91 +91,95 @@ class ViewOneDocumentState extends State<ViewOneDocument>
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                  child: Column(
-                    children: [
-                      AppBarUI(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 60,
-                          width: width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white,
-                          ),
-                          child: SecondBarUi("", false,
-                              fontSize: 16,
-                              like: (listModules.contains(module)),
-                              func: (!isFavorite)
-                                  ? () async {
-                                      bool result =
-                                          await UserModule.addToFavorite(
-                                              document.id ?? "");
-                                      if (result) {
-                                        showSimpleNotification(
-                                            Text("add to Favorite",
-                                                style: TextStyle()),
-                                            duration: Duration(seconds: 2),
-                                            foreground: Colors.white,
-                                            background: Colors.greenAccent);
-                                        setState(() {
-                                          isFavorite =
-                                              UserPrefs.getListFavorit()
-                                                  .contains(document.id);
-                                        });
-                                      } else {
-                                        showError('something went wrong');
-                                      }
-                                    }
-                                  : () async {
-                                      bool result =
-                                          await UserModule.removeFromFavorite(
-                                              document.id ?? "");
-                                      if (result) {
-                                        showSimpleNotification(
-                                            Text("removed from Favorite",
-                                                style: TextStyle()),
-                                            duration: Duration(seconds: 2),
-                                            foreground: Colors.white,
-                                            background: Colors.greenAccent);
-                                        setState(() {
-                                          isFavorite =
-                                              UserPrefs.getListFavorit()
-                                                  .contains(document.id);
-                                        });
-                                      } else {
-                                        showError('something went wrong');
-                                      }
-                                    },
-                              likeIcon: (isFavorite)
-                                  ? Icons.heart_broken_sharp
-                                  : Icons.favorite_sharp),
+                child: Column(
+                  children: [
+                    AppBarUI(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 60,
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
                         ),
+                        child: SecondBarUi("", false,
+                            fontSize: 16,
+                            lang: (listModules.contains(module)),
+                            langIcon: Icons.language_sharp, langFunc: () {
+                          setState(() {
+                            isFrench = !isFrench;
+                          });
+                        },
+                            like: (listModules.contains(module)),
+                            func: (!isFavorite)
+                                ? () async {
+                                    bool result =
+                                        await UserModule.addToFavorite(
+                                            document.id ?? "");
+                                    if (result) {
+                                      showSimpleNotification(
+                                          Text("add to Favorite",
+                                              style: TextStyle()),
+                                          duration: Duration(seconds: 2),
+                                          foreground: Colors.white,
+                                          background: Colors.greenAccent);
+                                      setState(() {
+                                        isFavorite = UserPrefs.getListFavorit()
+                                            .contains(document.id);
+                                      });
+                                    } else {
+                                      showError('something went wrong');
+                                    }
+                                  }
+                                : () async {
+                                    bool result =
+                                        await UserModule.removeFromFavorite(
+                                            document.id ?? "");
+                                    if (result) {
+                                      showSimpleNotification(
+                                          Text("removed from Favorite",
+                                              style: TextStyle()),
+                                          duration: Duration(seconds: 2),
+                                          foreground: Colors.white,
+                                          background: Colors.greenAccent);
+                                      setState(() {
+                                        isFavorite = UserPrefs.getListFavorit()
+                                            .contains(document.id);
+                                      });
+                                    } else {
+                                      showError('something went wrong');
+                                    }
+                                  },
+                            likeIcon: (isFavorite)
+                                ? Icons.heart_broken_sharp
+                                : Icons.favorite_sharp),
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            child: Column(
-                          children: [
-                            viewDetails(context, document),
-                            (listModules.contains(module))
-                                ? viewTitle(context, document)
-                                : Container(),
-                            (listModules.contains(module))
-                                ? viewDocumentWidget(context, document)
-                                : Container(),
-                          ],
-                        )),
-                      )
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: Column(
+                        children: [
+                          viewDetails(context, document),
+                          (listModules.contains(module))
+                              ? viewTitle(context, document)
+                              : Container(),
+                          (listModules.contains(module))
+                              ? viewDocumentWidget(context, document)
+                              : Container(),
+                        ],
+                      )),
+                    )
+                  ],
                 ),
+              ),
             ],
           ),
         ),
@@ -333,7 +338,10 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(height: height * 0.02),
-                        Text(document.titleFr ?? "",
+                        Text(
+                            (isFrench)
+                                ? document.titleFr ?? ""
+                                : document.titleAr ?? "",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w900)),
                         SizedBox(height: height * 0.02),
@@ -373,7 +381,15 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Flexible(child: Text(document.bodyFr ?? ""))
+                            Flexible(
+                                child: Directionality(
+                              textDirection: (isFrench)
+                                  ? TextDirection.ltr
+                                  : TextDirection.rtl,
+                              child: Text((isFrench)
+                                  ? document.bodyFr ?? ""
+                                  : document.bodyAr ?? ""),
+                            ))
                           ],
                         ),
                       ),

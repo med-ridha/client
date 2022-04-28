@@ -20,7 +20,7 @@ class ViewCategoriesState extends State<ViewCategories>
   String title;
   List<Category> listCategory;
   ViewCategoriesState(this.title, this.listCategory);
-  @override
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;

@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/module/service.dart';
 import 'package:http/http.dart' as http;
 import 'package:overlay_support/overlay_support.dart';
@@ -46,7 +47,9 @@ class ModuleModule {
         "numDoc": numDoc,
         "categories": List<dynamic>.from(categories!.map((x) => x.toJson())),
       };
+
   static List<ModuleModule> listModules = [];
+
   static Future<List<ModuleModule>> getListModules() async {
     List<ModuleModule> listModules = [];
     String getModulesURL = Service.url + "modules/getAll";
@@ -59,7 +62,6 @@ class ModuleModule {
       );
       if (result.statusCode == 200) {
         Map<String, dynamic> data = json.decode(result.body);
-        //print(data['message']);
         for (Map<String, dynamic> item in data['message']) {
           ModuleModule module = ModuleModule.fromJson(item);
           listModules.add(module);
@@ -96,6 +98,76 @@ class ModuleModule {
       }
     }
     return [];
+  }
+
+  static Future<List<dynamic>> getModulesLatest() async {
+    List<dynamic> listModules = [];
+    String getLatestModulesURL = Service.url +
+        "modules/latest/" +
+        UserPrefs.getLatestDuration().toString();
+    try {
+      var result = await http.get(
+        Uri.parse(getLatestModulesURL),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (result.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(result.body);
+        listModules = data['message'];
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return listModules;
+  }
+
+  static Future<List<Category>> getCategoriesLatest(
+      List<dynamic> listCategorieIds) async {
+    List<Category> listCategories = [];
+    String getCategoriesLatestURL = Service.url +
+        "modules/cat/latest/" +
+        UserPrefs.getLatestDuration().toString();
+
+    Map<String, List<dynamic>> data = {
+      "categories": listCategorieIds,
+    };
+
+    try {
+      var result = await http.post(
+        Uri.parse(getCategoriesLatestURL),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(data),
+      );
+      if (result.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(result.body);
+        for (Map<String, dynamic> item in data['message']) {
+          Category cat = Category.fromJson(item);
+          listCategories.add(cat);
+        }
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return listCategories;
   }
 
   static void showError(String error) {

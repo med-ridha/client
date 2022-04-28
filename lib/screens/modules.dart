@@ -1,10 +1,13 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/module/ModuleModule.dart';
+import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/screens/viewCategories.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:juridoc/theme.dart';
+import 'package:juridoc/widgets/secondBarUI.dart';
 
 class Modules extends StatefulWidget {
   @override
@@ -12,6 +15,22 @@ class Modules extends StatefulWidget {
 }
 
 class ModulesState extends State<Modules> with TickerProviderStateMixin {
+  List<dynamic> listModules = [];
+
+  String selectedValue = UserPrefs.getLatestDuration().toString();
+  List<String> items = ['1', '7', '10', '15', '30'];
+
+  @override
+  void initState() {
+    super.initState();
+    ModuleModule.getModulesLatest().then((value) {
+      setState(() {
+        listModules = value;
+        print(listModules);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -36,45 +55,77 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
         body: SingleChildScrollView(
           child: Column(
             children: [
-                Container(
-                  height: safePadding,
-                  width: width,
-                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
-                  ]),
-                ),
+              Container(
+                height: safePadding,
+                width: width,
+                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                ]),
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                  child: Column(
-                    children: [
-                      AppBarUI(),
-                      Text1(),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
+                child: Column(
+                  children: [
+                    AppBarUI(),
+                    SizedBox(height: 15),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          height: 60,
                           width: width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text2(),
-                                fiscal(context),
-                              ],
-                            ),
+                          child: SecondBarUi("Les derniers parutions", false,
+                              fontSize: 20)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text("les",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w500)),
+                                  SizedBox(width: 15),
+                                  duree(context),
+                                  SizedBox(width: 15),
+                                  Text("derniers jour",
+                                      style: TextStyle(
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              for (dynamic module in listModules)
+                                moduleWidget(context, module['name'],
+                                    module['count'].toString(), module),
+                              SizedBox(
+                                height: 15,
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
@@ -82,38 +133,20 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
     ]);
   }
 
-
-  Widget Text1() {
-    return FadeInUp(
-      delay: const Duration(milliseconds: 600),
-      duration: const Duration(milliseconds: 600),
-      child: Text(
-        "LES DERNIÈRES PARUTIONS",
-        style: titleText2,
-      ),
-    );
-  }
-
-  Widget Text2() {
-    return FadeInUp(
-      delay: const Duration(milliseconds: 600),
-      duration: const Duration(milliseconds: 600),
-      child: Text(
-        "JURIDOC trouver l’information juridique pertinente et à jour",
-        textAlign: TextAlign.center,
-        style: subTitle2,
-      ),
-    );
-  }
-
-  Widget fiscal(BuildContext context) {
+  Widget moduleWidget(
+      BuildContext context, String name, String count, dynamic module) {
     return GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (BuildContext context) => ViewCategories('Fiscal', []),
-              ));
+          ModuleModule.getCategoriesLatest(module['listCategories'])
+              .then((result) {
+            print(result);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      ViewCategories(name, result),
+                ));
+          });
         },
         child: Container(
             height: 150,
@@ -135,19 +168,19 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Image.asset(
-                        "images/Fiscal.png",
+                        "images/$name.png",
                         height: 60,
                       ),
                       SizedBox(
                         height: 10,
                       ),
                       Text(
-                        "Fiscal",
+                        name,
                         style: const TextStyle(
                             fontSize: 23, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "12 Documents",
+                        count,
                         style: const TextStyle(
                             fontSize: 15, fontWeight: FontWeight.normal),
                       ),
@@ -156,5 +189,105 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                 ],
               ),
             )));
+  }
+
+  Widget duree(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
+          ]),
+      child: Center(
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton2(
+            isExpanded: true,
+            hint: Row(
+              children: const [
+                Icon(
+                  Icons.list,
+                  size: 16,
+                  color: Colors.black,
+                ),
+                SizedBox(
+                  width: 4,
+                ),
+                Expanded(
+                  child: Text(
+                    "15",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+            items: items
+                .map((item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        item,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ))
+                .toList(),
+            value: selectedValue,
+            onChanged: (value) {
+              setState(() {
+                selectedValue = value as String;
+                UserPrefs.setLatestDuration(int.parse(value));
+                ModuleModule.getModulesLatest().then((result) {
+                  setState(() {
+                    listModules = result;
+                  });
+                });
+              });
+            },
+            icon: const Icon(
+              Icons.arrow_forward_ios_outlined,
+            ),
+            iconSize: 14,
+            iconEnabledColor: Colors.black,
+            iconDisabledColor: Colors.grey,
+            buttonHeight: 50,
+            buttonWidth: 80,
+            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+            buttonDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: Colors.black26,
+              ),
+              color: Colors.white,
+            ),
+            buttonElevation: 2,
+            itemHeight: 40,
+            itemPadding: const EdgeInsets.only(left: 14, right: 14),
+            dropdownMaxHeight: 500,
+            dropdownWidth: 100,
+            dropdownPadding: const EdgeInsets.only(left: 14),
+            dropdownDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: Colors.white,
+            ),
+            dropdownElevation: 8,
+            scrollbarRadius: const Radius.circular(40),
+            scrollbarThickness: 6,
+            scrollbarAlwaysShow: true,
+            offset: const Offset(-10, 0),
+          ),
+        ),
+      ),
+    );
   }
 }

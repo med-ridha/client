@@ -89,76 +89,76 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AppBarUI(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            height: 60,
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                            ),
-                            child: SecondBarUi("Abonnement", false)),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppBarUI(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          height: 60,
                           width: width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                abonnemnt(context),
-                                SizedBox(height: height * 0.02),
-                                text1(context),
-                                duree(context),
-                                SizedBox(height: height * 0.02),
-                                text2(context),
-                                checkbox(context),
-                                SizedBox(height: height * 0.02),
-                                Container(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text("Total: " + montant.toString(),
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                          )),
-                                    ],
-                                  ),
+                          child: SecondBarUi("Abonnement", false)),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: width,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              abonnemnt(context),
+                              SizedBox(height: height * 0.02),
+                              text1(context),
+                              duree(context),
+                              SizedBox(height: height * 0.02),
+                              text2(context),
+                              checkbox(context),
+                              SizedBox(height: height * 0.02),
+                              Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text("Total: " + montant.toString() + " TND",
+                                        style: TextStyle(
+                                          fontSize: 24,
+                                        )),
+                                  ],
                                 ),
-                                SizedBox(height: height * 0.02),
-                                Form(
-                                    key: _formKey,
-                                    child: RoundedTextFieldContainer(
-                                        child: buildCreditCard(),
-                                        error: _creditIsError)),
-                                SizedBox(height: height * 0.02),
-                                button1(context),
-                                SizedBox(height: height * 0.01),
-                              ],
-                            ),
+                              ),
+                              SizedBox(height: height * 0.02),
+                              Form(
+                                  key: _formKey,
+                                  child: RoundedTextFieldContainer(
+                                      child: buildCreditCard(),
+                                      error: _creditIsError)),
+                              SizedBox(height: height * 0.02),
+                              button1(context),
+                              SizedBox(height: height * 0.01),
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
@@ -182,9 +182,8 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
           setState(() {
             montant = 0;
           });
-          for (String item in checked) montant += 333;
+          for (String item in checked) montant += 444.4;
           setState(() {
-            print(montant);
             modules = checked;
           });
           print(checked.toString());
@@ -362,6 +361,35 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
     );
   }
 
+  showAlertDialog(BuildContext context, String text, Future<void> func()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Warning"),
+          content: Text(text),
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+            TextButton(
+              child: Text("Continue"),
+              onPressed: () {
+                func();
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget button1(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
@@ -381,45 +409,47 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
             if (!validateCreditCard(_creditCard!)) {
               return;
             }
-
-            Map<String, String?> data = {
-              "email": UserPrefs.getEmail(),
-              "montant": montant.toString(),
-              "modules": modules.toString(),
-              "duree": selectedValue!.split(' ')[0]
-            };
-            var result = await http.post(Uri.parse(createAbonnURL),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode(data));
-            if (result.statusCode == 200) {
-              setState(() {
-                done = true;
-              });
-              Map<String, dynamic> response = json.decode(result.body);
-              print(response);
-              List<String> listAbonn =
-                  List<String>.from(response['message'].map((x) => x));
-              UserPrefs.setListAbonn(listAbonn);
-              await UserModule.getModules();
-              await Future.delayed(Duration(seconds: 2), () {
-                showSimpleNotification(
-                    Text("abonnement success", style: TextStyle()),
-                    duration: Duration(seconds: 3),
-                    foreground: Colors.white,
-                    background: Colors.greenAccent);
+            showAlertDialog(context, "Are you sure? amount: $montant TND",
+                () async {
+              Map<String, String?> data = {
+                "email": UserPrefs.getEmail(),
+                "montant": montant.toString(),
+                "modules": modules.toString(),
+                "duree": selectedValue!.split(' ')[0]
+              };
+              var result = await http.post(Uri.parse(createAbonnURL),
+                  headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                  },
+                  body: jsonEncode(data));
+              if (result.statusCode == 200) {
                 setState(() {
-                  done = false;
+                  done = true;
                 });
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Abonnements()));
-              });
-            } else {
-              showError("something went wrong!");
-            }
+                Map<String, dynamic> response = json.decode(result.body);
+                print(response);
+                List<String> listAbonn =
+                    List<String>.from(response['message'].map((x) => x));
+                UserPrefs.setListAbonn(listAbonn);
+                await UserModule.getModules();
+                await Future.delayed(Duration(seconds: 2), () {
+                  showSimpleNotification(
+                      Text("abonnement success", style: TextStyle()),
+                      duration: Duration(seconds: 3),
+                      foreground: Colors.white,
+                      background: Colors.greenAccent);
+                  setState(() {
+                    done = false;
+                  });
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Abonnements()));
+                });
+              } else {
+                showError("something went wrong!");
+              }
+            });
           }
         },
         child: Container(

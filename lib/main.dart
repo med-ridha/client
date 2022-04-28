@@ -10,11 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/screens/welcome/onboarding_screen.dart';
+import 'package:juridoc/firebase/services/notifications.dart' as notif;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseModule.init();
   await UserPrefs.init();
+  await notif.Notification().initState();
+
   runApp(MyApp());
 }
 

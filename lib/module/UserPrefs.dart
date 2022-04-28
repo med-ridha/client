@@ -18,6 +18,7 @@ class UserPrefs {
   static const _keyIsLogedIn = "IsLogedIn";
   static const _keyIsCollabOwner = "IsCollabOwner";
   static const _keyModulesHasAccessTo = "ModulesHasAccessTo";
+  static const _keyLatestDuration = "latestDuration";
 
   static Future save(UserModule user) async {
     await UserPrefs.setName(user.name!);
@@ -31,11 +32,17 @@ class UserPrefs {
     await UserPrefs.setCollabId(user.collabId ?? "");
     await UserPrefs.setListFavorit(user.favored ?? []);
     await UserPrefs.setListAbonn(user.abonnement ?? []);
+    await UserPrefs.setLatestDuration(30);
   }
 
   static Future init() async => _prefs = await SharedPreferences.getInstance();
 
   static Future clear() async => await _prefs!.clear();
+
+  static Future setLatestDuration(int value) async =>
+      await _prefs!.setInt(_keyLatestDuration, value);
+
+  static int getLatestDuration() => _prefs!.getInt(_keyLatestDuration) ?? 30;
 
   static Future setModulesHasAccessTo(List<String> value) async =>
       await _prefs!.setStringList(_keyModulesHasAccessTo, value);

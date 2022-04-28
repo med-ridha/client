@@ -7,15 +7,26 @@ import 'package:juridoc/widgets/likeButton.dart';
 
 class SecondBarUi extends StatelessWidget {
   void Function()? func;
+  void Function()? langFunc;
   String titleString;
   bool add;
   bool? like;
+  bool? lang;
   double? fontSize;
+
   IconData? likeIcon;
+  IconData? langIcon;
   IconData? icon;
 
   SecondBarUi(this.titleString, this.add,
-      {this.func, this.fontSize, this.like, this.likeIcon, this.icon});
+      {this.func,
+      this.fontSize,
+      this.langFunc,
+      this.like,
+      this.likeIcon,
+      this.icon,
+      this.lang,
+      this.langIcon});
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -33,6 +44,12 @@ class SecondBarUi extends StatelessWidget {
           (add && UserPrefs.getIsCollabOwner())
               ? AddButton(func: func, icon: icon)
               : SizedBox(width: width * 0.092),
+          (lang == true)
+              ? LikeButton(
+                  langIcon ?? Icons.language,
+                  func: langFunc ?? () {},
+                )
+              : SizedBox(),
           (like == true)
               ? LikeButton(
                   likeIcon ?? Icons.favorite_sharp,

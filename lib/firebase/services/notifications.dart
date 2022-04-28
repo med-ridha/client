@@ -21,7 +21,8 @@ class Notification {
     var _messaging = FirebaseMessaging.instance;
     // three type of state in notification
     // not determined (null), granted (true) and decline (false)
-    await _messaging.subscribeToTopic("new");
+   // await _messaging.subscribeToTopic("new");
+    
     NotificationSettings settings = await _messaging.requestPermission(
       alert: true,
       badge: true,
