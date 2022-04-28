@@ -22,7 +22,7 @@ class Notification {
     // three type of state in notification
     // not determined (null), granted (true) and decline (false)
    // await _messaging.subscribeToTopic("new");
-    
+       
     NotificationSettings settings = await _messaging.requestPermission(
       alert: true,
       badge: true,
