@@ -457,7 +457,7 @@ class _SignUpFormState extends State<SignUpForm> {
             onChanged: (bool? value) {
               setState(() {
                 this._termsandconditions = value!;
-                if (value = true) {
+                if (value == true) {
                   _termsIsError = false;
                 }
               });
@@ -770,6 +770,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateName(String name) {
     if (name.isEmpty) {
+      showError("Veuiller remplir les champs");
       _nameFocusNode.requestFocus();
       setState(() {
         _nameIsError = true;
@@ -784,6 +785,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateSurname(String surname) {
     if (surname.isEmpty) {
+      showError("Veuiller remplir les champs");
       _surnameFocusNode.requestFocus();
       setState(() {
         _surnameIsError = true;
@@ -798,6 +800,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validatePhoneNumber(String phoneNumber) {
     if (phoneNumber.isEmpty) {
+      showError("Veuiller remplir les champs");
       _phoneNumberFocusNode.requestFocus();
       setState(() {
         _phoneNumberIsError = true;
@@ -832,6 +835,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateNomS(String nomS) {
     if (nomS.isEmpty) {
+      showError("Veuiller remplir les champs");
       _nomSFocusNode.requestFocus();
       setState(() {
         _nomSIsError = true;
@@ -847,6 +851,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateAdressS(String adressS) {
     if (adressS.isEmpty) {
+      showError("Veuiller remplir les champs");
       _adressSFocusNode.requestFocus();
       setState(() {
         _adressSIsError = true;
@@ -862,6 +867,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateNumF(String numF) {
     if (numF.isEmpty) {
+      showError("Veuiller remplir les champs");
       _numFFocusNode.requestFocus();
       setState(() {
         _numFIsError = true;
@@ -878,6 +884,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool validateEmail(String email) {
     if (email.isEmpty) {
       _emailFNode.requestFocus();
+      showError("Veuiller remplir les champs");
       setState(() {
         _emailIsError = true;
       });
@@ -902,6 +909,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool validatePassword(String password) {
     if (password.isEmpty) {
       _passwordFNode.requestFocus();
+      showError("Veuiller remplir les champs");
       setState(() {
         _passwordIsError = true;
       });
@@ -923,6 +931,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateConfirmP(String password, confirmPassword) {
     if (password.isEmpty) {
+      showError("Veuiller remplir les champs");
       _confirmPFNode.requestFocus();
       setState(() {
         _confirmPIsError = true;
@@ -960,6 +969,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool validateToken(String token) {
     if (token.isEmpty) {
       _tokenFocusNode.requestFocus();
+      showError("Veuiller remplir les champs");
       setState(() {
         _tokenIsError = true;
       });

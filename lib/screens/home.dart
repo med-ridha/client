@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   int startPage = 0;
   HomeScreenState(this.startPage);
-  int _currentPage = 0;
+  static int _currentPage = 0;
   final _pageController = PageController();
   @override
   void initState() {

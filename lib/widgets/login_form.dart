@@ -257,7 +257,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
                 ModalRoute.withName('/homescreen'));
           });
         } else if (tokenResult.statusCode == 400) {
-          showError("invalid token");
+          showError("Votre code de confirmation de session est invalide");
           setState(() {
             _tokenIsError = true;
           });
@@ -316,13 +316,13 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
             });
           }
         } else if (result.statusCode == 401) {
-          showError("Email doesn't exists");
+          showError("Veuller verifier vos identifiants");
           _emailFocusNode.requestFocus();
           setState(() {
             _emailIsError = true;
           });
         } else if (result.statusCode == 402) {
-          showError("wrong password");
+          showError("Veuller verifier vos identifiants");
           _passwordFocusNode.requestFocus();
           setState(() {
             _passwordIsError = true;
@@ -466,6 +466,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
 
   bool validatePassword(String password) {
     if (password.isEmpty) {
+      showError("Veuiller remplir les champs");
       _passwordFocusNode.requestFocus();
       setState(() {
         _passwordIsError = true;
@@ -474,7 +475,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
     }
     if (password.length < 8) {
       _passwordFocusNode.requestFocus();
-      showError("password should be atleast 8 characters long");
+      showError("Mot de passe doit etre 8 characters ");
       setState(() {
         _passwordIsError = true;
       });
@@ -486,6 +487,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
   bool validateEmail(String email) {
     if (email.isEmpty) {
       _emailFocusNode.requestFocus();
+      showError("Veuiller remplir les champs");
       setState(() {
         _emailIsError = true;
       });

@@ -3,8 +3,15 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
+import 'package:juridoc/module/DocumentModule.dart';
+import 'package:juridoc/module/ModuleModule.dart';
+import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
+import 'package:juridoc/screens/search_result.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
-import '../theme.dart';
+import 'package:juridoc/widgets/secondary_button.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:juridoc/theme.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 
@@ -15,183 +22,141 @@ class AdvancedSearch extends StatefulWidget {
 
 class AdvancedSearchState extends State<AdvancedSearch>
     with TickerProviderStateMixin {
-  final apresle = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void start1() {
-    apresle.dispose();
-    super.dispose();
-  }
-
-  void start2() {
-    apresle.dispose();
-    super.dispose();
-  }
-
-  final avantle = TextEditingController();
+  String motCle = "";
+  bool motCleIsError = false;
   bool exacte = false;
 
-  void end1() {
-    avantle.dispose();
-    super.dispose();
-  }
+  String? module;
+  String? category = "select a module";
 
-  void end2() {
-    avantle.dispose();
-    super.dispose();
-  }
+  List<String> listModules = [];
 
-  String? selectedValue;
-  List<String> items = [
-    'Accord',
-    'Arrêté',
-    'Avis de change',
-    'Avis',
-    'Cahiers des charges',
-    'Charte',
-    'Circulaire',
-    'Code',
-    'Communiqué',
-    'Constitution',
-    'Convention de Non Double Imposition',
-    'Convention internationale',
-    'Conventions',
-    'Conventions bilatérales',
-    'Conventions cadre et sectorielles',
-    'Décision',
-    "Décision de la commission d'agrément",
-    'Décret Gouvernomental',
-    'Décret Présidentiel',
-    'Décret-loi',
-    'Douane',
-    'Guide',
-    'Loi',
-    'Loi de Finance',
-    'Loi organique',
-    'Norme',
-    'Note Commune',
-    'Note Interne',
-    'Prise de Position',
-    'Règlement',
-    'Traité',
-  ];
-  String? selectedValue1;
-  List<String> items1 = [
-    'Tous les documents',
-    'Documents en vigueur',
-    'Documents abrogés',
-  ];
-  String? selectedValue2;
-  List<String> items2 = [
-    "Fiscal",
-    "Fiscal >> Codes",
-    "Fiscal >> Lois de finances",
-    "Fiscal >> Lois",
-    "Fiscal >> Décrets",
-    "Fiscal >> Arrêtés",
-    "Fiscal >> Notes communes",
-    "Fiscal >> Prise de positions",
-    "Fiscal >> Notes internes",
-    "Fiscal >> Jurisprudence",
-    "Fiscal >> Système comptable",
-    "Fiscal >> Conventions de non double imposition",
-    "Fiscal >> Circulaires",
-    "Fiscal >> Douane",
-    "Social",
-    "Social >> Codes",
-    "Social >> Lois",
-    "Social >> Décrets",
-    "Social >> Arrêtés",
-    "Social >> Circulaires",
-    "Social >> Notes internes",
-    "Social >> Jurisprudence",
-    "Social >> Notes communes fiscales",
-    "Social >> Conventions cadre et sectorielles",
-    "Social >> Conventions bilatérales",
-    "Social >> Convention internationale",
-    "Investissement",
-    "Investissement >> Codes",
-    "Investissement >> Décrets",
-    "Investissement >> Arrêtés",
-    "Investissement >> Notes communes",
-    "Investissement >> Notes internes",
-    "Investissement >> Circulaires",
-    "Investissement >> Cahiers des charges",
-    "Investissement >> Douane",
-    "Banque - Finances - Assurances",
-    "Banque - Finances - Assurances >> Codes",
-    "Banque - Finances - Assurances >> Lois",
-    "Banque - Finances - Assurances >> Décrets",
-    "Banque - Finances - Assurances >> Arrêtés",
-    "Banque - Finances - Assurances >> Notes communes",
-    "Banque - Finances - Assurances >> Jurisprudence",
-    "Banque - Finances - Assurances >> Circulaires",
-    "Banque - Finances - Assurances >> Notes bancaires",
-    "Banque - Finances - Assurances >> Décision",
-    "Banque - Finances - Assurances >> Conventions cadre et sectorielles",
-    "Banque - Finances - Assurances >> Marché Financier",
-    "Banque - Finances - Assurances >> Microfinance",
-    "BIBUS",
-    "BIBUS >> Constitution",
-    "BIBUS >> Codes",
-    "Collectivités locales",
-    "Collectivités locales >> Codes",
-    "Collectivités locales >> Lois",
-    "Collectivités locales >> Décrets",
-    "Collectivités locales >> Arrêtés",
-    "Collectivités locales >> Circulaires",
-    "Collectivités locales >> Notes communes",
-    "Collectivités locales >> Notes internes",
-    "Collectivités locales >> Jurisprudence",
-    "Collectivités locales >> Prise de positions",
-    "Collectivités locales >> Cahiers des charges",
-    "Veille Juridique",
-  ];
-  String? selectedValue3;
-  List<String> items3 = [
-    'Association',
-    "Blanchiment d'argent",
-    'Change',
-    'Collectivités locales',
-    'Commerce extérieur',
-    'Conventions collectives',
-    'Droit bancaire',
-    'Droit commercial',
-    'Droit de l’investissement',
-    'Droit de la concurrence',
-    'Droit de la santé',
-    'Droit des assurances',
-    'Droit des sociétés',
-    'Mme.',
-    'Droit des transports',
-    'Droit du Capital Investissement',
-    'Droit du travail',
-    'Droit financier',
-    'Droit fiscal',
-    'Droit immobilier',
-    'Droit pénal',
-    'Mme.',
-    'Droit social',
-    'Mme.',
-    'Entreprises publiques',
-    'Financement',
-    'Industries culturelles',
-    'Justice',
-    'Marchés financiers',
-    'Microfinance',
-    'Sécurité sociale',
-    'Tourisme',
-    'Veille Juridique',
-  ];
+  List<String> listCategories = ["select a module"];
 
-  TextEditingController numero = TextEditingController();
-  TextEditingController annee = TextEditingController();
-  TextEditingController motcle = TextEditingController();
+  DateTime? apresLe;
+  DateTime? avantLe;
+
   @override
   void initState() {
-    numero.text = ""; //innitail value of text field
-    annee.text = "";
-    motcle.text = "";
     super.initState();
+    ModuleModule.getListModules().then(((value) {
+      List<String> list = [];
+      for (ModuleModule mod in value) {
+        if (mod.numDoc!.toInt() > 0) {
+          list.add(mod.name ?? '');
+        }
+      }
+      setState(() {
+        listModules = list;
+      });
+    }));
+  }
+
+  Widget _buildMotCle() {
+    return TextFormField(
+        initialValue: motCle,
+        decoration: InputDecoration(
+            icon: Icon(Icons.search),
+            hintText: 'Mot Cle',
+            border: InputBorder.none),
+        onSaved: (String? value) {
+          motCle = value ?? '';
+        },
+        onChanged: (String? value) {
+          setState(() {
+            motCleIsError = false;
+          });
+        });
+  }
+
+  Widget buildModules(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+      height: 50,
+      alignment: Alignment.center,
+      child: DropdownButton<String>(
+        alignment: Alignment.center,
+        value: module,
+        icon: null,
+        elevation: 16,
+        style: const TextStyle(color: Colors.deepPurple, fontSize: 20),
+        underline: Container(
+          height: 2,
+          color: Colors.deepPurpleAccent,
+        ),
+        onChanged: (String? newValue) {
+          List<Category> list = ModuleModule.getCategories(
+              newValue ?? '', ModuleModule.listModules);
+          List<String> listCategorie = [];
+          for (Category cat in list) {
+            listCategorie.add(cat.name ?? "");
+          }
+          setState(() {
+            listCategories = ["select a category"];
+            listCategories.addAll(listCategorie);
+            category = "select a category";
+            module = newValue!;
+          });
+        },
+        items: listModules.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget buildCategory(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return Container(
+      height: 50,
+      alignment: Alignment.center,
+      child: DropdownButton<String>(
+        alignment: Alignment.center,
+        value: category,
+        icon: null,
+        elevation: 16,
+        style: const TextStyle(color: Colors.deepPurple, fontSize: 20),
+        underline: Container(
+          height: 2,
+          color: Colors.deepPurpleAccent,
+        ),
+        onChanged: (listCategories.length > 0)
+            ? (String? newValue) {
+                setState(() {
+                  category = newValue!;
+                });
+              }
+            : null,
+        items: listCategories.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildExacte() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Checkbox(
+            value: this.exacte,
+            onChanged: (bool? value) {
+              setState(() {
+                this.exacte = value!;
+              });
+            }),
+        Text("Recherche l'expression exacte",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
+      ],
+    );
   }
 
   @override
@@ -199,101 +164,214 @@ class AdvancedSearchState extends State<AdvancedSearch>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     double safePadding = MediaQuery.of(context).padding.top;
-    return Stack(fit: StackFit.expand, children: [
-      Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(4, 9, 35, 1),
-              Color.fromRGBO(39, 105, 171, 1),
-            ],
-            begin: FractionalOffset.bottomCenter,
-            end: FractionalOffset.topCenter,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: Stack(fit: StackFit.expand, children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(4, 9, 35, 1),
+                Color.fromRGBO(39, 105, 171, 1),
+              ],
+              begin: FractionalOffset.bottomCenter,
+              end: FractionalOffset.topCenter,
+            ),
           ),
         ),
-      ),
-      Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: safePadding,
-                width: width,
-                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                child: Column(
-                  children: [
-                    Column(
-                      children: [
-                        AppBarUI(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  abonnemnt(context),
-                                  Text2(context),
-                                  Text1(context),
-                                  checkbox(context),
-                                  Text3(context),
-                                  Text9(context),
-                                  duree(context),
-                                  Text10(context),
-                                  widgetnumero(context),
-                                  Text4(context),
-                                  widgetannee(context),
-                                  Text5(context),
-                                  duree1(context),
-                                  Text6(context),
-                                  duree2(context),
-                                  Text7(context),
-                                  duree3(context),
-                                  Text8(context),
-                                  rang(context),
-                                  SizedBox(
-                                    height: 10,
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: safePadding,
+                  width: width,
+                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                  ]),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          AppBarUI(),
+                          SizedBox(
+                            height: height * 0.11,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      header(context),
+                                      RoundedTextFieldContainer(
+                                          child: _buildMotCle(),
+                                          error: motCleIsError),
+                                      SizedBox(height: height * 0.01),
+                                      _buildExacte(),
+                                      SizedBox(height: height * 0.02),
+                                      buildDivider(),
+                                      SizedBox(height: height * 0.02),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("MODULE: ",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
+                                                buildModules(context),
+                                                SizedBox(height: 10),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("CATEGORIE: ",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
+                                                buildCategory(context),
+                                                SizedBox(height: 10),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: height * 0.02),
+                                      buildDivider(),
+                                      SizedBox(height: height * 0.02),
+                                      Text("DATE DE PUBLICATION",
+                                          style: TextStyle(
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.w600)),
+                                      SizedBox(height: height * 0.02),
+                                      Row(
+                                        //mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text("Apres le: ",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500)),
+                                          SizedBox(width: width * 0.2),
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                selectApresLe(context),
+                                            child: Text(
+                                                (apresLe != null)
+                                                    ? apresLe
+                                                        .toString()
+                                                        .split(" ")[0]
+                                                    : "select a date",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        //mainAxisSize: MainAxisSize.min,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text("Avant le: ",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500)),
+                                          SizedBox(width: width * 0.2),
+                                          ElevatedButton(
+                                            onPressed: () =>
+                                                selectAvantLe(context),
+                                            child: Text(
+                                                (avantLe != null)
+                                                    ? avantLe
+                                                        .toString()
+                                                        .split(" ")[0]
+                                                    : "select a date",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.w400)),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: height * 0.02),
+                                      buildDivider(),
+                                      SizedBox(height: height * 0.02),
+                                      button1(context),
+                                    ],
                                   ),
-                                  button1(context),
-                                ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          SizedBox(height: height * 0.02),
+                          GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  motCle = "";
+                                  exacte = false;
+                                  module = null;
+                                  listCategories = ["select a module"];
+                                  category = "select a module";
+                                  apresLe = null;
+                                  avantLe = null;
+                                });
+                              },
+                              child: SecondaryButton(
+                                  buttonText: 'Reset',
+                                  icon: Icon(Icons.refresh_sharp))),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      )
-    ]);
+        )
+      ]),
+    );
   }
 
-  Widget abonnemnt(BuildContext context) {
+  Widget header(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           SvgPicture.asset(
             "SVG/search.svg",
@@ -316,626 +394,37 @@ class AdvancedSearchState extends State<AdvancedSearch>
     );
   }
 
-  Widget Text1(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-              controller: motcle,
-              decoration: InputDecoration(
-                labelText: "Recherchez par mot clé:",
-                focusedBorder: myfocusborder(),
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget duree(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Center(
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Row(
-              children: const [
-                Icon(
-                  Icons.list,
-                  size: 16,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Expanded(
-                  child: Text(
-                    'Accord',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            items: items
-                .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: selectedValue,
-            onChanged: (value) {
-              setState(() {
-                selectedValue = value as String;
-              });
-            },
-            icon: const Icon(
-              Icons.arrow_forward_ios_outlined,
-            ),
-            iconSize: 14,
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.grey,
-            buttonHeight: 50,
-            buttonWidth: width,
-            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-            buttonDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: Colors.black26,
-              ),
-              color: Colors.white,
-            ),
-            buttonElevation: 2,
-            itemHeight: 40,
-            itemPadding: const EdgeInsets.only(left: 14, right: 14),
-            dropdownMaxHeight: 200,
-            dropdownWidth: width,
-            dropdownPadding: null,
-            dropdownDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-            ),
-            dropdownElevation: 8,
-            scrollbarRadius: const Radius.circular(40),
-            scrollbarThickness: 6,
-            scrollbarAlwaysShow: true,
-            offset: const Offset(-20, 0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget Text2(BuildContext context) {
-    return Text(
-      "Mots clés:",
-      style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: kSecondaryColor),
-    );
-  }
-
-  Widget Text3(BuildContext context) {
-    return Text(
-      "Référence du texte:",
-      style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: kSecondaryColor),
-    );
-  }
-
-  Widget Text9(BuildContext context) {
-    return Text(
-      "Nature de texte:",
-      style: const TextStyle(
-          fontSize: 12, fontWeight: FontWeight.normal, color: kBlackColor),
-    );
-  }
-
-  Widget Text10(BuildContext context) {
-    return Text(
-      "Numéro:",
-      style: const TextStyle(
-          fontSize: 12, fontWeight: FontWeight.normal, color: kBlackColor),
-    );
-  }
-
-  Widget duree1(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Center(
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Row(
-              children: const [
-                Icon(
-                  Icons.list,
-                  size: 16,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Expanded(
-                  child: Text(
-                    'Tous les documents',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            items: items1
-                .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: selectedValue1,
-            onChanged: (value) {
-              setState(() {
-                selectedValue1 = value as String;
-              });
-            },
-            icon: const Icon(
-              Icons.arrow_forward_ios_outlined,
-            ),
-            iconSize: 14,
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.grey,
-            buttonHeight: 50,
-            buttonWidth: width,
-            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-            buttonDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: Colors.black26,
-              ),
-              color: Colors.white,
-            ),
-            buttonElevation: 2,
-            itemHeight: 40,
-            itemPadding: const EdgeInsets.only(left: 14, right: 14),
-            dropdownMaxHeight: 200,
-            dropdownWidth: width,
-            dropdownPadding: null,
-            dropdownDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-            ),
-            dropdownElevation: 8,
-            scrollbarRadius: const Radius.circular(40),
-            scrollbarThickness: 6,
-            scrollbarAlwaysShow: true,
-            offset: const Offset(-20, 0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget duree2(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Center(
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Row(
-              children: const [
-                Icon(
-                  Icons.list,
-                  size: 16,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Expanded(
-                  child: Text(
-                    'Tous les catégories',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            items: items2
-                .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: selectedValue2,
-            onChanged: (value) {
-              setState(() {
-                selectedValue2 = value as String;
-              });
-            },
-            icon: const Icon(
-              Icons.arrow_forward_ios_outlined,
-            ),
-            iconSize: 14,
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.grey,
-            buttonHeight: 50,
-            buttonWidth: width,
-            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-            buttonDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: Colors.black26,
-              ),
-              color: Colors.white,
-            ),
-            buttonElevation: 2,
-            itemHeight: 40,
-            itemPadding: const EdgeInsets.only(left: 14, right: 14),
-            dropdownMaxHeight: 200,
-            dropdownWidth: width,
-            dropdownPadding: null,
-            dropdownDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-            ),
-            dropdownElevation: 8,
-            scrollbarRadius: const Radius.circular(40),
-            scrollbarThickness: 6,
-            scrollbarAlwaysShow: true,
-            offset: const Offset(-20, 0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget duree3(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Center(
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Row(
-              children: const [
-                Icon(
-                  Icons.list,
-                  size: 16,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Expanded(
-                  child: Text(
-                    'Tous les secteurs',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            items: items3
-                .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: selectedValue3,
-            onChanged: (value) {
-              setState(() {
-                selectedValue3 = value as String;
-              });
-            },
-            icon: const Icon(
-              Icons.arrow_forward_ios_outlined,
-            ),
-            iconSize: 14,
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.grey,
-            buttonHeight: 50,
-            buttonWidth: width,
-            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-            buttonDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: Colors.black26,
-              ),
-              color: Colors.white,
-            ),
-            buttonElevation: 2,
-            itemHeight: 40,
-            itemPadding: const EdgeInsets.only(left: 14, right: 14),
-            dropdownMaxHeight: 200,
-            dropdownWidth: width,
-            dropdownPadding: null,
-            dropdownDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-            ),
-            dropdownElevation: 8,
-            scrollbarRadius: const Radius.circular(40),
-            scrollbarThickness: 6,
-            scrollbarAlwaysShow: true,
-            offset: const Offset(-20, 0),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget widgetnumero(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-              controller: numero,
-              decoration: InputDecoration(
-                labelText: "Numéro:",
-                focusedBorder: myfocusborder(),
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget Text4(BuildContext context) {
-    return Text(
-      "Année",
-      style: const TextStyle(
-          fontSize: 12, fontWeight: FontWeight.normal, color: kBlackColor),
-    );
-  }
-
-  Widget widgetannee(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 1, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-              controller: annee,
-              decoration: InputDecoration(
-                labelText: "AAAA",
-                focusedBorder: myfocusborder(),
-              )),
-        ],
-      ),
-    );
-  }
-
-  Widget Text5(BuildContext context) {
-    return Text(
-      "États du document:",
-      style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: kSecondaryColor),
-    );
-  }
-
-  Widget Text6(BuildContext context) {
-    return Text(
-      "Catégories:",
-      style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: kSecondaryColor),
-    );
-  }
-
-  Widget Text7(BuildContext context) {
-    return Text(
-      "Secteurs d'activité:",
-      style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: kSecondaryColor),
-    );
-  }
-
-  Widget Text8(BuildContext context) {
-    return Text(
-      "Date de publication:",
-      style: const TextStyle(
-          fontSize: 16, fontWeight: FontWeight.bold, color: kSecondaryColor),
-    );
-  }
-
-  Widget checkbox(BuildContext context) {
-    return CheckboxGroup(
-        labels: <String>["Rechercher l'expression exacte"],
-        onSelected: (List<String> checked) => exacte = !exacte);
-  }
-
-  Widget rang(BuildContext context) {
-    return Container(
-        child: Row(
-      children: [
-        Container(
-          width: 5,
-        ),
-        Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Après le:"),
-            GestureDetector(
-              onTap: () async {
-                var date = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(2100));
-                apresle.text = date.toString().substring(0, 10);
-              },
-              child: AbsorbPointer(
-                absorbing: true,
-                child: TextFormField(
-                  style: TextStyle(color: Colors.black),
-                  controller: apresle,
-                  decoration: InputDecoration(
-                      suffixIcon:
-                          Icon(Icons.calendar_today, color: Colors.blue)),
-                ),
-              ),
-            )
-          ],
-        )),
-        Container(
-          width: 5,
-        ),
-        Expanded(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text("Avant le:"),
-            GestureDetector(
-              onTap: () async {
-                var date = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(1900),
-                    lastDate: DateTime(2100));
-                avantle.text = date.toString().substring(0, 10);
-              },
-              child: AbsorbPointer(
-                absorbing: true,
-                child: TextFormField(
-                  controller: avantle,
-                  decoration: InputDecoration(
-                      suffixIcon:
-                          Icon(Icons.calendar_today, color: Colors.blue)),
-                ),
-              ),
-            )
-          ],
-        )),
-        Container(
-          width: 5,
-        ),
-      ],
-    ));
-  }
-
   Widget button1(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
         onTap: () {
-          print(annee.text);
-          print(motcle.text);
-          print(numero.text);
-          print(apresle.text);
-          print(avantle.text);
+          _formKey.currentState!.save();
+          if (motCle.length < 3) {
+            showError("mot cle should be atleast 3 letters long");
+            return;
+          }
+          print(motCle);
+          String query = '?search=$motCle';
+          if (exacte) query += '&exacte=$exacte';
           print(exacte);
-          print(selectedValue);
-          print(selectedValue1);
-          print(selectedValue2);
-          print(selectedValue3);
-          //api call
+          if (module != null) query += '&module=$module';
+          print(module);
+          if (category != "select a module" && category != "select a category")
+            query += '&category=$category';
+          print(category);
+          if (apresLe != null) query += '&apresLe=$apresLe';
+          print(apresLe);
+          if (avantLe != null) query += '&avantLe=$avantLe';
+          print(avantLe);
+          print(query);
+          query += '&email=' + (UserPrefs.getEmail() ?? '');
+          //DocumentModule.search(query).then((value) => print(value));
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => Search(query),
+              ));
         },
         child: Container(
             alignment: Alignment.center,
@@ -975,12 +464,43 @@ class AdvancedSearchState extends State<AdvancedSearch>
             )));
   }
 
-  OutlineInputBorder myfocusborder() {
-    return OutlineInputBorder(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-        borderSide: BorderSide(
-          color: Colors.greenAccent,
-          width: 3,
-        ));
+  void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent);
+  }
+
+  Divider buildDivider() {
+    return Divider(
+      color: Color(Colors.purple.value),
+      height: 2,
+    );
+  }
+
+  Future<void> selectApresLe(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: apresLe ?? DateTime.now(),
+        firstDate: DateTime(1970, 1),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != apresLe) {
+      setState(() {
+        apresLe = picked;
+      });
+    }
+  }
+
+  Future<void> selectAvantLe(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: avantLe ?? DateTime.now(),
+        firstDate: DateTime(1970, 1),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != avantLe) {
+      setState(() {
+        avantLe = picked;
+      });
+    }
   }
 }

@@ -3,10 +3,13 @@
 //     final documentModule = documentModuleFromJson(jsonString);
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juridoc/module/ModuleModule.dart';
 import 'package:juridoc/module/service.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 DocumentModule documentModuleFromJson(String str) =>
     DocumentModule.fromJson(json.decode(str));
@@ -123,5 +126,81 @@ class DocumentModule {
       listDocuments = [];
     }
     return listDocuments;
+  }
+
+  static Future<List<dynamic>> search(String searchTerm) async {
+    List<dynamic> listModules = [];
+    String searchURL = Service.url + "documents/search" + searchTerm;
+    try {
+      var result = await http.get(
+        Uri.parse(searchURL),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (result.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(result.body);
+        listModules = data['message'];
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return listModules;
+  }
+
+  static Future<List<Category>> getCatSearch(
+      List<dynamic> listCategorieIds, String searchTerm) async {
+    List<Category> listCategories = [];
+    String getCategoriesLatestURL =
+        Service.url + "documents/cat/search" + searchTerm;
+
+    Map<String, List<dynamic>> data = {
+      "categories": listCategorieIds,
+    };
+
+    try {
+      var result = await http.post(
+        Uri.parse(getCategoriesLatestURL),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: json.encode(data),
+      );
+      if (result.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(result.body);
+        for (Map<String, dynamic> item in data['message']) {
+          Category cat = Category.fromJson(item);
+          listCategories.add(cat);
+        }
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
+    } catch (e) {
+      print(e);
+    }
+    return listCategories;
+  }
+
+  static void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent,
+        autoDismiss: false,
+        slideDismissDirection: DismissDirection.down);
   }
 }

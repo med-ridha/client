@@ -6,12 +6,16 @@ import 'package:juridoc/Profile/alert_juridique.dart';
 import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/screens/modules.dart';
 import 'package:juridoc/screens/favoris.dart';
+import 'package:juridoc/screens/profile.dart';
 
 class AppBarUI extends StatefulWidget {
   AppBarState createState() => AppBarState();
 }
 
 class AppBarState extends State<AppBarUI> {
+  String name = UserPrefs.getName() ?? '';
+  String surname = UserPrefs.getSurname() ?? '';
+
   @override
   build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -42,118 +46,146 @@ class AppBarState extends State<AppBarUI> {
                 )
               ],
             ),
-            SizedBox(width: width * 0.38),
+            SizedBox(width: width * 0.30),
             Row(children: [rightSideButtons(context)]),
           ])),
     );
   }
-}
 
-Widget rightSideButtons(BuildContext context) {
-  return Container(
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(30),
-      color: Colors.white,
-    ),
-    child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-      SizedBox.fromSize(
-        size: Size(40, 40), // button width and height
-        child: ClipOval(
-          child: Material(
-            color: Color(0xFF00a3af),
-            // button color
-            child: InkWell(
-              splashColor: Color(0xFF3f407a), // splash color
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Cart()));
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new SvgPicture.asset(
-                    'SVG/cart.svg',
-                    height: 30.0,
-                    width: 30.0,
-                    color: Colors.white,
-                    allowDrawingOutsideViewBox: true,
-                  ),
-                  // icon
-                ],
+  Widget rightSideButtons(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: Colors.white,
+      ),
+      child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+        SizedBox.fromSize(
+          size: Size(40, 40), // button width and height
+          child: ClipOval(
+            child: Material(
+              color: Color(0xFF00a3af),
+              // button color
+              child: InkWell(
+                splashColor: Color(0xFF3f407a), // splash color
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Cart()));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new SvgPicture.asset(
+                      'SVG/cart.svg',
+                      height: 30.0,
+                      width: 30.0,
+                      color: Colors.white,
+                      allowDrawingOutsideViewBox: true,
+                    ),
+                    // icon
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-      SizedBox(width: 10), // give it width
-      SizedBox.fromSize(
-        size: Size(40, 40), // button width and height
-        child: ClipOval(
-          child: Material(
-            color: Color(0xFF00a3af),
-            // button color
-            child: InkWell(
-              splashColor: Color(0xFF3f407a), // splash color
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Modules()));
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new SvgPicture.asset(
-                    'SVG/bell.svg',
-                    height: 30.0,
-                    width: 30.0,
-                    color: Colors.white,
-                    allowDrawingOutsideViewBox: true,
-                  ),
-                  // icon
-                ],
+        SizedBox(width: 10), // give it width
+        SizedBox.fromSize(
+          size: Size(40, 40), // button width and height
+          child: ClipOval(
+            child: Material(
+              color: Color(0xFF00a3af),
+              // button color
+              child: InkWell(
+                splashColor: Color(0xFF3f407a), // splash color
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Modules()));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new SvgPicture.asset(
+                      'SVG/bell.svg',
+                      height: 30.0,
+                      width: 30.0,
+                      color: Colors.white,
+                      allowDrawingOutsideViewBox: true,
+                    ),
+                    // icon
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-      SizedBox(width: 10), // give it width
-      SizedBox.fromSize(
-        size: Size(40, 40), // button width and height
-        child: ClipOval(
-          child: Material(
-            color: Color(0xFF00a3af),
-            // button color
-            child: InkWell(
-              splashColor: Color(0xFF3f407a), // splash color
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => Favoris(
-                            UserPrefs.getListFavorit(),
-                            UserPrefs.getEmail() ?? '',
-                            UserPrefs.getName() ?? ''
-                            )));
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new SvgPicture.asset(
-                    'SVG/like.svg',
-                    height: 30.0,
-                    width: 30.0,
-                    color: Colors.white,
-                    allowDrawingOutsideViewBox: true,
-                  ),
-                ],
+        SizedBox(width: 10), // give it width
+        SizedBox.fromSize(
+          size: Size(40, 40), // button width and height
+          child: ClipOval(
+            child: Material(
+              color: Color(0xFF00a3af),
+              // button color
+              child: InkWell(
+                splashColor: Color(0xFF3f407a), // splash color
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Favoris(
+                              UserPrefs.getListFavorit(),
+                              UserPrefs.getEmail() ?? '',
+                              UserPrefs.getName() ?? '')));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new SvgPicture.asset(
+                      'SVG/like.svg',
+                      height: 30.0,
+                      width: 30.0,
+                      color: Colors.white,
+                      allowDrawingOutsideViewBox: true,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    ]),
-  );
+        SizedBox(width: 10), // give it width
+        SizedBox.fromSize(
+          size: Size(40, 40), // button width and height
+          child: ClipOval(
+            child: Material(
+              color: Color(0xFF00a3af),
+              // button color
+              child: InkWell(
+                splashColor: Color(0xFF3f407a), // splash color
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => HomeScreen(2)));
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Image.network(
+                      'https://avatars.dicebear.com/api/initials/$name%20$surname.png?r=50&scale=101&b=%23379ad7',
+                      height: 30.0,
+                      width: 30.0,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
 }

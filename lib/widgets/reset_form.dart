@@ -251,7 +251,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
       });
 
       if (result.statusCode == 401) {
-        showError("Email doesn't exists");
+        showError("Email inexistant");
         setState(() {
           _emailIsError = true;
         });
@@ -303,7 +303,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
           etap = 2;
         });
       } else if (tokenResult.statusCode == 400) {
-        showError("invalid token");
+        showError("Votre code de confirmation est invalide");
         setState(() {
           _tokenIsError = true;
         });
@@ -467,7 +467,12 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
                         : (etap == 2)
                             ? newPassword
                             : null,
-                buttonText: (etap <= 1) ? 'Suivant ($n / 3)' : 'Submit',
+                buttonText: (etap == 0) ? 'Valider email':
+                            (etap == 1) ? 'Valider token':
+                            'Réinitialisation le mot de passe' 
+
+
+                //(etap <= 1) ? 'Suivant ($n / 3)' : 'Submit',
               ),
             ),
             SizedBox(height: /*10*/ height * 0.05),

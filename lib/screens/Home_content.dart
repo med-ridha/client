@@ -2,9 +2,12 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/module/ModuleModule.dart';
+import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/screens/search_result.dart';
 import 'package:juridoc/screens/viewCategories.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class HomeContent extends StatefulWidget {
   @override
@@ -14,6 +17,8 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent>
     with TickerProviderStateMixin {
   List<ModuleModule> listModules = [];
+
+  String searchTerm = "";
 
   @override
   void initState() {
@@ -62,67 +67,65 @@ class _HomeContentState extends State<HomeContent>
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                    child: Column(
-                      children: [
-                        AppBarUI(),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  getText(),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  getText1(),
-                                  getSearchBarUI(),
-                                ],
-                              ),
+                  child: Column(
+                    children: [
+                      AppBarUI(),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                getText(),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                getText1(),
+                                getSearchBarUI(),
+                              ],
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Colors.white,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Column(
-                                children: [
-                                  juridoc(),
-                                  juridoc1(),
-                                  text(),
-                                  juridoc2(),
-                                ],
-                              ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              children: [
+                                juridoc(),
+                                juridoc1(),
+                                text(),
+                                juridoc2(),
+                              ],
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                ),
               ],
             ),
           ),
@@ -311,6 +314,9 @@ class _HomeContentState extends State<HomeContent>
                       child: Container(
                         padding: const EdgeInsets.only(left: 16, right: 16),
                         child: TextFormField(
+                          onChanged: (String? value) {
+                            searchTerm = value ?? '';
+                          },
                           style: TextStyle(
                             fontFamily: 'WorkSans',
                             fontWeight: FontWeight.bold,
@@ -341,6 +347,17 @@ class _HomeContentState extends State<HomeContent>
                       height: 60,
                       child: IconButton(
                         onPressed: () {
+                          if (searchTerm.length > 3) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) => Search(
+                                      "?search=$searchTerm&email=" +
+                                          (UserPrefs.getEmail() ?? "")),
+                                ));
+                          } else {
+                            showError("atleast 3 letters are requried!");
+                          }
                           //showSearch(context: context, delegate: Search(widget.list));
                         },
                         icon: Icon(
@@ -438,5 +455,12 @@ class _HomeContentState extends State<HomeContent>
                 ],
               ),
             )));
+  }
+
+  void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent);
   }
 }

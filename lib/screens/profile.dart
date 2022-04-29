@@ -66,37 +66,37 @@ class ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(0.0),
-                      child: Container(
-                        height: height * 0.25,
-                        child: LayoutBuilder(
-                          builder: (context, BoxConstraints constraints) {
-                            double innerWidth = constraints.maxWidth;
-                            return Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                Positioned(
-                                  top: 0,
-                                  left: 0,
-                                  right: 0,
-                                  bottom: 0,
-                                  child: Center(
-                                    child: Container(
-                                      child: Image.network(
-                                        'https://avatars.dicebear.com/api/initials/$name$surname.png?r=50&scale=101&b=%23379ad7',
-                                        width: innerWidth * 0.35,
-                                        fit: BoxFit.fitWidth,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                   // Padding(
+                   //   padding: const EdgeInsets.all(0.0),
+                   //   child: Container(
+                   //     height: height * 0.25,
+                   //     child: LayoutBuilder(
+                   //       builder: (context, BoxConstraints constraints) {
+                   //         double innerWidth = constraints.maxWidth;
+                   //         return Stack(
+                   //           fit: StackFit.expand,
+                   //           children: [
+                   //             Positioned(
+                   //               top: 0,
+                   //               left: 0,
+                   //               right: 0,
+                   //               bottom: 0,
+                   //               child: Center(
+                   //                 child: Container(
+                   //                   child: Image.network(
+                   //                     'https://avatars.dicebear.com/api/initials/$name$surname.png?r=50&scale=101&b=%23379ad7',
+                   //                     width: innerWidth * 0.35,
+                   //                     fit: BoxFit.fitWidth,
+                   //                   ),
+                   //                 ),
+                   //               ),
+                   //             ),
+                   //           ],
+                   //         );
+                   //       },
+                   //     ),
+                   //   ),
+                   // ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -106,7 +106,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                           color: Colors.white,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
@@ -118,11 +118,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 style: TextStyle(
                                   color: Color.fromRGBO(39, 105, 171, 1),
                                   fontFamily: 'Nunito',
-                                  fontSize: 24,
+                                  fontSize: 32,
                                 ),
                               ),
                               SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               profileWidget(
                                   context, 'SVG/user.svg', 'Mon Profil', () {

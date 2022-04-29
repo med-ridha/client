@@ -178,7 +178,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                         color: Colors.white,
                                       ),
                                       child: SecondBarUi(
-                                          "Mes collabarotateurs", true,
+                                          "Mes collabarotateurs", !empty,
                                           func: () {
                                         setState(() {
                                           isAdd = !isAdd;
@@ -272,9 +272,9 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                               children: (empty)
                                                   ? [
                                                       Text(
-                                                          "you are not a part of any collab"),
+                                                          "La liste est vide,"),
                                                       Text(
-                                                          "Start by creating one"),
+                                                          "Veuillez creer une collaboration"),
                                                       SizedBox(height: 20),
                                                       AddButton(
                                                           func: () {
