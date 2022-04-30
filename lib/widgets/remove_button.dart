@@ -15,7 +15,8 @@ class RemoveButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(80), color: Colors.redAccent),
-        child: IconButton(
+        child:
+        IconButton(
             padding: EdgeInsets.zero,
             color: Colors.white,
             onPressed: func,

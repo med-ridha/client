@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/Profile/edit_profile.dart';
+import 'package:juridoc/Profile/mon_profile.dart';
 import 'package:juridoc/Profile/achats.dart';
 import 'package:juridoc/Profile/alert_juridique.dart';
 import 'package:juridoc/Profile/collab.dart';
@@ -66,37 +67,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                   // Padding(
-                   //   padding: const EdgeInsets.all(0.0),
-                   //   child: Container(
-                   //     height: height * 0.25,
-                   //     child: LayoutBuilder(
-                   //       builder: (context, BoxConstraints constraints) {
-                   //         double innerWidth = constraints.maxWidth;
-                   //         return Stack(
-                   //           fit: StackFit.expand,
-                   //           children: [
-                   //             Positioned(
-                   //               top: 0,
-                   //               left: 0,
-                   //               right: 0,
-                   //               bottom: 0,
-                   //               child: Center(
-                   //                 child: Container(
-                   //                   child: Image.network(
-                   //                     'https://avatars.dicebear.com/api/initials/$name$surname.png?r=50&scale=101&b=%23379ad7',
-                   //                     width: innerWidth * 0.35,
-                   //                     fit: BoxFit.fitWidth,
-                   //                   ),
-                   //                 ),
-                   //               ),
-                   //             ),
-                   //           ],
-                   //         );
-                   //       },
-                   //     ),
-                   //   ),
-                   // ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
@@ -124,13 +94,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 20,
                               ),
-                              profileWidget(
-                                  context, 'SVG/user.svg', 'Mon Profil', () {
+                              profileWidget(context, 'SVG/user.svg',
+                                  'mon profile', () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          EditProfile(),
+                                          MonProfile(),
                                     ));
                                 return;
                               }),
@@ -187,7 +157,20 @@ class ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              profileWidget(context, 'SVG/user.svg', 'Log out',
+                              profileWidget(context, 'SVG/tools.svg',
+                                  'Mettre a jour profile', () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          EditProfile(),
+                                    ));
+                                return;
+                              }),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              profileWidget(context, 'SVG/logout.svg', 'Log out',
                                   () {
                                 UserPrefs.clear().then((res) {
                                   Navigator.pushAndRemoveUntil<void>(
@@ -242,9 +225,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                   allowDrawingOutsideViewBox: true,
                   color: Colors.white,
                 ),
-                SizedBox(width: 100),
+                SizedBox(width: 30),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       text,

@@ -446,7 +446,7 @@ class EditProfileState extends State<EditProfile> {
                                   borderRadius: BorderRadius.circular(30),
                                   color: Colors.white,
                                 ),
-                                child: SecondBarUi("Profile", false)),
+                                child: SecondBarUi("Mettre a jour profile", false)),
                             Container(
                                 height: height * 0.05,
                                 child: (waiting)
@@ -607,8 +607,6 @@ class EditProfileState extends State<EditProfile> {
                                             onTap: () {},
                                             child: SecondaryButton(
                                                 func: () {
-                                                  _formKey.currentState!
-                                                      .reset();
                                                   setState(() {
                                                     _name = UserPrefs.getName();
                                                     _surname = UserPrefs.getSurname();

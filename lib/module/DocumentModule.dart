@@ -83,19 +83,16 @@ class DocumentModule {
 
   static Future<List<String>> getListFavored(String email) async {
     List<String> listDocumentIds = [];
-    String getListFavoredURL = Service.url + "users/getListFavored";
-    Map<String, String> data = {
-      "email": email,
-    };
-    var result = await http.post(
+    String getListFavoredURL = Service.url + "users/getListFavored/$email";
+    var result = await http.get(
       Uri.parse(getListFavoredURL),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: json.encode(data),
     );
     if (result.statusCode == 200) {
       Map<String, dynamic> response = json.decode(result.body);
+      print(response);
       listDocumentIds = List<String>.from(response['message'].map((x) => x));
     }
     return listDocumentIds;

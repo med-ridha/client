@@ -81,10 +81,10 @@ class AdvancedSearchState extends State<AdvancedSearch>
         value: module,
         icon: null,
         elevation: 16,
-        style: const TextStyle(color: Colors.deepPurple, fontSize: 20),
+        style: const TextStyle(color: kPrimaryColor, fontSize: 20),
         underline: Container(
           height: 2,
-          color: Colors.deepPurpleAccent,
+          color: kSecondaryColor//Colors.deepPurpleAccent,
         ),
         onChanged: (String? newValue) {
           List<Category> list = ModuleModule.getCategories(
@@ -120,10 +120,10 @@ class AdvancedSearchState extends State<AdvancedSearch>
         value: category,
         icon: null,
         elevation: 16,
-        style: const TextStyle(color: Colors.deepPurple, fontSize: 20),
+        style:  const TextStyle(color: kPrimaryColor, fontSize: 20),
         underline: Container(
           height: 2,
-          color: Colors.deepPurpleAccent,
+          color: kSecondaryColor,// Colors.deepPurpleAccent,
         ),
         onChanged: (listCategories.length > 0)
             ? (String? newValue) {
@@ -473,7 +473,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
 
   Divider buildDivider() {
     return Divider(
-      color: Color(Colors.purple.value),
+      color: kSecondaryColor, // Color(Colors.purple.value),
       height: 2,
     );
   }

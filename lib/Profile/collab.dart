@@ -145,246 +145,221 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
             backgroundColor: Colors.transparent,
             body: SingleChildScrollView(
                 child: Column(
-                  children: [
-                    Container(
-                      height: safePadding,
-                      width: width,
-                      decoration:
-                          BoxDecoration(color: Colors.white70, boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withAlpha(100),
-                            blurRadius: 10.0),
-                      ]),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 0, vertical: 0),
-                      child: Column(
-                        children: [
-                          AppBarUI(),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  Container(
-                                      height: 60,
+              children: [
+                Container(
+                  height: safePadding,
+                  width: width,
+                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                  ]),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  child: Column(
+                    children: [
+                      AppBarUI(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                  height: 60,
+                                  width: width,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.white,
+                                  ),
+                                  child: SecondBarUi(
+                                      "Mes collabarotateurs", !empty, func: () {
+                                    setState(() {
+                                      isAdd = !isAdd;
+                                    });
+                                  },
+                                      icon:
+                                          (!isAdd) ? Icons.add : Icons.cancel)),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              (isAdd)
+                                  ? Container(
                                       width: width,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(30),
+                                        borderRadius: BorderRadius.circular(50),
                                         color: Colors.white,
                                       ),
-                                      child: SecondBarUi(
-                                          "Mes collabarotateurs", !empty,
-                                          func: () {
-                                        setState(() {
-                                          isAdd = !isAdd;
-                                        });
-                                      },
-                                          icon: (!isAdd)
-                                              ? Icons.add
-                                              : Icons.cancel)),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  (isAdd)
-                                      ? Container(
-                                          width: width,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: Colors.white,
-                                          ),
-                                          child: Form(
-                                              key: _formKey,
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
+                                      child: Form(
+                                          key: _formKey,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                      height: height * 0.01),
+                                                  Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
-                                                            .center,
+                                                            .spaceEvenly,
                                                     children: [
-                                                      SizedBox(
-                                                          height:
-                                                              height * 0.01),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          RoundedTextFieldContainer(
-                                                              customWidth:
-                                                                  width * 0.8,
-                                                              child:
-                                                                  _buildEmail(),
-                                                              error:
-                                                                  _emailIsError),
-                                                          Container(
-                                                              width:
-                                                                  width * 0.1,
-                                                              height:
-                                                                  width * 0.1,
-                                                              child: (emailWaiting)
-                                                                  ? SpinKitDualRing(
-                                                                      size: 35,
-                                                                      color: Colors
-                                                                          .green)
-                                                                  : SendButton(
-                                                                      func:
-                                                                          addCollab)),
-                                                        ],
-                                                      ),
-                                                      SizedBox(
-                                                          height: height * 0.01)
+                                                      RoundedTextFieldContainer(
+                                                          customWidth:
+                                                              width * 0.8,
+                                                          child: _buildEmail(),
+                                                          error: _emailIsError),
+                                                      Container(
+                                                          width: width * 0.1,
+                                                          height: width * 0.1,
+                                                          child: (emailWaiting)
+                                                              ? SpinKitDualRing(
+                                                                  size: 35,
+                                                                  color: Colors
+                                                                      .green)
+                                                              : SendButton(
+                                                                  func:
+                                                                      addCollab)),
                                                     ],
                                                   ),
-                                                ),
-                                              )))
-                                      : Container(),
-                                  SizedBox(height: height * 0.05),
-                                  Container(
-                                    width: width,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color: Colors.grey,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(height: height * 0.05),
-                                          Container(
-                                              child: (waiting)
-                                                  ? SpinKitDualRing(
-                                                      size: 40,
-                                                      color: Colors.green)
-                                                  : null),
-                                          Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: (empty)
-                                                  ? [
-                                                      Text(
-                                                          "La liste est vide,"),
-                                                      Text(
-                                                          "Veuillez creer une collaboration"),
-                                                      SizedBox(height: 20),
-                                                      AddButton(
-                                                          func: () {
-                                                            setState(() {
-                                                              isCreate =
-                                                                  !isCreate;
-                                                            });
-                                                          },
-                                                          icon: (!isCreate)
-                                                              ? Icons.add
-                                                              : Icons.cancel)
-                                                    ]
-                                                  : [
-                                                      for (Map<String,
-                                                              dynamic> item
-                                                          in listCollabs)
-                                                        Container(
-                                                          child: Column(
-                                                            children: [
-                                                              collabWidget(
-                                                                  context,
-                                                                  //listCollabs[item]["fullName"],
-                                                                  item[
-                                                                      'fullName'],
-                                                                  item['email'],
-                                                                  item[
-                                                                      'phoneNumber'],
-                                                                  List<
-                                                                      String>.from(item[
-                                                                          'listFavored']
+                                                  SizedBox(
+                                                      height: height * 0.01)
+                                                ],
+                                              ),
+                                            ),
+                                          )))
+                                  : Container(),
+                              SizedBox(height: height * 0.05),
+                              Container(
+                                width: width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Colors.grey,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(height: height * 0.05),
+                                      Container(
+                                          child: (waiting)
+                                              ? SpinKitDualRing(
+                                                  size: 40, color: Colors.green)
+                                              : null),
+                                      Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: (empty)
+                                              ? [
+                                                  Text("La liste est vide,"),
+                                                  Text(
+                                                      "Veuillez creer une collaboration"),
+                                                  SizedBox(height: 20),
+                                                  AddButton(
+                                                      func: () {
+                                                        setState(() {
+                                                          isCreate = !isCreate;
+                                                        });
+                                                      },
+                                                      icon: (!isCreate)
+                                                          ? Icons.add
+                                                          : Icons.cancel)
+                                                ]
+                                              : [
+                                                  for (Map<String, dynamic> item
+                                                      in listCollabs)
+                                                    Container(
+                                                      child: Column(
+                                                        children: [
+                                                          collabWidget(
+                                                              context,
+                                                              //listCollabs[item]["fullName"],
+                                                              item['fullName'],
+                                                              item['email'],
+                                                              item[
+                                                                  'phoneNumber'],
+                                                              List<String>.from(
+                                                                  item['listFavored']
                                                                       .map((x) =>
                                                                           x))),
-                                                              SizedBox(
-                                                                  height:
-                                                                      height *
-                                                                          0.03)
-                                                            ],
-                                                          ),
-                                                        )
-                                                    ]),
-                                          SizedBox(height: height * 0.02),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: height * 0.05),
-                                  (isCreate)
-                                      ? Container(
-                                          width: width,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50),
-                                            color: Colors.white,
-                                          ),
-                                          child: Form(
-                                              key: _nameKey,
-                                              child: Container(
-                                                alignment: Alignment.center,
-                                                child: SingleChildScrollView(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      SizedBox(
-                                                          height:
-                                                              height * 0.01),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
-                                                        children: [
-                                                          RoundedTextFieldContainer(
-                                                              customWidth:
-                                                                  width * 0.8,
-                                                              child:
-                                                                  _buildName(),
-                                                              error:
-                                                                  _nameIsError),
-                                                          Container(
-                                                              width:
-                                                                  width * 0.1,
+                                                          SizedBox(
                                                               height:
-                                                                  width * 0.1,
-                                                              child: (emailWaiting)
-                                                                  ? SpinKitDualRing(
-                                                                      size: 35,
-                                                                      color: Colors
-                                                                          .green)
-                                                                  : SendButton(
-                                                                      func:
-                                                                          createCollab)),
+                                                                  height * 0.03)
                                                         ],
                                                       ),
-                                                      SizedBox(
-                                                          height: height * 0.01)
+                                                    )
+                                                ]),
+                                      SizedBox(height: height * 0.02),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: height * 0.05),
+                              (isCreate)
+                                  ? Container(
+                                      width: width,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.white,
+                                      ),
+                                      child: Form(
+                                          key: _nameKey,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: SingleChildScrollView(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                      height: height * 0.01),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      RoundedTextFieldContainer(
+                                                          customWidth:
+                                                              width * 0.8,
+                                                          child: _buildName(),
+                                                          error: _nameIsError),
+                                                      Container(
+                                                          width: width * 0.1,
+                                                          height: width * 0.1,
+                                                          child: (emailWaiting)
+                                                              ? SpinKitDualRing(
+                                                                  size: 35,
+                                                                  color: Colors
+                                                                      .green)
+                                                              : SendButton(
+                                                                  func:
+                                                                      createCollab)),
                                                     ],
                                                   ),
-                                                ),
-                                              )))
-                                      : Container(),
-                                ],
-                              ),
-                            ),
+                                                  SizedBox(
+                                                      height: height * 0.01)
+                                                ],
+                                              ),
+                                            ),
+                                          )))
+                                  : Container(),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
-                )))
+                    ],
+                  ),
+                ),
+              ],
+            )))
       ]),
     );
   }
@@ -468,6 +443,12 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                   }
                                   setState(() {
                                     waiting = false;
+                                    showSimpleNotification(
+                                        Text("Suppression effectuee avec success",
+                                            style: TextStyle()),
+                                        duration: Duration(seconds: 2),
+                                        foreground: Colors.white,
+                                        background: Colors.greenAccent);
                                   });
                                 });
                               } else {
@@ -606,6 +587,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
           listCollabs = res;
         }
         setState(() {
+          isAdd = false;
           waiting = false;
         });
       });

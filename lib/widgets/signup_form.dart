@@ -720,7 +720,7 @@ class _SignUpFormState extends State<SignUpForm> {
                       : (etap == 2)
                           ? etap2
                           : etap3,
-              buttonText: (etap <= 2) ? 'Suivant ($n / 4) ' : 'Submit',
+              buttonText: (etap <= 2) ? 'Suivant ($n / 4) ' : 'Confirmer',
             ),
           ),
           SizedBox(height: /*10*/ height * 0.04),

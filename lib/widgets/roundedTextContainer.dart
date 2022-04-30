@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:juridoc/theme.dart';
 
-class RoundedTextFieldContainer extends StatelessWidget {
+class RoundedTextContainer extends StatelessWidget {
   final Widget? child;
   final bool? error;
-  final double? customWidth;
-  const RoundedTextFieldContainer({
+  const RoundedTextContainer({
     Key? key,
     this.child,
     this.error,
-    this.customWidth
   }) : super(key: key);
 
   @override
@@ -17,7 +15,6 @@ class RoundedTextFieldContainer extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        width: (customWidth != null)? customWidth:width,
         decoration: BoxDecoration(
             color: kTextFieldColor,
             borderRadius: BorderRadius.circular(29),

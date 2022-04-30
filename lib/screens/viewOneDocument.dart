@@ -333,17 +333,22 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                     color: Colors.white,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(12.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(height: height * 0.02),
-                        Text(
-                            (isFrench)
-                                ? document.titleFr ?? ""
-                                : document.titleAr ?? "",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w900)),
+                        Directionality(
+                            textDirection: (isFrench)
+                                ? TextDirection.ltr
+                                : TextDirection.rtl,
+                            child: Text(
+                                (isFrench)
+                                    ? document.titleFr ?? ""
+                                    : document.titleAr ?? "",
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w900))),
                         SizedBox(height: height * 0.02),
                       ],
                     ),
