@@ -46,7 +46,7 @@ class AppBarState extends State<AppBarUI> {
                 )
               ],
             ),
-            SizedBox(width: width * 0.30),
+            SizedBox(width: width - 350),
             Row(children: [rightSideButtons(context)]),
           ])),
     );
