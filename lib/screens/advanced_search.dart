@@ -81,7 +81,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
         value: module,
         icon: null,
         elevation: 16,
-        style: const TextStyle(color: kPrimaryColor, fontSize: 20),
+        style: const TextStyle(color: kPrimaryColor, fontSize: 15),
         underline: Container(
             height: 2, color: kSecondaryColor //Colors.deepPurpleAccent,
             ),
@@ -119,7 +119,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
         value: category,
         icon: null,
         elevation: 16,
-        style: const TextStyle(color: kPrimaryColor, fontSize: 20),
+        style: const TextStyle(color: kPrimaryColor, fontSize: 15),
         underline: Container(
           height: 2,
           color: kSecondaryColor, // Colors.deepPurpleAccent,
@@ -230,11 +230,11 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .spaceBetween,
+                                                      .start,
                                               children: [
                                                 Text("MODULE: ",
                                                     style: TextStyle(
-                                                        fontSize: 20,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w500)),
                                                 buildModules(context),
@@ -244,11 +244,11 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
-                                                      .spaceBetween,
+                                                      .start,
                                               children: [
                                                 Text("CATEGORIE: ",
                                                     style: TextStyle(
-                                                        fontSize: 20,
+                                                        fontSize: 18,
                                                         fontWeight:
                                                             FontWeight.w500)),
                                                 buildCategory(context),

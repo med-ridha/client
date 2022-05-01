@@ -461,7 +461,7 @@ class EditProfileState extends State<EditProfile> {
                                     color: Colors.white,
                                   ),
                                   child: SecondBarUi(
-                                      "Mettre a jour profile", false)),
+                                      "Mettre a jour profile", false, fontSize: 21)),
                               Container(
                                   height: height * 0.05,
                                   child: (waiting)
@@ -493,7 +493,7 @@ class EditProfileState extends State<EditProfile> {
                                                       'SVG/door-lock.svg',
                                                       "Mot de passe",
                                                       0.045),
-                                                  SizedBox(width: width * 0.38),
+                                                  SizedBox(width: width * 0.27),
                                                   PasswordIcon(() {
                                                     setState(() {
                                                       _isObscure = !_isObscure;

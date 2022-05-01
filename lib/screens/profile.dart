@@ -222,7 +222,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     Text(
                       text,
                       style: const TextStyle(
-                          fontSize: 24,
+                          fontSize: 18,
                           fontWeight: FontWeight.normal,
                           color: Colors.white),
                     ),

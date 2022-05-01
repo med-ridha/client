@@ -84,7 +84,7 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
-                          child: SecondBarUi("Search", false, fontSize: 20)),
+                          child: SecondBarUi("Search", false, fontSize: 24)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -185,7 +185,7 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
                       Text(
                         name,
                         style: const TextStyle(
-                            fontSize: 23, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         count,
