@@ -33,104 +33,103 @@ class _HomeContentState extends State<HomeContent>
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    double safePadding = MediaQuery.of(context).padding.top;
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).requestFocus(new FocusNode());
-      },
-      child: Stack(fit: StackFit.expand, children: [
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(4, 9, 35, 1),
-                Color.fromRGBO(39, 105, 171, 1),
-              ],
-              begin: FractionalOffset.bottomCenter,
-              end: FractionalOffset.topCenter,
+    return RefreshIndicator(
+          onRefresh: () async {
+            ModuleModule.getListModules().then((result) {
+              setState(() {
+                listModules = result;
+              });
+            });
+          },
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+          child: Stack(fit: StackFit.expand, children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color.fromRGBO(4, 9, 35, 1),
+                    Color.fromRGBO(39, 105, 171, 1),
+                  ],
+                  begin: FractionalOffset.bottomCenter,
+                  end: FractionalOffset.topCenter,
+                ),
+              ),
             ),
-          ),
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 15),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                child: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    getText(),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    getText1(),
+                                    getSearchBarUI(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              width: width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Colors.white,
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: Column(
+                                  children: [
+                                    juridoc(),
+                                    juridoc1(),
+                                    text(),
+                                    juridoc2(),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ]),
         ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  height: safePadding,
-                  width: width,
-                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
-                  ]),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                  child: Column(
-                    children: [
-                      AppBarUI(),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Column(
-                              children: [
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                getText(),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                getText1(),
-                                getSearchBarUI(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: width,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: Colors.white,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Column(
-                              children: [
-                                juridoc(),
-                                juridoc1(),
-                                text(),
-                                juridoc2(),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ]),
     );
   }
 

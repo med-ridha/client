@@ -112,12 +112,26 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                               SizedBox(
                                 height: 15,
                               ),
-                              for (dynamic module in listModules)
-                                moduleWidget(context, module['name'],
-                                    module['count'].toString(), module),
-                              SizedBox(
-                                height: 15,
-                              ),
+                              (listModules.length == 0)
+                                  ? Container(
+                                      child: Column(
+                                      children: [
+                                        Text("Aucun nouveau document ajoute",
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w500)),
+                                        SizedBox(height: height * 0.02)
+                                      ],
+                                    ))
+                                  : Container(
+                                      child: Column(children: [
+                                      for (dynamic module in listModules)
+                                        moduleWidget(context, module['name'],
+                                            module['count'].toString(), module),
+                                      SizedBox(
+                                        height: 15,
+                                      ),
+                                    ]))
                             ],
                           ),
                         ),

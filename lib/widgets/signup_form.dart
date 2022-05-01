@@ -144,7 +144,7 @@ class _SignUpFormState extends State<SignUpForm> {
       });
       return;
     } else if (result.statusCode == 401) {
-      showError("email already in use");
+      showError("Email existe deja");
       return;
     } else {
       print(result.body);
@@ -677,7 +677,7 @@ class _SignUpFormState extends State<SignUpForm> {
           waiting = false;
         });
         showSimpleNotification(
-            Text("Account created success", style: TextStyle()),
+            Text("Compte cree avec succees", style: TextStyle()),
             duration: Duration(seconds: 2),
             foreground: Colors.white,
             background: Colors.greenAccent);
@@ -689,7 +689,7 @@ class _SignUpFormState extends State<SignUpForm> {
               ModalRoute.withName('/homescreen'));
         });
       } else if (result.statusCode == 401) {
-        showError("Invalid token");
+        showError("Veuillez verifier votre code de confirmation");
       } else {
         showError("something went wrong");
       }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:juridoc/screens/advanced_search.dart';
 import 'package:juridoc/screens/profile.dart';
 import 'package:juridoc/screens/Home_content.dart';
+import 'package:juridoc/widgets/app_Bar_ui.dart';
 
 class HomeScreen extends StatefulWidget {
   int startPage = 0;
@@ -28,6 +29,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    double safePadding = MediaQuery.of(context).padding.top;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -43,16 +45,29 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
       Scaffold(
         backgroundColor: Colors.transparent,
-        body: PageView(
-          controller: _pageController,
+        body: Column(
           children: [
-            HomeContent(),
-            AdvancedSearch(),
-            ProfileScreen(),
+            Container(
+              height: safePadding,
+              decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
+              ]),
+            ),
+            AppBarUI(),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                children: [
+                  Scaffold(body: HomeContent()),
+                  AdvancedSearch(),
+                  ProfileScreen(),
+                ],
+                onPageChanged: (index) {
+                  setState(() => _currentPage = index);
+                },
+              ),
+            ),
           ],
-          onPageChanged: (index) {
-            setState(() => _currentPage = index);
-          },
         ),
         bottomNavigationBar: BottomBar(
           selectedIndex: _currentPage,

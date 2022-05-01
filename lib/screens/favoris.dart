@@ -114,7 +114,7 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
                               ]
                             : [
                                 Container(
-                                  height: 60,
+                                  //height: 60,
                                   width: width,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30),
@@ -133,8 +133,8 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
                                               child: Text(
                                                   (UserPrefs.getEmail() ==
                                                           email)
-                                                      ? "you have no favorite documents"
-                                                      : "user have no favorite documents",
+                                                      ? "Le dossier est vide, veuillez ajouter au moins un document"
+                                                      : "Le dossier est vide",
                                                   style: TextStyle(
                                                       fontSize: 24,
                                                       fontWeight:

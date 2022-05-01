@@ -63,128 +63,158 @@ class ViewOneDocumentState extends State<ViewOneDocument>
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     double safePadding = MediaQuery.of(context).padding.top;
-    return Stack(fit: StackFit.expand, children: [
-      Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color.fromRGBO(4, 9, 35, 1),
-              Color.fromRGBO(39, 105, 171, 1),
-            ],
-            begin: FractionalOffset.bottomCenter,
-            end: FractionalOffset.topCenter,
+    return RefreshIndicator(
+      onRefresh: () async {
+        waiting = true;
+        setState(() {
+          isFavorite = UserPrefs.getListFavorit().contains(document.id);
+        });
+
+        UserModule.getModules().then((result) async => {
+              await Future.delayed(Duration(milliseconds: 250), () {
+                setState(() {
+                  listModules = result;
+                  waiting = false;
+                  print(listModules);
+                });
+              })
+            });
+      },
+      child: Stack(fit: StackFit.expand, children: [
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(4, 9, 35, 1),
+                Color.fromRGBO(39, 105, 171, 1),
+              ],
+              begin: FractionalOffset.bottomCenter,
+              end: FractionalOffset.topCenter,
+            ),
           ),
         ),
-      ),
-      Scaffold(
-        backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: safePadding,
-                width: width,
-                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                child: Column(
-                  children: [
-                    AppBarUI(),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 60,
-                        width: width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white,
-                        ),
-                        child: SecondBarUi("", false,
-                            fontSize: 16,
-                            lang: (listModules.contains(module)),
-                            langIcon: Icons.language_sharp, langFunc: () {
-                          setState(() {
-                            isFrench = !isFrench;
-                          });
-                        },
-                            like: (listModules.contains(module)),
-                            func: (!isFavorite)
-                                ? () async {
-                                    bool result =
-                                        await UserModule.addToFavorite(
-                                            document.id ?? "");
-                                    if (result) {
-                                      showSimpleNotification(
-                                          Text("add to Favorite",
-                                              style: TextStyle()),
-                                          duration: Duration(seconds: 2),
-                                          foreground: Colors.white,
-                                          background: Colors.greenAccent);
-                                      setState(() {
-                                        isFavorite = UserPrefs.getListFavorit()
-                                            .contains(document.id);
-                                      });
-                                    } else {
-                                      showError('something went wrong');
-                                    }
-                                  }
-                                : () async {
-                                    bool result =
-                                        await UserModule.removeFromFavorite(
-                                            document.id ?? "");
-                                    if (result) {
-                                      showSimpleNotification(
-                                          Text("removed from Favorite",
-                                              style: TextStyle()),
-                                          duration: Duration(seconds: 2),
-                                          foreground: Colors.white,
-                                          background: Colors.greenAccent);
-                                      setState(() {
-                                        isFavorite = UserPrefs.getListFavorit()
-                                            .contains(document.id);
-                                      });
-                                    } else {
-                                      showError('something went wrong');
-                                    }
-                                  },
-                            likeIcon: (isFavorite)
-                                ? Icons.heart_broken_sharp
-                                : Icons.favorite_sharp),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          child: Column(
-                        children: [
-                          viewDetails(context, document),
-                          (listModules.contains(module))
-                              ? viewTitle(context, document)
-                              : Container(),
-                          (listModules.contains(module))
-                              ? viewDocumentWidget(context, document)
-                              : Container(),
-                        ],
-                      )),
-                    )
-                  ],
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  height: safePadding,
+                  width: width,
+                  decoration: BoxDecoration(color: Colors.white70, boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                  ]),
                 ),
-              ),
-            ],
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  child: Column(
+                    children: [
+                      AppBarUI(),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 60,
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white,
+                          ),
+                          child: SecondBarUi("", false,
+                              fontSize: 16,
+                              lang: (listModules.contains(module)),
+                              langIcon: Icons.language_sharp, langFunc: () {
+                            setState(() {
+                              isFrench = !isFrench;
+                            });
+                          },
+                              like: (listModules.contains(module)),
+                              func: (!isFavorite)
+                                  ? () async {
+                                      showAlertDialog(
+                                          context, "ajoute au favoris?",
+                                          () async {
+                                        bool result =
+                                            await UserModule.addToFavorite(
+                                                document.id ?? "");
+                                        if (result) {
+                                          showSimpleNotification(
+                                              Text(
+                                                  "Le document a ete ajoue aux favoris",
+                                                  style: TextStyle()),
+                                              duration: Duration(seconds: 2),
+                                              foreground: Colors.white,
+                                              background: Colors.greenAccent);
+                                          setState(() {
+                                            isFavorite =
+                                                UserPrefs.getListFavorit()
+                                                    .contains(document.id);
+                                          });
+                                        } else {
+                                          showError('something went wrong');
+                                        }
+                                      });
+                                    }
+                                  : () async {
+                                      showAlertDialog(
+                                          context, "supprimer du favoris?",
+                                          () async {
+                                        bool result =
+                                            await UserModule.removeFromFavorite(
+                                                document.id ?? "");
+                                        if (result) {
+                                          showSimpleNotification(
+                                              Text("removed from Favorite",
+                                                  style: TextStyle()),
+                                              duration: Duration(seconds: 2),
+                                              foreground: Colors.white,
+                                              background: Colors.greenAccent);
+                                          setState(() {
+                                            isFavorite =
+                                                UserPrefs.getListFavorit()
+                                                    .contains(document.id);
+                                          });
+                                        } else {
+                                          showError('something went wrong');
+                                        }
+                                      });
+                                    },
+                              likeIcon: (isFavorite)
+                                  ? Icons.heart_broken_sharp
+                                  : Icons.favorite_sharp),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            child: Column(
+                          children: [
+                            viewDetails(context, document),
+                            (listModules.contains(module))
+                                ? viewTitle(context, document)
+                                : Container(),
+                            (listModules.contains(module))
+                                ? viewDocumentWidget(context, document)
+                                : Container(),
+                          ],
+                        )),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      )
-    ]);
+        )
+      ]),
+    );
   }
 
   Widget viewDetails(BuildContext context, DocumentModule document) {
@@ -406,6 +436,35 @@ class ViewOneDocumentState extends State<ViewOneDocument>
           SizedBox(height: height * 0.02),
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, String text, Future<void> func()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Warning"),
+          content: Text(text),
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+            TextButton(
+              child: Text("Continue"),
+              onPressed: () {
+                func();
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -32,7 +32,6 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double safePadding = MediaQuery.of(context).padding.top;
     return Stack(fit: StackFit.expand, children: [
       Container(
         decoration: BoxDecoration(
@@ -51,19 +50,10 @@ class ProfileScreenState extends State<ProfileScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                height: safePadding,
-                width: width,
-                decoration: BoxDecoration(color: Colors.white70, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withAlpha(100), blurRadius: 10.0),
-                ]),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 child: Column(
                   children: [
-                    AppBarUI(),
                     SizedBox(
                       height: 15,
                     ),
@@ -94,8 +84,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 20,
                               ),
-                              profileWidget(context, 'SVG/user.svg',
-                                  'mon profile', () {
+                              profileWidget(
+                                  context, 'SVG/user.svg', 'mon profile', () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -170,8 +160,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              profileWidget(context, 'SVG/logout.svg', 'Log out',
-                                  () {
+                              profileWidget(
+                                  context, 'SVG/logout.svg', 'Log out', () {
                                 UserPrefs.clear().then((res) {
                                   Navigator.pushAndRemoveUntil<void>(
                                     context,
