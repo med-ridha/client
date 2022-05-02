@@ -28,11 +28,11 @@ class ResetPasswordScreen extends StatelessWidget {
                   ),
                   Image.asset('images/Logo.png'),
                   SizedBox(
-                    height: /*60*/ height * 0.06,
+                    height: /*60*/ height * 0.04,
                   ),
                   ResetForm(),
                   SizedBox(
-                    height: /*20*/ height * 0.04,
+                    height: /*20*/ height * 0.03,
                   ),
                   SizedBox(height: /*5*/ height * 0.01),
                   OrDivider(),

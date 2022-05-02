@@ -49,13 +49,13 @@ class SecondBarUi extends StatelessWidget {
                   langIcon ?? Icons.language,
                   func: langFunc ?? () {},
                 )
-              : SizedBox(),
+              : Container(width: 0, height: 0),
           (like == true)
               ? LikeButton(
                   likeIcon ?? Icons.favorite_sharp,
                   func: func,
                 )
-              : SizedBox(),
+              : Container(width: 0, height: 0),
         ],
       ),
     );
@@ -63,12 +63,14 @@ class SecondBarUi extends StatelessWidget {
 
   Widget title() {
     return Container(
-      child: Text(
-        titleString,
-        style: TextStyle(
-          color: kPrimaryColor,
-          fontSize: fontSize ?? 24,
-          fontWeight: FontWeight.w500,
+      child: Flexible(
+        child: Text(
+          titleString,
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontSize: fontSize ?? 24,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );

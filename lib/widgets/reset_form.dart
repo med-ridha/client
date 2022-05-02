@@ -469,13 +469,13 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
                             : null,
                 buttonText: (etap == 0) ? 'Valider email':
                             (etap == 1) ? 'Valider token':
-                            'Réinitialisation le mot de passe' 
+                            'Réinitialiser' 
 
 
                 //(etap <= 1) ? 'Suivant ($n / 3)' : 'Submit',
               ),
             ),
-            SizedBox(height: /*10*/ height * 0.05),
+            SizedBox(height: /*10*/ height * 0.03),
             Container(
                 decoration: BoxDecoration(
                   color: kTextFieldColor,

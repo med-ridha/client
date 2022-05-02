@@ -9,20 +9,19 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class Notification {
-
   late final FirebaseMessaging messaging;
   //model
   PushNotification? _notificationInfo;
   // register notification
   registerNotification() async {
     await Firebase.initializeApp();
-
     // instance for firebase messaging
     var _messaging = FirebaseMessaging.instance;
     // three type of state in notification
     // not determined (null), granted (true) and decline (false)
-   // await _messaging.subscribeToTopic("new");
-       
+    // await _messaging.subscribeToTopic("new");
+    print(await _messaging.getToken());
+
     NotificationSettings settings = await _messaging.requestPermission(
       alert: true,
       badge: true,
@@ -42,7 +41,6 @@ class Notification {
           dataBody: message.data['body'],
           url: message.data['url'],
         );
-
       });
     } else {
       print("permission declined by user");
@@ -51,7 +49,7 @@ class Notification {
 
   checkForInitialMessage() async {
     await Firebase.initializeApp();
-    
+
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
@@ -84,5 +82,4 @@ class Notification {
     background();
     checkForInitialMessage();
   }
-
 }

@@ -176,7 +176,8 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                     color: Colors.white,
                                   ),
                                   child: SecondBarUi(
-                                      "Mes collabarotateurs", !empty, func: () {
+                                      "Mes collabarotateurs", !empty,
+                                      fontSize: 16, func: () {
                                     setState(() {
                                       isAdd = !isAdd;
                                     });
@@ -444,7 +445,8 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                   setState(() {
                                     waiting = false;
                                     showSimpleNotification(
-                                        Text("Suppression effectuee avec success",
+                                        Text(
+                                            "Suppression effectuee avec success",
                                             style: TextStyle()),
                                         duration: Duration(seconds: 2),
                                         foreground: Colors.white,

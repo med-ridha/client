@@ -84,7 +84,7 @@ class AbonnementsState extends State<Abonnements>
                               color: Colors.white,
                             ),
                             child:
-                                SecondBarUi('Mes abonnements', true, func: () {
+                                SecondBarUi('Mes abonnements', false,fontSize:18, func: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

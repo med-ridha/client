@@ -69,42 +69,39 @@ class ViewOneCategoryState extends State<ViewOneCategory>
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                  child: Column(
-                    children: [
-                      AppBarUI(),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
+                child: Column(
+                  children: [
+                    AppBarUI(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
                           height: 60,
                           width: width,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
-                          child: (title != "Conventions cadre et sectorielles")
-                              ? SecondBarUi(title, false)
-                              : SecondBarUi(title, false, fontSize: 16),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                            child: Column(
-                          children: [
-                            for (DocumentModule item in listDocuments)
-                              buildDocumentWidget(context, item),
-                          ],
-                        )),
-                      )
-                    ],
-                  ),
+                          child: SecondBarUi(title, false, fontSize: 19)),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          child: Column(
+                        children: [
+                          for (DocumentModule item in listDocuments)
+                            buildDocumentWidget(context, item),
+                        ],
+                      )),
+                    )
+                  ],
                 ),
+              ),
             ],
           ),
         ),

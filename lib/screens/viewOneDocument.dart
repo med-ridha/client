@@ -39,6 +39,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
         background: Colors.redAccent);
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -255,9 +256,10 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                       Text("Reference: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 18)),
-                                      Text(document.ref ?? "",
-                                          style: TextStyle(fontSize: 18)),
+                                              fontSize: 16)),
+                                      Expanded(
+                                          child: Text(document.ref ?? "",
+                                              style: TextStyle(fontSize: 18))),
                                     ],
                                   ),
                                   Row(
@@ -266,7 +268,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                       Text("Publie le: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 18)),
+                                              fontSize: 16)),
                                       Text(document.dateP!.split("T")[0],
                                           style: TextStyle(fontSize: 18)),
                                     ],
@@ -277,7 +279,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                       Text("Module: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 18)),
+                                              fontSize: 16)),
                                       Text(module,
                                           style: TextStyle(fontSize: 18)),
                                     ],
@@ -288,7 +290,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                       Text("Categorie: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
-                                              fontSize: 18)),
+                                              fontSize: 16)),
                                       Text(category,
                                           style: TextStyle(fontSize: 18)),
                                     ],

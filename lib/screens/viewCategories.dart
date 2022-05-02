@@ -80,11 +80,6 @@ class ViewCategoriesState extends State<ViewCategories>
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        width: width,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Colors.white,
-                        ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
@@ -117,34 +112,52 @@ class ViewCategoriesState extends State<ViewCategories>
       BuildContext context, String name, List<String> documentIds) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Container(
-        child: Column(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(name, style: TextStyle(fontSize: 24)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(documentIds.length.toString(),
-                    style: TextStyle(fontSize: 18)),
-                SizedBox(width: width * 0.02),
-                SendButton(
-                    icon: Icons.arrow_forward_ios_sharp,
-                    func: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  ViewOneCategory(name, documentIds, title)));
-                    }),
-              ],
-            )
-          ],
-        ),
+        Container(
+            alignment: Alignment.center,
+            width: width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(height: height * 0.02),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(child: Text(name, style: TextStyle(fontSize: 24))),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(documentIds.length.toString(),
+                              style: TextStyle(fontSize: 18)),
+                          SizedBox(width: width * 0.02),
+                          SendButton(
+                              icon: Icons.arrow_forward_ios_sharp,
+                              func: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            ViewOneCategory(
+                                                name, documentIds, title)));
+                              }),
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: height * 0.02)
+                ],
+              ),
+            )),
         SizedBox(height: height * 0.02)
       ],
-    ));
+    );
   }
 }

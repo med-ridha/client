@@ -31,7 +31,6 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
     DocumentModule.search(searchTerm).then((value) {
       setState(() {
         listModules = value;
-        print(listModules);
         waiting = false;
       });
     });
@@ -145,16 +144,16 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
       BuildContext context, String name, String count, dynamic module) {
     return GestureDetector(
         onTap: () {
-          DocumentModule.getCatSearch(module['listCategories'], searchTerm)
-              .then((result) {
-            print(result);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      ViewCategories(name, result),
-                ));
-          });
+          List<Category> listCategories = [];
+          for (dynamic cat in module['listCategories']) {
+            listCategories.add(Category.fromJson(cat));
+          }
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) =>
+                    ViewCategories(name, listCategories),
+              ));
         },
         child: Container(
             height: 150,

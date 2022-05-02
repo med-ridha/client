@@ -354,7 +354,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         return Form(
             key: _formKey,
             child: Container(
-              height: height * 0.25,
+              //height: height * 0.25,
               alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Column(
@@ -384,7 +384,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         return Form(
             key: _tokenformKey,
             child: Container(
-              height: height * 0.25,
+              //height: height * 0.25,
               alignment: Alignment.center,
               child: SingleChildScrollView(
                 child: Column(

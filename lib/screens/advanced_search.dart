@@ -29,11 +29,11 @@ class AdvancedSearchState extends State<AdvancedSearch>
   bool exacte = false;
 
   String? module;
-  String? category = "select a module";
+  String? category = "Sélectionner une module";
 
   List<String> listModules = [];
 
-  List<String> listCategories = ["select a module"];
+  List<String> listCategories = ["Sélectionner une module"];
 
   DateTime? apresLe;
   DateTime? avantLe;
@@ -93,9 +93,9 @@ class AdvancedSearchState extends State<AdvancedSearch>
             listCategorie.add(cat.name ?? "");
           }
           setState(() {
-            listCategories = ["select a category"];
+            listCategories = ["Sélectionner une categorie"];
             listCategories.addAll(listCategorie);
-            category = "select a category";
+            category = "Sélectionner une categorie";
             module = newValue!;
           });
         },
@@ -119,7 +119,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
         value: category,
         icon: null,
         elevation: 16,
-        style: const TextStyle(color: kPrimaryColor, fontSize: 15),
+        style: const TextStyle(color: kPrimaryColor, fontSize: 12),
         underline: Container(
           height: 2,
           color: kSecondaryColor, // Colors.deepPurpleAccent,
@@ -162,7 +162,6 @@ class AdvancedSearchState extends State<AdvancedSearch>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    double safePadding = MediaQuery.of(context).padding.top;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(new FocusNode());
@@ -193,7 +192,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
                       Column(
                         children: [
                           SizedBox(
-                            height: height * 0.11,
+                            height: 15,
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -229,8 +228,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                           children: [
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text("MODULE: ",
                                                     style: TextStyle(
@@ -243,8 +241,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .start,
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 Text("CATEGORIE: ",
                                                     style: TextStyle(
@@ -271,11 +268,11 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
-                                          Text("Apres le: ",
+                                          Text("APRES LE: ",
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w500)),
-                                          SizedBox(width: width * 0.2),
+                                          SizedBox(width: width * 0.1),
                                           ElevatedButton(
                                             onPressed: () =>
                                                 selectApresLe(context),
@@ -284,7 +281,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                                     ? apresLe
                                                         .toString()
                                                         .split(" ")[0]
-                                                    : "select a date",
+                                                    : "Choisir une date",
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
@@ -297,11 +294,11 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: <Widget>[
-                                          Text("Avant le: ",
+                                          Text("AVANT LE: ",
                                               style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.w500)),
-                                          SizedBox(width: width * 0.2),
+                                          SizedBox(width: width * 0.1),
                                           ElevatedButton(
                                             onPressed: () =>
                                                 selectAvantLe(context),
@@ -310,7 +307,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                                     ? avantLe
                                                         .toString()
                                                         .split(" ")[0]
-                                                    : "select a date",
+                                                    : "Choisir une date",
                                                 style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight:
@@ -335,8 +332,8 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                   motCle = "";
                                   exacte = false;
                                   module = null;
-                                  listCategories = ["select a module"];
-                                  category = "select a module";
+                                  listCategories = ["Sélectionner une module"];
+                                  category = "Sélectionner une module";
                                   apresLe = null;
                                   avantLe = null;
                                 });
@@ -388,6 +385,7 @@ class AdvancedSearchState extends State<AdvancedSearch>
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
         onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
           _formKey.currentState!.save();
           if (motCle.length < 3) {
             showError("mot cle should be atleast 3 letters long");
@@ -399,8 +397,8 @@ class AdvancedSearchState extends State<AdvancedSearch>
           print(exacte);
           if (module != null) query += '&module=$module';
           print(module);
-          if (category != "select a module" && category != "select a category")
-            query += '&category=$category';
+          if (category != "Sélectionner une module" &&
+              category != "Sélectionner une categorie") query += '&category=$category';
           print(category);
           if (apresLe != null) query += '&apresLe=$apresLe';
           print(apresLe);

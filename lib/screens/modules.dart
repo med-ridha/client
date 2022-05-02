@@ -79,7 +79,7 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                             color: Colors.white,
                           ),
                           child: SecondBarUi("Les derniers parutions", false,
-                              fontSize: 20)),
+                              fontSize: 16)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -98,14 +98,14 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                                 children: [
                                   Text("les",
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 25,
                                           fontWeight: FontWeight.w500)),
                                   SizedBox(width: 15),
                                   duree(context),
                                   SizedBox(width: 15),
                                   Text("derniers jour",
                                       style: TextStyle(
-                                          fontSize: 30,
+                                          fontSize: 25,
                                           fontWeight: FontWeight.w500)),
                                 ],
                               ),
@@ -191,7 +191,7 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                       Text(
                         name,
                         style: const TextStyle(
-                            fontSize: 23, fontWeight: FontWeight.bold),
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       Text(
                         count,

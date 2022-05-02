@@ -153,45 +153,6 @@ class DocumentModule {
     return listModules;
   }
 
-  static Future<List<Category>> getCatSearch(
-      List<dynamic> listCategorieIds, String searchTerm) async {
-    List<Category> listCategories = [];
-    String getCategoriesLatestURL =
-        Service.url + "documents/cat/search" + searchTerm;
-
-    Map<String, List<dynamic>> data = {
-      "categories": listCategorieIds,
-    };
-
-    try {
-      var result = await http.post(
-        Uri.parse(getCategoriesLatestURL),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: json.encode(data),
-      );
-      if (result.statusCode == 200) {
-        Map<String, dynamic> data = json.decode(result.body);
-        for (Map<String, dynamic> item in data['message']) {
-          Category cat = Category.fromJson(item);
-          listCategories.add(cat);
-        }
-      }
-    } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101) {
-        showError(
-            "network is unreachable, please make sure you are connected to the internet and try again");
-      }
-      if (e.osError!.errorCode == 111) {
-        showError("connection refused, couldn't reach the server");
-      }
-    } catch (e) {
-      print(e);
-    }
-    return listCategories;
-  }
-
   static void showError(String error) {
     showSimpleNotification(Text(error, style: TextStyle()),
         duration: Duration(seconds: 3),

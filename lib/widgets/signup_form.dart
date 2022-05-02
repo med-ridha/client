@@ -18,8 +18,8 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  String verifyEmailURL = Service.url+'verifyEmail'; // real
-  String createUserURL = Service.url+'createUser'; // real
+  String verifyEmailURL = Service.url + 'verifyEmail'; // real
+  String createUserURL = Service.url + 'createUser'; // real
 
   int etap = 0;
   final GlobalKey<FormState> _etap0FormKey = GlobalKey<FormState>();
@@ -530,7 +530,7 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
               key: _etap0FormKey,
               child: Container(
-                height: height * 0.40,
+                //       height: height * 0.40,
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: Column(
@@ -553,7 +553,7 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
               key: _etap1FormKey,
               child: Container(
-                height: height * 0.40,
+                //      height: height * 0.40,
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: Column(
@@ -580,18 +580,13 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
               key: _etap2FormKey,
               child: Container(
-                height: height * 0.40,
+                //     height: height * 0.40,
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                          height: height * 0.05,
-                          child: (waiting)
-                              ? SpinKitDualRing(size: 40, color: Colors.green)
-                              : null),
-                      SizedBox(height: height * 0.0435),
+                      //SizedBox(height: height * 0.0435),
                       RoundedTextFieldContainer(
                           child: _buildEmail(), error: _emailIsError),
                       SizedBox(height: 15),
@@ -612,17 +607,12 @@ class _SignUpFormState extends State<SignUpForm> {
           return Form(
               key: _etap3FormKey,
               child: Container(
-                height: height * 0.40,
+                //    height: height * 0.40,
                 alignment: Alignment.center,
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                          height: height * 0.05,
-                          child: (waiting)
-                              ? SpinKitDualRing(size: 40, color: Colors.green)
-                              : null),
                       SizedBox(height: height * 0.0435),
                       RoundedTextFieldContainer(
                           child: _buildToken(), error: _tokenIsError),
@@ -706,41 +696,55 @@ class _SignUpFormState extends State<SignUpForm> {
 
     int n = etap + 1;
     return WillPopScope(
-    onWillPop: () async {return (etap == 0)?true:false;},
+      onWillPop: () async {
+        return (etap == 0) ? true : false;
+      },
       child: Container(
           child: Column(
         children: [
           getForm(),
+          SizedBox(height: height * 0.05),
           GestureDetector(
             child: PrimaryButton(
-              func: (etap == 0)
-                  ? etap0
-                  : (etap == 1)
-                      ? etap1
-                      : (etap == 2)
-                          ? etap2
-                          : etap3,
+              func: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+
+                (etap == 0)
+                    ? etap0()
+                    : (etap == 1)
+                        ? etap1()
+                        : (etap == 2)
+                            ? etap2()
+                            : etap3();
+              },
               buttonText: (etap <= 2) ? 'Suivant ($n / 4) ' : 'Confirmer',
             ),
           ),
-          SizedBox(height: /*10*/ height * 0.04),
-          Container(
-              decoration: BoxDecoration(
-                color: kTextFieldColor,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: (etap > 0)
-                  ? IconButton(
-                      splashColor: Colors.red,
-                      splashRadius: 30,
-                      iconSize: 30,
-                      onPressed: () {
-                        setState(() {
-                          etap--;
-                        });
-                      },
-                      icon: Icon(Icons.arrow_back_ios_sharp))
-                  : SizedBox(height: height * 0.0435)),
+          SizedBox(height: /*10*/ height * 0.02),
+          (waiting)
+              ? Container(
+
+                  ///                 height: height * 0.05,
+                  child: (waiting)
+                      ? SpinKitDualRing(size: 40, color: Colors.green)
+                      : null)
+              : Container(
+                  decoration: BoxDecoration(
+                    color: kTextFieldColor,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: (etap > 0)
+                      ? IconButton(
+                          splashColor: Colors.red,
+                          splashRadius: 30,
+                          iconSize: 30,
+                          onPressed: () {
+                            setState(() {
+                              etap--;
+                            });
+                          },
+                          icon: Icon(Icons.arrow_back_ios_sharp))
+                      : SizedBox(height: height * 0.0435)),
         ],
       )),
     );

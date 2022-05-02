@@ -3,7 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/Profile/edit_profile.dart';
 import 'package:juridoc/Profile/mon_profile.dart';
 import 'package:juridoc/Profile/achats.dart';
-import 'package:juridoc/Profile/alert_juridique.dart';
 import 'package:juridoc/Profile/collab.dart';
 import 'package:juridoc/Profile/abonnements.dart';
 import 'package:juridoc/module/UserPrefs.dart';
@@ -92,19 +91,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                       builder: (BuildContext context) =>
                                           MonProfile(),
                                     ));
-                                return;
-                              }),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              profileWidget(
-                                  context, 'SVG/bell.svg', "Alerte juridique",
-                                  () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            Alert()));
                                 return;
                               }),
                               SizedBox(
@@ -207,6 +193,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              //mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SvgPicture.asset(
                   image,
@@ -216,17 +203,19 @@ class ProfileScreenState extends State<ProfileScreen> {
                   color: Colors.white,
                 ),
                 SizedBox(width: 30),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      text,
-                      style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.white),
-                    ),
-                  ],
+                Flexible(
+                  child: Wrap(
+                    //crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        text,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

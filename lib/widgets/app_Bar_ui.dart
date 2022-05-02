@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/screens/Cart.dart';
-import 'package:juridoc/Profile/alert_juridique.dart';
 import 'package:juridoc/screens/home.dart';
 import 'package:juridoc/screens/modules.dart';
 import 'package:juridoc/screens/favoris.dart';
@@ -166,6 +165,7 @@ class AppBarState extends State<AppBarUI> {
               child: InkWell(
                 splashColor: Color(0xFF3f407a), // splash color
                 onTap: () {
+                  print(ModalRoute.of(context)!.toString());
                   Navigator.push(
                       context,
                       MaterialPageRoute(

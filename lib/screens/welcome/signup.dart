@@ -28,11 +28,11 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   Image.asset('images/Logo.png'),
                   SizedBox(
-                    height: /*60*/ height * 0.02,
+                    height: /*60*/ height * 0.03,
                   ),
                   SignUpForm(),
                   SizedBox(
-                    height: /*20*/ height * 0.05,
+                    height: /*20*/ height * 0.01,
                   ),
                   OrDivider(),
                   //SizedBox(height: height * 0.01),

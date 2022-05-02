@@ -24,15 +24,15 @@ class LogInScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                    height: /* 50 */ height * 0.07,
+                    height: /* 50 */ height * 0.05,
                   ),
                   Image.asset('images/Logo.png'),
                   SizedBox(
-                    height: /*60*/ height * 0.06,
+                    height: /*60*/ height * 0.04,
                   ),
                   LogInForm(),
                   SizedBox(
-                    height: /*20*/ height * 0.04,
+                    height: /*20*/ height * 0.02,
                   ),
                   GestureDetector(
                     onTap: () {

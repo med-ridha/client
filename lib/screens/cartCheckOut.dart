@@ -9,7 +9,6 @@ import 'package:juridoc/Profile/abonnements.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/module/service.dart';
-import 'package:juridoc/screens/cartCheckOut.dart';
 import 'package:juridoc/theme.dart';
 import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
@@ -17,29 +16,35 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:juridoc/widgets/secondBarUI.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-class Cart extends StatefulWidget {
+class CartCheckOut extends StatefulWidget {
+  final List<String> modules;
+  final int duree;
+  final double montant;
+  CartCheckOut(this.modules, this.duree, this.montant);
   @override
-  CartState createState() => CartState();
+  CartCheckOutState createState() => CartCheckOutState(modules, duree, montant);
 }
 
-class CartState extends State<Cart> with TickerProviderStateMixin {
-  double montant = 0;
-  List<String> modules = [];
+class CartCheckOutState extends State<CartCheckOut>
+    with TickerProviderStateMixin {
+  List<String> modules;
+  int duree;
+  double montant;
+  CartCheckOutState(this.modules, this.duree, this.montant);
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String createAbonnURL = Service.url + 'users/createAbonn';
 
   late FocusNode _creditFNode;
   bool _creditIsError = false;
   String? _creditCard;
-  List<String> listModules = [];
 
   bool done = false;
 
   @override
   void initState() {
     _creditFNode = FocusNode();
-    UserModule.getModules().then((result) => {
-          setState(() => {listModules = result})
-        });
     super.initState();
   }
 
@@ -48,13 +53,6 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
     _creditFNode.dispose();
     super.dispose();
   }
-
-  String? selectedValue;
-  List<String> items = [
-    '1 Ans',
-    '2 Ans',
-    '3 Ans',
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +88,7 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     AppBarUI(),
                     SizedBox(
@@ -121,15 +119,14 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            //mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               abonnemnt(context),
                               SizedBox(height: height * 0.02),
                               text1(context),
-                              duree(context),
+                              //duree(context),
                               SizedBox(height: height * 0.02),
                               text2(context),
-                              checkbox(context),
                               SizedBox(height: height * 0.02),
                               Container(
                                 child: Row(
@@ -143,6 +140,12 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
                                   ],
                                 ),
                               ),
+                              SizedBox(height: height * 0.02),
+                              Form(
+                                  key: _formKey,
+                                  child: RoundedTextFieldContainer(
+                                      child: buildCreditCard(),
+                                      error: _creditIsError)),
                               SizedBox(height: height * 0.02),
                               button1(context),
                               SizedBox(height: height * 0.01),
@@ -161,48 +164,20 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
     ]);
   }
 
-  Widget checkbox(BuildContext context) {
-    return CheckboxGroup(
-        labels: <String>[
-          "Fiscal",
-          "Social",
-          "Investissement",
-          "Banque-Finances-Assurances",
-          "BIBUS",
-          "Collectivites locales",
-          "Veille Juridique",
-        ],
-        disabled: listModules,
-        checked: modules,
-        onSelected: (List<String> checked) {
-          setState(() {
-            montant = 0;
-          });
-          for (String item in checked) montant += 444.4;
-          setState(() {
-            modules = checked;
-          });
-          print(checked.toString());
-        });
-  }
-
   Widget abonnemnt(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(
-            width: 15,
-          ),
           Flexible(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  "Merci de préciser la durée de votre abonnement et le nombre de module acheter.",
+                  "CONFIRMER LA COMMANDE.",
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.normal),
+                      fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -214,112 +189,82 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
 
   Widget text1(BuildContext context) {
     return Text(
-      "Duree d'abonnement",
+      "Duree d'abonnement: $duree ans",
       style: const TextStyle(
           fontSize: 21, fontWeight: FontWeight.normal, color: kSecondaryColor),
     );
   }
 
   Widget text2(BuildContext context) {
-    return Text(
-      "Choisir un ou plusieur",
-      style: const TextStyle(
-          fontSize: 21, fontWeight: FontWeight.normal, color: kSecondaryColor),
+    return Column(
+      children: [
+        Text(
+          "Modules choisis",
+          style: const TextStyle(
+              fontSize: 21,
+              fontWeight: FontWeight.normal,
+              color: kSecondaryColor),
+        ),
+        SizedBox(height: 10),
+        for (String module in modules)
+          Text(module,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400))
+      ],
     );
   }
 
-  Widget duree(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-          ]),
-      width: width,
-      child: Center(
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton2(
-            isExpanded: true,
-            hint: Row(
-              children: const [
-                Icon(
-                  Icons.list,
-                  size: 16,
-                  color: Colors.black,
-                ),
-                SizedBox(
-                  width: 4,
-                ),
-                Expanded(
-                  child: Text(
-                    'Choisir votre durée',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-            items: items
-                .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ))
-                .toList(),
-            value: selectedValue,
-            onChanged: (value) {
-              setState(() {
-                selectedValue = value as String;
-              });
-            },
-            icon: const Icon(
-              Icons.arrow_forward_ios_outlined,
-            ),
-            iconSize: 14,
-            iconEnabledColor: Colors.black,
-            iconDisabledColor: Colors.grey,
-            buttonHeight: 50,
-            buttonWidth: width,
-            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-            buttonDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: Colors.black26,
-              ),
-              color: Colors.white,
-            ),
-            buttonElevation: 2,
-            itemHeight: 40,
-            itemPadding: const EdgeInsets.only(left: 14, right: 14),
-            dropdownMaxHeight: 200,
-            dropdownWidth: 200,
-            dropdownPadding: null,
-            dropdownDecoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-            ),
-            dropdownElevation: 8,
-            scrollbarRadius: const Radius.circular(40),
-            scrollbarThickness: 6,
-            scrollbarAlwaysShow: true,
-            offset: const Offset(-20, 0),
-          ),
-        ),
+  Widget buildCreditCard() {
+    return TextFormField(
+      focusNode: _creditFNode,
+      initialValue: _creditCard,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        icon: Icon(Icons.credit_card),
+        border: InputBorder.none,
+        iconColor: Colors.purple,
+        errorStyle: TextStyle(fontSize: 16.0),
+        hintText: 'Credit Card',
       ),
+      onChanged: (String? value) {
+        if (value!.length == 16) {
+          setState(() {
+            _creditIsError = false;
+          });
+          return null;
+        }
+      },
+      onSaved: (String? value) {
+        _creditCard = value;
+      },
+    );
+  }
+
+  showAlertDialog(BuildContext context, String text, Future<void> func()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Warning"),
+          content: Text(text),
+          actions: [
+            TextButton(
+              child: Text("Annuler"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+            TextButton(
+              child: Text("Continue"),
+              onPressed: () {
+                func();
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -327,31 +272,58 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
         onTap: () async {
+          FocusScope.of(context).requestFocus(new FocusNode());
           if (!done) {
-            if (selectedValue == null) {
-              showError("you need to choose une duree");
-              return;
-            }
+            _formKey.currentState!.save();
 
             if (modules.length == 0) {
               showError("please select atleast one module!!");
               return;
             }
 
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => CartCheckOut(
-                        modules,
-                        int.parse(selectedValue?.split(" ")[0] ?? ""),
-                        montant))).then((value) {
-              selectedValue = null;
-              modules = [];
-              UserModule.getModules().then((result) {
+            if (!validateCreditCard(_creditCard!)) {
+              return;
+            }
+            showAlertDialog(context, "Are you sure? amount: $montant TND",
+                () async {
+              Map<String, String?> data = {
+                "email": UserPrefs.getEmail(),
+                "montant": montant.toString(),
+                "modules": modules.toString(),
+                "duree": duree.toString()
+              };
+              var result = await http.post(Uri.parse(createAbonnURL),
+                  headers: <String, String>{
+                    'Content-Type': 'application/json; charset=UTF-8',
+                  },
+                  body: jsonEncode(data));
+              if (result.statusCode == 200) {
                 setState(() {
-                  listModules = result;
+                  done = true;
                 });
-              });
+                Map<String, dynamic> response = json.decode(result.body);
+                print(response);
+                List<String> listAbonn =
+                    List<String>.from(response['message'].map((x) => x));
+                UserPrefs.setListAbonn(listAbonn);
+                await UserModule.getModules();
+                await Future.delayed(Duration(seconds: 2), () {
+                  showSimpleNotification(
+                      Text("abonnement success", style: TextStyle()),
+                      duration: Duration(seconds: 3),
+                      foreground: Colors.white,
+                      background: Colors.greenAccent);
+                  setState(() {
+                    done = false;
+                  });
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => Abonnements()));
+                });
+              } else {
+                showError("something went wrong!");
+              }
             });
           }
         },
@@ -393,6 +365,40 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
                 ],
               ),
             )));
+  }
+
+  bool validateCreditCard(String creditCard) {
+    if (creditCard.isEmpty) {
+      _creditFNode.requestFocus();
+      setState(() {
+        _creditIsError = true;
+      });
+      return false;
+    }
+    List<String> args = creditCard.split('');
+    for (int i = 0; i < args.length; i++) {
+      try {
+        double.parse(args[i]);
+      } catch (error) {
+        setState(() {
+          _creditIsError = true;
+        });
+        showError("credit card must contains only numbers");
+        return false;
+      }
+    }
+    if (creditCard.length != 16) {
+      showError("credit card should be 16 numbers long");
+      setState(() {
+        _creditIsError = true;
+      });
+      _creditFNode.requestFocus();
+      return false;
+    }
+    setState(() {
+      _creditIsError = false;
+    });
+    return true;
   }
 
   void showError(String error) {
