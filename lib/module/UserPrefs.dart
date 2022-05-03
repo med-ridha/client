@@ -33,6 +33,7 @@ class UserPrefs {
     await UserPrefs.setListFavorit(user.favored ?? []);
     await UserPrefs.setListAbonn(user.abonnement ?? []);
     await UserPrefs.setLatestDuration(30);
+    await UserPrefs.setIsLogedIn(true);
   }
 
   static Future init() async => _prefs = await SharedPreferences.getInstance();

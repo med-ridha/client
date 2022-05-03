@@ -667,7 +667,6 @@ class _SignUpFormState extends State<SignUpForm> {
         await UserPrefs.save(user);
         //await notif.Notification().initState();
         await FirebaseMessaging.instance.subscribeToTopic("new");
-        await UserPrefs.setIsLogedIn(true);
         setState(() {
           waiting = false;
         });

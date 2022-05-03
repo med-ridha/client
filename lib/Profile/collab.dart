@@ -437,6 +437,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                   if (res == null || res.length == 0) {
                                     setState(() {
                                       empty = true;
+                                      isAdd = false;
                                       waiting = false;
                                     });
                                   } else {

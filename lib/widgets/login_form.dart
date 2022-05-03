@@ -248,13 +248,12 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
           await UserPrefs.save(user);
           //await notif.Notification().initState();
           await FirebaseMessaging.instance.subscribeToTopic("new");
-          await UserPrefs.setIsLogedIn(true);
           await UserModule.getModules();
-          showSimpleNotification(Text("welcome", style: TextStyle()),
-              duration: Duration(seconds: 3),
+          showSimpleNotification(Text("Bienvenue", style: TextStyle()),
+              duration: Duration(seconds: 2),
               foreground: Colors.white,
               background: Colors.greenAccent);
-          await Future.delayed(Duration(seconds: 2), () {
+          await Future.delayed(Duration(seconds: 1), () {
             Navigator.pushAndRemoveUntil<void>(
                 context,
                 MaterialPageRoute<void>(
