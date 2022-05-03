@@ -6,6 +6,8 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juridoc/module/UserPrefs.dart';
@@ -182,7 +184,8 @@ class UserModule {
 
   static Future<bool> removeFromFavorite(String documentId) async {
     String email = UserPrefs.getEmail() ?? '';
-    String addToFavoriteURL = Service.url + 'documents/removeFromFavorite'; // real
+    String addToFavoriteURL =
+        Service.url + 'documents/removeFromFavorite'; // real
     Map<String, String> data = {
       "email": email,
       "documentId": documentId,
@@ -217,6 +220,7 @@ class UserModule {
       return false;
     }
   }
+
   static Future<bool> addToFavorite(String documentId) async {
     String email = UserPrefs.getEmail() ?? '';
     String addToFavoriteURL = Service.url + 'documents/addToFavorite'; // real
@@ -252,6 +256,36 @@ class UserModule {
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  static check(String notifId, String email) async {
+    String checkURL = Service.url + "users/check";
+    try {
+      Map<String, String> data = {"notifId": notifId, "email": email};
+      var result = await http.post(
+        Uri.parse(checkURL),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
+      print(result.body);
+      if (result.statusCode == 200) {
+        final user = userModuleFromJson(result.body);
+        await UserPrefs.save(user);
+      } else if (result.statusCode == 404) {
+        showError("Your account has been deleted");
+        UserPrefs.clear();
+      }
+    } on SocketException catch (e) {
+      if (e.osError!.errorCode == 101) {
+        showError(
+            "network is unreachable, please make sure you are connected to the internet and try again");
+      }
+      if (e.osError!.errorCode == 111) {
+        showError("connection refused, couldn't reach the server");
+      }
     }
   }
 

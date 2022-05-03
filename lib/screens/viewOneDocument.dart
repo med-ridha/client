@@ -39,18 +39,15 @@ class ViewOneDocumentState extends State<ViewOneDocument>
         background: Colors.redAccent);
   }
 
-
   @override
   void initState() {
     super.initState();
     waiting = true;
-    setState(() {
-      isFavorite = UserPrefs.getListFavorit().contains(document.id);
-    });
-
+    
     UserModule.getModules().then((result) async => {
           await Future.delayed(Duration(milliseconds: 250), () {
             setState(() {
+              isFavorite = UserPrefs.getListFavorit().contains(document.id);
               listModules = result;
               waiting = false;
               print(listModules);
@@ -299,7 +296,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                 ]
                               : <Widget>[
                                   Padding(
-                                    padding: const EdgeInsets.all(18.0),
+                                    padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -311,7 +308,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: Colors.redAccent,
-                                                fontSize: 18),
+                                                fontSize: 20),
                                           ),
                                         ),
                                         Row(
@@ -322,14 +319,20 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                               mainAxisAlignment:
                                                   MainAxisAlignment.center,
                                               children: [
-                                                Text(
-                                                    "you need to by a subscription to view this",
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                    )),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                        "you need to by a subscription to view this",
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                        )),
+                                                  ],
+                                                ),
                                                 Text("document",
                                                     style: TextStyle(
-                                                      fontSize: 18,
+                                                      fontSize: 14,
                                                     )),
                                               ],
                                             )

@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/module/ModuleModule.dart';
@@ -34,127 +35,94 @@ class _HomeContentState extends State<HomeContent>
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return RefreshIndicator(
-          onRefresh: () async {
-            ModuleModule.getListModules().then((result) {
-              setState(() {
-                listModules = result;
-              });
-            });
-          },
+      onRefresh: () async {
+        ModuleModule.getListModules().then((result) {
+          setState(() {
+            listModules = result;
+          });
+        });
+      },
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
-          child: Stack(fit: StackFit.expand, children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromRGBO(4, 9, 35, 1),
-                    Color.fromRGBO(39, 105, 171, 1),
-                  ],
-                  begin: FractionalOffset.bottomCenter,
-                  end: FractionalOffset.topCenter,
-                ),
+        child: Stack(fit: StackFit.expand, children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color.fromRGBO(4, 9, 35, 1),
+                  Color.fromRGBO(39, 105, 171, 1),
+                ],
+                begin: FractionalOffset.bottomCenter,
+                end: FractionalOffset.topCenter,
               ),
-            ),
-            Scaffold(
-              backgroundColor: Colors.transparent,
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.white,
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8),
-                                child: Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    getText(),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    getText1(),
-                                    getSearchBarUI(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.white,
-                              ),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 15),
-                                child: Column(
-                                  children: [
-                                    juridoc(),
-                                    juridoc1(),
-                                    text(),
-                                    juridoc2(),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            )
-          ]),
-        ),
-    );
-  }
-
-  Widget juridoc() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-          child: Text(
-            'Juridoc.tn',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
-              letterSpacing: 0.27,
-              color: DesignCourseAppTheme.darkerText,
             ),
           ),
-        ),
-        const SizedBox(
-          height: 16,
-        ),
-      ],
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body:
+                // SingleChildScrollView(
+                //   child:
+                Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 15),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white60,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Column(
+                              children: [
+                                getSearchBarUI(),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: width,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: Colors.white70,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: Column(
+                              children: [
+                                juridoc1(),
+                                text(),
+                                moduleWidget(context),
+                                SizedBox(height: 15)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // )
+        ]),
+      ),
     );
   }
 
@@ -165,15 +133,22 @@ class _HomeContentState extends State<HomeContent>
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-          child: Text(
-            'Juridoc est la plateforme indispensable s’adressant aux : DAF, DRH, Experts-Comptables, commissaires aux comptes, Responsables juridiques, Avocats, ...',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.w200,
-              fontSize: 17,
-              letterSpacing: 0.27,
-              color: DesignCourseAppTheme.darkerText,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                child: Text(
+                  'Juridoc est la plateforme indispensable s’adressant aux : DAF, DRH, Experts-Comptables, commissaires aux comptes, Responsables juridiques, Avocats, ...',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                    letterSpacing: 0.27,
+                    color: DesignCourseAppTheme.darkerText,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         const SizedBox(
@@ -205,113 +180,28 @@ class _HomeContentState extends State<HomeContent>
     );
   }
 
-  Widget juridoc2() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
-          child: Text(
-            'JURIDOC vous donne l accès à une documentation exhaustive et continuellement à jour',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontWeight: FontWeight.w200,
-              fontSize: 17,
-              letterSpacing: 0.27,
-              color: DesignCourseAppTheme.darkerText,
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 50,
-        ),
-        Container(
-          height: 200,
-          width: double.infinity,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              moduleWidget(
-                context,
-                "Fiscal",
-                "images/Fiscal.png",
-                ModuleModule.getNum("Fiscal", listModules).toString(),
-              ),
-              moduleWidget(
-                context,
-                "Social",
-                "images/Social.png",
-                ModuleModule.getNum("Social", listModules).toString(),
-              ),
-              moduleWidget(
-                context,
-                "Investissement",
-                "images/Investissement.png",
-                ModuleModule.getNum("Investissement", listModules).toString(),
-              ),
-              moduleWidget(
-                context,
-                "Banque-Finances-Assurances",
-                "images/Banque-Finances-Assurances.png",
-                ModuleModule.getNum("Banque-Finances-Assurances", listModules)
-                    .toString(),
-              ),
-              moduleWidget(
-                context,
-                "BIBUS",
-                "images/BIBUS.png",
-                ModuleModule.getNum("BIBUS", listModules).toString(),
-              ),
-              moduleWidget(
-                context,
-                "Collectivités locales",
-                "images/Collectivites locales.png",
-                ModuleModule.getNum("Collectivites locales", listModules)
-                    .toString(),
-              ),
-              moduleWidget(
-                context,
-                "Veille Juridique",
-                "images/Veille Juridique.png",
-                ModuleModule.getNum("Veille Juridique", listModules).toString(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
-      ],
-    );
-  }
-
   Widget getSearchBarUI() {
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, left: 20),
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(context).size.width * 0.75,
+            width: MediaQuery.of(context).size.width * 0.90,
+            height: 40,
             child: Padding(
-              padding: const EdgeInsets.only(top: 18, bottom: 18),
+              padding: const EdgeInsets.only(top: 0, bottom: 0),
               child: Container(
                 decoration: BoxDecoration(
                   color: kSecondaryColor,
-                  borderRadius: const BorderRadius.only(
-                    bottomRight: Radius.circular(18.0),
-                    bottomLeft: Radius.circular(13.0),
-                    topLeft: Radius.circular(18.0),
-                    topRight: Radius.circular(13.0),
-                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(18.0)),
                 ),
                 child: Row(
                   children: <Widget>[
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        padding: const EdgeInsets.only(left: 15, bottom: 5),
                         child: TextFormField(
                           onChanged: (String? value) {
                             searchTerm = value ?? '';
@@ -319,17 +209,37 @@ class _HomeContentState extends State<HomeContent>
                           style: TextStyle(
                             fontFamily: 'WorkSans',
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 18,
                             color: Colors.white,
                           ),
                           keyboardType: TextInputType.text,
+                          onFieldSubmitted: (String? value) {
+                            if (value != null) {
+                              if (value.length > 3) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (BuildContext context) => Search(
+                                          "?search=$searchTerm&email=" +
+                                              (UserPrefs.getEmail() ?? "")),
+                                    ));
+                              } else {
+                                showError("atleast 3 letters are requried!");
+                              }
+                            }
+                          },
                           decoration: InputDecoration(
-                            labelText: 'Recherchez par mot clé',
+                            hintText: 'Recherchez par mot clé',
                             border: InputBorder.none,
+                            hintStyle: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 15,
+                            ),
                             helperStyle: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
+                              fontWeight: FontWeight.w200,
+                              fontSize: 14,
                             ),
                             labelStyle: TextStyle(
                               color: Colors.white,
@@ -357,7 +267,6 @@ class _HomeContentState extends State<HomeContent>
                           } else {
                             showError("atleast 3 letters are requried!");
                           }
-                          //showSearch(context: context, delegate: Search(widget.list));
                         },
                         icon: Icon(
                           Icons.search,
@@ -399,11 +308,74 @@ class _HomeContentState extends State<HomeContent>
     );
   }
 
-  Widget moduleWidget(
-      BuildContext context, String name, String image, String count) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+  Widget moduleWidget(BuildContext context) {
+    return GestureDetector(
+        onTap: () {},
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CarouselSlider(
+                items: [
+                  moduleWidget2(
+                    context,
+                    "Fiscal",
+                    "Fiscal",
+                    ModuleModule.getNum("Fiscal", listModules).toString(),
+                  ),
+                  moduleWidget2(
+                    context,
+                    "Social",
+                    "Social",
+                    ModuleModule.getNum("Social", listModules).toString(),
+                  ),
+                  moduleWidget2(
+                    context,
+                    "Investissement",
+                    "Investissement",
+                    ModuleModule.getNum("Investissement", listModules)
+                        .toString(),
+                  ),
+                  moduleWidget2(
+                    context,
+                    "Banque-Finances-Assurances",
+                    "Banque-Finances-Assurances",
+                    ModuleModule.getNum(
+                            "Banque-Finances-Assurances", listModules)
+                        .toString(),
+                  ),
+                  moduleWidget2(
+                    context,
+                    "BIBUS",
+                    "BIBUS",
+                    ModuleModule.getNum("BIBUS", listModules).toString(),
+                  ),
+                  moduleWidget2(
+                    context,
+                    "Collectivités locales",
+                    "Collectivites locales",
+                    ModuleModule.getNum("Collectivites locales", listModules)
+                        .toString(),
+                  ),
+                  moduleWidget2(
+                    context,
+                    "Veille Juridique",
+                    "Veille Juridique",
+                    ModuleModule.getNum("Veille Juridique", listModules)
+                        .toString(),
+                  ),
+                ],
+                options: CarouselOptions(
+                  initialPage: 0,
+                  autoPlay: true,
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enableInfiniteScroll: true,
+                ))
+          ],
+        ));
+  }
 
+  Widget moduleWidget2(
+      BuildContext context, String name, String image, String count) {
     return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -414,7 +386,8 @@ class _HomeContentState extends State<HomeContent>
               ));
         },
         child: Container(
-            height: height,
+            height: 150,
+            width: 300,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -427,29 +400,31 @@ class _HomeContentState extends State<HomeContent>
               padding:
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        name,
-                        style: const TextStyle(
-                            fontSize: 23, fontWeight: FontWeight.bold),
+                      Image.asset(
+                        "images/$image.png",
+                        height: 90,
                       ),
                       SizedBox(
                         height: 10,
                       ),
+                      Flexible(
+                        child: Text(
+                          name.split("-").join(" "),
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ),
                       Text(
-                        "$count Documents",
+                        count,
                         style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.normal),
+                            fontSize: 19, fontWeight: FontWeight.normal),
                       ),
                     ],
-                  ),
-                  Image.asset(
-                    image,
-                    height: double.infinity,
                   ),
                 ],
               ),

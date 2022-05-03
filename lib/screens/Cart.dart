@@ -108,7 +108,7 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
                           child: SecondBarUi("Abonnement", false)),
                     ),
                     SizedBox(
-                      height: 30,
+                      height: 15,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -201,8 +201,9 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
               children: <Widget>[
                 Text(
                   "Merci de préciser la durée de votre abonnement et le nombre de module acheter.",
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.normal),
+                      fontSize: 16, fontWeight: FontWeight.w300),
                 ),
               ],
             ),

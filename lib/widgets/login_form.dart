@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:juridoc/firebase/services/notifications.dart' as notif;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
@@ -243,6 +246,8 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
           final user = userModuleFromJson(tokenResult.body);
           await UserPrefs.clear();
           await UserPrefs.save(user);
+          //await notif.Notification().initState();
+          await FirebaseMessaging.instance.subscribeToTopic("new");
           await UserPrefs.setIsLogedIn(true);
           await UserModule.getModules();
           showSimpleNotification(Text("welcome", style: TextStyle()),

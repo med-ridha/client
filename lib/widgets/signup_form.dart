@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:juridoc/firebase/services/notifications.dart' as notif;
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
@@ -662,6 +665,8 @@ class _SignUpFormState extends State<SignUpForm> {
         final user = userModuleFromJson(result.body);
         await UserPrefs.clear();
         await UserPrefs.save(user);
+        //await notif.Notification().initState();
+        await FirebaseMessaging.instance.subscribeToTopic("new");
         await UserPrefs.setIsLogedIn(true);
         setState(() {
           waiting = false;
@@ -671,7 +676,7 @@ class _SignUpFormState extends State<SignUpForm> {
             duration: Duration(seconds: 2),
             foreground: Colors.white,
             background: Colors.greenAccent);
-        Future.delayed(Duration(seconds: 2), () {
+        Future.delayed(Duration(seconds: 1), () {
           Navigator.pushAndRemoveUntil<void>(
               context,
               MaterialPageRoute<void>(

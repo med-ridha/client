@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:juridoc/Profile/edit_profile.dart';
@@ -84,7 +86,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 height: 20,
                               ),
                               profileWidget(
-                                  context, 'SVG/user.svg', 'mon profile', () {
+                                  context, 'SVG/user.svg', 'Mon profil', () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -97,7 +99,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 height: 15,
                               ),
                               profileWidget(context, 'SVG/paper-plane.svg',
-                                  'Mes Abonnements', () {
+                                  'Mes abonnements', () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -109,7 +111,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 height: 15,
                               ),
                               profileWidget(
-                                  context, 'SVG/shopbag.svg', "Mes achat", () {
+                                  context, 'SVG/shopbag.svg', "Mes achats", () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -121,7 +123,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 height: 15,
                               ),
                               profileWidget(
-                                  context, 'SVG/users.svg', "Mes Collaborateur",
+                                  context, 'SVG/users.svg', "Mes collaborateurs",
                                   () {
                                 Navigator.push(
                                     context,
@@ -134,7 +136,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 height: 15,
                               ),
                               profileWidget(context, 'SVG/tools.svg',
-                                  'Mettre a jour profile', () {
+                                  'Mettre à jour profil', () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -147,8 +149,11 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 height: 15,
                               ),
                               profileWidget(
-                                  context, 'SVG/logout.svg', 'Log out', () {
-                                UserPrefs.clear().then((res) {
+                                  context, 'SVG/logout.svg', 'Se déconnecter',
+                                  () {
+                                UserPrefs.clear().then((res) async {
+                                  await FirebaseMessaging.instance
+                                      .unsubscribeFromTopic('new');
                                   Navigator.pushAndRemoveUntil<void>(
                                     context,
                                     MaterialPageRoute<void>(
