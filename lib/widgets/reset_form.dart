@@ -201,7 +201,6 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
                             foreground: Colors.white,
                             background: Colors.greenAccent);
                       } else {
-                        print(result.body);
                         showError("something went wrong!");
                       }
                       setState(() {
@@ -260,7 +259,6 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
           etap = 1;
         });
       } else {
-        print(result.body);
         showDialog(
             context: context,
             builder: (BuildContext context) => _buildErrorPopupDialog(

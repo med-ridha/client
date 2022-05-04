@@ -525,7 +525,6 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
           background: Colors.greenAccent);
       UserModule.getCollabs().then((res) {
         if (res == null || res.length == 0) {
-          print(res);
           setState(() {
             empty = true;
             waiting = false;
@@ -551,7 +550,6 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
       return;
     }
 
-    print(_email);
 
     setState(() {
       emailWaiting = true;

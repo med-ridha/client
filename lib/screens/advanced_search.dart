@@ -391,22 +391,14 @@ class AdvancedSearchState extends State<AdvancedSearch>
             showError("mot cle should be atleast 3 letters long");
             return;
           }
-          print(motCle);
           String query = '?search=$motCle';
           if (exacte) query += '&exacte=$exacte';
-          print(exacte);
           if (module != null) query += '&module=$module';
-          print(module);
           if (category != "Sélectionner une module" &&
               category != "Sélectionner une categorie") query += '&category=$category';
-          print(category);
           if (apresLe != null) query += '&apresLe=$apresLe';
-          print(apresLe);
           if (avantLe != null) query += '&avantLe=$avantLe';
-          print(avantLe);
-          print(query);
           query += '&email=' + (UserPrefs.getEmail() ?? '');
-          //DocumentModule.search(query).then((value) => print(value));
 
           Navigator.push(
               context,

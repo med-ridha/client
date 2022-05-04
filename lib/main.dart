@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,10 @@ import 'package:juridoc/module/DocumentModule.dart';
 import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
+import 'package:juridoc/module/service.dart';
+import 'package:juridoc/screens/404Error.dart';
 import 'package:juridoc/screens/home.dart';
+import 'package:juridoc/screens/no_connection.dart';
 import 'package:juridoc/screens/viewOneCategory.dart';
 import 'package:juridoc/screens/viewOneDocument.dart';
 import 'package:juridoc/screens/welcome/login.dart';
@@ -19,7 +23,6 @@ import 'package:juridoc/screens/welcome/onboarding_screen.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("Handling a background message");
 }
 
 Future<void> main() async {
@@ -65,7 +68,6 @@ class InitState extends State<Init> {
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        print("yses");
         DocumentModule document;
         DocumentModule.getListDocuments([message.data['id']]).then((result) {
           if (result.length > 0) {
@@ -83,13 +85,9 @@ class InitState extends State<Init> {
     LocalNotificationService.initilize(context);
     FirebaseMessaging.onMessage.listen((message) {
       LocalNotificationService.showNotificationOnForeground(message);
-      print(message.notification!.body);
-      print(message.notification!.title);
-      print(message.data);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print("yses");
       DocumentModule document;
       DocumentModule.getListDocuments([message.data['id']])
           .then((result) async {
@@ -105,23 +103,38 @@ class InitState extends State<Init> {
     });
   }
 
+  void showError(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent);
+  }
+
   Future<Widget> loadFromFuture() async {
-    if (!logedIn) {
-      await FirebaseMessaging.instance.unsubscribeFromTopic("new");
-      return Future.value(new OnboardingScreen());
-    } else {
-      //await notif.Notification().initState();
-      await FirebaseMessaging.instance.subscribeToTopic("new");
-      String notifId = await FirebaseModule.getFireBaseId() ?? '';
-      await UserModule.check(notifId, UserPrefs.getEmail() ?? '');
-      logedIn = UserPrefs.getIsLogedIn()!;
+    try {
+      await http.get(Uri.parse(Service.url));
       if (!logedIn) {
         await FirebaseMessaging.instance.unsubscribeFromTopic("new");
         return Future.value(new OnboardingScreen());
       } else {
-        return Future.value(new HomeScreen(0));
+        String notifId = await FirebaseModule.getFireBaseId() ?? '';
+        await UserModule.check(notifId, UserPrefs.getEmail() ?? '');
+        logedIn = UserPrefs.getIsLogedIn()!;
+        if (!logedIn) {
+          await FirebaseMessaging.instance.unsubscribeFromTopic("new");
+          return Future.value(new OnboardingScreen());
+        } else {
+          await FirebaseMessaging.instance.subscribeToTopic("new");
+          return Future.value(new HomeScreen(0));
+        }
+      }
+    } on SocketException catch (err) {
+      if (err.osError!.errorCode == 101) {
+        showError("make sure you are connected to the internet");
+        return Future.value(new NoConnectionScreen());
       }
     }
+    return Future.value(new SomethingWentWrongScreen());
   }
 
   @override

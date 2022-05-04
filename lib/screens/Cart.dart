@@ -182,7 +182,6 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
           setState(() {
             modules = checked;
           });
-          print(checked.toString());
         });
   }
 

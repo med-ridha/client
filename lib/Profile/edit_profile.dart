@@ -358,7 +358,6 @@ class EditProfileState extends State<EditProfile> {
     } else if (result.statusCode == 401) {
       showError("Wrong password");
     } else {
-      print(result.body);
       showDialog(
           context: context,
           builder: (BuildContext context) => _buildErrorPopupDialog(

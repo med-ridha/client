@@ -302,7 +302,6 @@ class CartCheckOutState extends State<CartCheckOut>
                   done = true;
                 });
                 Map<String, dynamic> response = json.decode(result.body);
-                print(response);
                 List<String> listAbonn =
                     List<String>.from(response['message'].map((x) => x));
                 UserPrefs.setListAbonn(listAbonn);

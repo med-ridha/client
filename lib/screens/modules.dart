@@ -26,7 +26,6 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
     ModuleModule.getModulesLatest().then((value) {
       setState(() {
         listModules = value;
-        print(listModules);
       });
     });
   }
@@ -153,7 +152,6 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
         onTap: () {
           ModuleModule.getCategoriesLatest(module['listCategories'])
               .then((result) {
-            print(result);
             Navigator.push(
                 context,
                 MaterialPageRoute(

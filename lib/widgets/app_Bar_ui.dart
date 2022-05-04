@@ -165,7 +165,6 @@ class AppBarState extends State<AppBarUI> {
               child: InkWell(
                 splashColor: Color(0xFF3f407a), // splash color
                 onTap: () {
-                  print(ModalRoute.of(context)!.toString());
                   Navigator.push(
                       context,
                       MaterialPageRoute(

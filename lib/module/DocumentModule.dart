@@ -92,7 +92,6 @@ class DocumentModule {
     );
     if (result.statusCode == 200) {
       Map<String, dynamic> response = json.decode(result.body);
-      print(response);
       listDocumentIds = List<String>.from(response['message'].map((x) => x));
     }
     return listDocumentIds;
@@ -144,11 +143,9 @@ class DocumentModule {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showError("connection refused, couldn't reach the server");
       }
-    } catch (e) {
-      print(e);
     }
     return listModules;
   }

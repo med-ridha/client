@@ -73,7 +73,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         showErrorSlide(
             "network is unreachable, please make sure you are connected to the internet");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showErrorSlide("connection refused, couldn't reach the server");
       }
     }
@@ -194,7 +194,6 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
                             foreground: Colors.white,
                             background: Colors.greenAccent);
                       } else {
-                        print(result.body);
                         showError("something went wrong!");
                       }
                       setState(() {
@@ -278,7 +277,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
           showErrorSlide(
               "network is unreachable, please make sure you are connected to the internet");
         }
-        if (e.osError!.errorCode == 111) {
+        if (e.osError!.errorCode != 101) {
           showErrorSlide("connection refused, couldn't reach the server");
         }
       }
@@ -289,8 +288,6 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
       _formKey.currentState!.save();
       if (!validateEmail(_email!) || !validatePassword(_password!)) return;
 
-      print(_email);
-      print(_password);
 
       Map<String, String?> data = {
         "email": _email,
@@ -332,7 +329,6 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
             _passwordIsError = true;
           });
         } else {
-          print(result.body);
           showDialog(
               context: context,
               builder: (BuildContext context) => _buildErrorPopupDialog(
@@ -345,7 +341,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
           showErrorSlide(
               "network is unreachable, please make sure you are connected to the internet");
         }
-        if (e.osError!.errorCode == 111) {
+        if (e.osError!.errorCode != 101) {
           showErrorSlide("connection refused, couldn't reach the server");
         }
       }

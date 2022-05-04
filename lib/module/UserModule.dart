@@ -198,7 +198,6 @@ class UserModule {
           body: json.encode(data));
       if (result.statusCode == 200) {
         Map<String, dynamic> col = json.decode(result.body);
-        print(col['message']);
         UserPrefs.setListFavorit(
             List<String>.from(col['message'].map((x) => x)));
         return true;
@@ -210,13 +209,11 @@ class UserModule {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showError("connection refused, couldn't reach the server");
       }
-      print(e);
       return false;
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -236,7 +233,6 @@ class UserModule {
           body: json.encode(data));
       if (result.statusCode == 200) {
         Map<String, dynamic> col = json.decode(result.body);
-        print(col['message']);
         UserPrefs.setListFavorit(
             List<String>.from(col['message'].map((x) => x)));
         return true;
@@ -248,13 +244,11 @@ class UserModule {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showError("connection refused, couldn't reach the server");
       }
-      print(e);
       return false;
     } catch (e) {
-      print(e);
       return false;
     }
   }
@@ -270,7 +264,6 @@ class UserModule {
         },
         body: jsonEncode(data),
       );
-      print(result.body);
       if (result.statusCode == 200) {
         final user = userModuleFromJson(result.body);
         await UserPrefs.save(user);
@@ -279,13 +272,13 @@ class UserModule {
         UserPrefs.clear();
       }
     } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101) {
-        showError(
-            "network is unreachable, please make sure you are connected to the internet and try again");
-      }
-      if (e.osError!.errorCode == 111) {
-        showError("connection refused, couldn't reach the server");
-      }
+     // if (e.osError!.errorCode == 101) {
+     //   showError(
+     //       "network is unreachable, please make sure you are connected to the internet and try again");
+     // }
+     // if (e.osError!.errorCode != 101) {
+     //   showError("connection refused, couldn't reach the server");
+     // }
     }
   }
 

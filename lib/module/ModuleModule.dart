@@ -72,11 +72,9 @@ class ModuleModule {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showError("connection refused, couldn't reach the server");
       }
-    } catch (e) {
-      print(e);
     }
     ModuleModule.listModules = listModules;
     return listModules;
@@ -121,11 +119,9 @@ class ModuleModule {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showError("connection refused, couldn't reach the server");
       }
-    } catch (e) {
-      print(e);
     }
     return listModules;
   }
@@ -161,11 +157,9 @@ class ModuleModule {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
-      if (e.osError!.errorCode == 111) {
+      if (e.osError!.errorCode != 101) {
         showError("connection refused, couldn't reach the server");
       }
-    } catch (e) {
-      print(e);
     }
     return listCategories;
   }

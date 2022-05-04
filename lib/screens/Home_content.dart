@@ -215,7 +215,7 @@ class _HomeContentState extends State<HomeContent>
                           keyboardType: TextInputType.text,
                           onFieldSubmitted: (String? value) {
                             if (value != null) {
-                              if (value.length > 3) {
+                              if (value.length >= 3) {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -256,7 +256,7 @@ class _HomeContentState extends State<HomeContent>
                       height: 60,
                       child: IconButton(
                         onPressed: () {
-                          if (searchTerm.length > 3) {
+                          if (searchTerm.length >= 3) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(

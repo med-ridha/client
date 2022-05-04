@@ -23,7 +23,6 @@ class Notification {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("User granted the permission");
       // main message
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         LocalNotificationService.showNotificationOnForeground(message);
@@ -36,7 +35,6 @@ class Notification {
         );
       });
     } else {
-      print("permission declined by user");
     }
   }
 

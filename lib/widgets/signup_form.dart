@@ -150,7 +150,6 @@ class _SignUpFormState extends State<SignUpForm> {
       showError("Email existe deja");
       return;
     } else {
-      print(result.body);
       showDialog(
           context: context,
           builder: (BuildContext context) => _buildErrorPopupDialog(
@@ -505,7 +504,6 @@ class _SignUpFormState extends State<SignUpForm> {
                             foreground: Colors.white,
                             background: Colors.greenAccent);
                       } else {
-                        print(result.body);
                         showError("something went wrong!");
                       }
                       setState(() {
@@ -658,7 +656,6 @@ class _SignUpFormState extends State<SignUpForm> {
         waiting = false;
       });
       if (result.statusCode == 200) {
-        print(result.body);
         setState(() {
           waiting = true;
         });

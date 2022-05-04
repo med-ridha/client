@@ -17,10 +17,7 @@ class LocalNotificationService {
             android: AndroidInitializationSettings("@mipmap/launcher_icon"));
     _notificationsPlugin.initialize(initializationSettings,
         onSelectNotification: (String? payload) async {
-      print(payload);
-      print("yes");
       Map<String, dynamic> data = await json.decode(payload ?? '{ok: ok}');
-      print(data);
       DocumentModule document;
       DocumentModule.getListDocuments([data['id'].toString()]).then((result) {
         if (result.length > 0) {

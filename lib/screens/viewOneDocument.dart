@@ -50,7 +50,6 @@ class ViewOneDocumentState extends State<ViewOneDocument>
               isFavorite = UserPrefs.getListFavorit().contains(document.id);
               listModules = result;
               waiting = false;
-              print(listModules);
             });
           })
         });
@@ -73,7 +72,6 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                 setState(() {
                   listModules = result;
                   waiting = false;
-                  print(listModules);
                 });
               })
             });
