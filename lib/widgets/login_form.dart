@@ -69,7 +69,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         },
       );
     } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101) {
+      if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
         showErrorSlide(
             "network is unreachable, please make sure you are connected to the internet");
       }
@@ -273,7 +273,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
                   "something went wrong in the server side please try again later"));
         }
       } on SocketException catch (e) {
-        if (e.osError!.errorCode == 101) {
+        if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
           showErrorSlide(
               "network is unreachable, please make sure you are connected to the internet");
         }
@@ -287,7 +287,6 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
       FocusManager.instance.primaryFocus?.unfocus();
       _formKey.currentState!.save();
       if (!validateEmail(_email!) || !validatePassword(_password!)) return;
-
 
       Map<String, String?> data = {
         "email": _email,
@@ -337,7 +336,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
                   "something went wrong in the server side please try again later"));
         }
       } on SocketException catch (e) {
-        if (e.osError!.errorCode == 101) {
+        if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
           showErrorSlide(
               "network is unreachable, please make sure you are connected to the internet");
         }

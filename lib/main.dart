@@ -9,9 +9,9 @@ import 'package:juridoc/module/FireBaseModule.dart';
 import 'package:juridoc/module/UserModule.dart';
 import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/module/service.dart';
-import 'package:juridoc/screens/404Error.dart';
+import 'package:juridoc/screens/errors/something_went_wrong.dart';
 import 'package:juridoc/screens/home.dart';
-import 'package:juridoc/screens/no_connection.dart';
+import 'package:juridoc/screens/errors/no_connection.dart';
 import 'package:juridoc/screens/viewOneCategory.dart';
 import 'package:juridoc/screens/viewOneDocument.dart';
 import 'package:juridoc/screens/welcome/login.dart';
@@ -65,6 +65,7 @@ class InitState extends State<Init> {
   void initState() {
     super.initState();
     logedIn = UserPrefs.getIsLogedIn()!;
+
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
@@ -129,7 +130,7 @@ class InitState extends State<Init> {
         }
       }
     } on SocketException catch (err) {
-      if (err.osError!.errorCode == 101) {
+      if (err.osError!.errorCode == 101 || err.osError!.errorCode == 110) {
         showError("make sure you are connected to the internet");
         return Future.value(new NoConnectionScreen());
       }

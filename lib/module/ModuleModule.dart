@@ -68,7 +68,7 @@ class ModuleModule {
         }
       }
     } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101) {
+      if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
@@ -115,7 +115,7 @@ class ModuleModule {
         listModules = data['message'];
       }
     } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101) {
+      if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
@@ -153,7 +153,7 @@ class ModuleModule {
         }
       }
     } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101) {
+      if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
         showError(
             "network is unreachable, please make sure you are connected to the internet and try again");
       }
