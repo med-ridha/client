@@ -113,7 +113,10 @@ class InitState extends State<Init> {
 
   Future<Widget> loadFromFuture() async {
     try {
+      print(Service.url);
       await http.get(Uri.parse(Service.url));
+      print(Service.url);
+
       if (!logedIn) {
         await FirebaseMessaging.instance.unsubscribeFromTopic("new");
         return Future.value(new OnboardingScreen());
@@ -134,6 +137,7 @@ class InitState extends State<Init> {
         showError("make sure you are connected to the internet");
         return Future.value(new NoConnectionScreen());
       }
+      print(err);
     }
     return Future.value(new SomethingWentWrongScreen());
   }

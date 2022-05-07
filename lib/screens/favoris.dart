@@ -36,12 +36,16 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
     DocumentModule.getListFavored(email).then((result) {
       setState(() {
         listDocumentIds = result;
-        DocumentModule.getListDocuments(listDocumentIds).then((result) => {
-              setState(() {
-                listDocuments = result;
-                waiting = false;
-              })
-            });
+        if (listDocumentIds.length > 0) {
+          DocumentModule.getListDocuments(listDocumentIds).then((result) => {
+                setState(() {
+                  listDocuments = result;
+                  waiting = false;
+                })
+              });
+        } else {
+          waiting = false;
+        }
       });
     });
   }
@@ -133,8 +137,9 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
                                               child: Text(
                                                   (UserPrefs.getEmail() ==
                                                           email)
-                                                      ? "Le dossier est vide, veuillez ajouter au moins un document"
-                                                      : "Le dossier est vide",
+                                                      ? "La liste est vide, veuillez ajouter au moins un document"
+                                                      : "La liste est vide",
+                                                  textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                       fontSize: 24,
                                                       fontWeight:

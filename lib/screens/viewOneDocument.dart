@@ -43,7 +43,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
   void initState() {
     super.initState();
     waiting = true;
-    
+
     UserModule.getModules().then((result) async => {
           await Future.delayed(Duration(milliseconds: 250), () {
             setState(() {
@@ -241,7 +241,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                           color: Colors.white,
                         ),
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: (listModules.contains(module))
                               ? <Widget>[
                                   SizedBox(height: height * 0.02),
@@ -252,7 +252,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16)),
-                                      Expanded(
+                                      Flexible(
                                           child: Text(document.ref ?? "",
                                               style: TextStyle(fontSize: 18))),
                                     ],
