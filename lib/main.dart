@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -23,6 +24,10 @@ import 'package:juridoc/screens/welcome/onboarding_screen.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
+  print("25" + message.data.toString());
+  if (message.data['type'] == 'delete') {
+    exit(0); 
+  }
 }
 
 Future<void> main() async {
@@ -66,7 +71,6 @@ class InitState extends State<Init> {
     super.initState();
     logedIn = UserPrefs.getIsLogedIn()!;
 
-
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         DocumentModule document;
@@ -84,8 +88,18 @@ class InitState extends State<Init> {
     });
 
     LocalNotificationService.initilize(context);
-    FirebaseMessaging.onMessage.listen((message) {
+    FirebaseMessaging.onMessage.listen((message) async {
       LocalNotificationService.showNotificationOnForeground(message);
+      print('94' + message.data.toString());
+      if (message.data['type'] == 'delete') {
+        await UserPrefs.clear();
+        showError("Vous ne faits plus partie de JURIDOC");
+        Navigator.pushAndRemoveUntil<void>(
+            context,
+            MaterialPageRoute<void>(
+                builder: (BuildContext context) => LogInScreen()),
+            ModalRoute.withName('/login'));
+      }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
@@ -113,9 +127,7 @@ class InitState extends State<Init> {
 
   Future<Widget> loadFromFuture() async {
     try {
-      print(Service.url);
       await http.get(Uri.parse(Service.url));
-      print(Service.url);
 
       if (!logedIn) {
         await FirebaseMessaging.instance.unsubscribeFromTopic("new");

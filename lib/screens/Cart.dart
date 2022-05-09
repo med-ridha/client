@@ -329,12 +329,12 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
         onTap: () async {
           if (!done) {
             if (selectedValue == null) {
-              showError("you need to choose une duree");
+              showError("Veuillez valider une durée");
               return;
             }
 
             if (modules.length == 0) {
-              showError("please select atleast one module!!");
+              showError("Veuillez choisir au moins un module!!");
               return;
             }
 

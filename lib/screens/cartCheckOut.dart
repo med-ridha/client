@@ -217,7 +217,8 @@ class CartCheckOutState extends State<CartCheckOut>
     return TextFormField(
       focusNode: _creditFNode,
       initialValue: _creditCard,
-      keyboardType: TextInputType.number,
+      keyboardType: TextInputType.phone,
+      maxLength: 16,
       decoration: InputDecoration(
         icon: Icon(Icons.credit_card),
         border: InputBorder.none,
@@ -276,10 +277,10 @@ class CartCheckOutState extends State<CartCheckOut>
           if (!done) {
             _formKey.currentState!.save();
 
-            if (modules.length == 0) {
-              showError("please select atleast one module!!");
-              return;
-            }
+            // if (modules.length == 0) {
+            //   showError("please select atleast one module!!");
+            //   return;
+            // }
 
             if (!validateCreditCard(_creditCard!)) {
               return;
@@ -302,13 +303,14 @@ class CartCheckOutState extends State<CartCheckOut>
                   done = true;
                 });
                 Map<String, dynamic> response = json.decode(result.body);
+                print(response);
                 List<String> listAbonn =
                     List<String>.from(response['message'].map((x) => x));
                 UserPrefs.setListAbonn(listAbonn);
                 await UserModule.getModules();
                 await Future.delayed(Duration(seconds: 2), () {
                   showSimpleNotification(
-                      Text("abonnement success", style: TextStyle()),
+                      Text("Abonnement effectué avec succés", style: TextStyle()),
                       duration: Duration(seconds: 3),
                       foreground: Colors.white,
                       background: Colors.greenAccent);
