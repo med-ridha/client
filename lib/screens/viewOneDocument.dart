@@ -132,7 +132,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                               func: (!isFavorite)
                                   ? () async {
                                       showAlertDialog(
-                                          context, "ajoute au favoris?",
+                                          context, "Ajouté aux favoris ?",
                                           () async {
                                         bool result =
                                             await UserModule.addToFavorite(
@@ -140,7 +140,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                         if (result) {
                                           showSimpleNotification(
                                               Text(
-                                                  "Le document a ete ajoue aux favoris",
+                                                  "Ce document a été ajouté aux favoris",
                                                   style: TextStyle()),
                                               duration: Duration(seconds: 2),
                                               foreground: Colors.white,
@@ -151,20 +151,20 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                                     .contains(document.id);
                                           });
                                         } else {
-                                          showError('something went wrong');
+                                          showError('Erreur inconnue');
                                         }
                                       });
                                     }
                                   : () async {
                                       showAlertDialog(
-                                          context, "supprimer du favoris?",
+                                          context, "Supprimer de la liste des favoris?",
                                           () async {
                                         bool result =
                                             await UserModule.removeFromFavorite(
                                                 document.id ?? "");
                                         if (result) {
                                           showSimpleNotification(
-                                              Text("removed from Favorite",
+                                              Text("Supprimé avec succès",
                                                   style: TextStyle()),
                                               duration: Duration(seconds: 2),
                                               foreground: Colors.white,
@@ -175,7 +175,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                                     .contains(document.id);
                                           });
                                         } else {
-                                          showError('something went wrong');
+                                          showError('Erreur inconnue');
                                         }
                                       });
                                     },
@@ -248,7 +248,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Reference: ",
+                                      Text("Référence: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16)),
@@ -260,7 +260,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Publie le: ",
+                                      Text("Publié le: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16)),
@@ -282,7 +282,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text("Categorie: ",
+                                      Text("Catégorie: ",
                                           style: TextStyle(
                                               fontWeight: FontWeight.w600,
                                               fontSize: 16)),
@@ -302,7 +302,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                         Padding(
                                           padding: const EdgeInsets.all(9.0),
                                           child: Text(
-                                            "pay wall",
+                                            "Mur payant",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600,
                                                 color: Colors.redAccent,
@@ -320,7 +320,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                                 Row(
                                                   children: [
                                                     Text(
-                                                        "you need to by a subscription to view this",
+                                                        "Vous devez acheter un abonnement pour voir ce document",
                                                         textAlign:
                                                             TextAlign.center,
                                                         style: TextStyle(
@@ -328,7 +328,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                                         )),
                                                   ],
                                                 ),
-                                                Text("document",
+                                                Text("Document",
                                                     style: TextStyle(
                                                       fontSize: 14,
                                                     )),
@@ -447,11 +447,11 @@ class ViewOneDocumentState extends State<ViewOneDocument>
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Warning"),
+          title: Text("Attention"),
           content: Text(text),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: Text("Annuler"),
               onPressed: () {
                 Navigator.of(context).pop();
                 return;

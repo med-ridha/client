@@ -24,7 +24,6 @@ import 'package:juridoc/screens/welcome/onboarding_screen.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print("25" + message.data.toString());
   if (message.data['type'] == 'delete') {
     exit(0); 
   }
@@ -90,7 +89,6 @@ class InitState extends State<Init> {
     LocalNotificationService.initilize(context);
     FirebaseMessaging.onMessage.listen((message) async {
       LocalNotificationService.showNotificationOnForeground(message);
-      print('94' + message.data.toString());
       if (message.data['type'] == 'delete') {
         await UserPrefs.clear();
         showError("Vous ne faits plus partie de JURIDOC");
@@ -146,7 +144,7 @@ class InitState extends State<Init> {
       }
     } on SocketException catch (err) {
       if (err.osError!.errorCode == 101 || err.osError!.errorCode == 110) {
-        showError("make sure you are connected to the internet");
+        showError("Assurez-vous que vous êtes connecté à Internet");
         return Future.value(new NoConnectionScreen());
       }
       print(err);

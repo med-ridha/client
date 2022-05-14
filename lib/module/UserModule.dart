@@ -268,7 +268,7 @@ class UserModule {
         final user = userModuleFromJson(result.body);
         await UserPrefs.save(user);
       } else if (result.statusCode == 404) {
-        showError("Your account has been deleted");
+        showError("Votre compte a été supprimé");
         UserPrefs.clear();
       }
     } on SocketException catch (e) {

@@ -277,15 +277,11 @@ class CartCheckOutState extends State<CartCheckOut>
           if (!done) {
             _formKey.currentState!.save();
 
-            // if (modules.length == 0) {
-            //   showError("please select atleast one module!!");
-            //   return;
-            // }
 
             if (!validateCreditCard(_creditCard!)) {
               return;
             }
-            showAlertDialog(context, "Are you sure? amount: $montant TND",
+            showAlertDialog(context, "Êtes-vous sûr? Montant: $montant TND",
                 () async {
               Map<String, String?> data = {
                 "email": UserPrefs.getEmail(),
@@ -323,7 +319,7 @@ class CartCheckOutState extends State<CartCheckOut>
                           builder: (BuildContext context) => Abonnements()));
                 });
               } else {
-                showError("something went wrong!");
+                showError("Erreur inconnue!");
               }
             });
           }
@@ -354,7 +350,7 @@ class CartCheckOutState extends State<CartCheckOut>
                       ),
                       (!done)
                           ? Text(
-                              "Submit order",
+                              "Soumettre",
                               style: const TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold,
@@ -384,12 +380,12 @@ class CartCheckOutState extends State<CartCheckOut>
         setState(() {
           _creditIsError = true;
         });
-        showError("credit card must contains only numbers");
+        showError("La carte de crédit ne doit contenir que des chiffres");
         return false;
       }
     }
     if (creditCard.length != 16) {
-      showError("credit card should be 16 numbers long");
+      showError("La carte de crédit doit comporter de 16 chiffres");
       setState(() {
         _creditIsError = true;
       });

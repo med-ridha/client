@@ -206,36 +206,39 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
                                             color: Colors.red,
                                             icon: Icons.heart_broken_sharp,
                                             func: () async {
-                                              bool result = await UserModule
-                                                  .removeFromFavorite(
-                                                      document.id ?? "");
-                                              if (result) {
-                                                showSimpleNotification(
-                                                    Text(
-                                                        "removed from Favorite",
-                                                        style: TextStyle()),
-                                                    duration:
-                                                        Duration(seconds: 2),
-                                                    foreground: Colors.white,
-                                                    background:
-                                                        Colors.greenAccent);
-                                                setState(() {
-                                                  listDocumentIds = UserPrefs
-                                                      .getListFavorit();
-                                                  DocumentModule
-                                                          .getListDocuments(
-                                                              listDocumentIds)
-                                                      .then((result) => {
-                                                            setState(() {
-                                                              listDocuments =
-                                                                  result;
-                                                            })
-                                                          });
-                                                });
-                                              } else {
-                                                showError(
-                                                    'something went wrong');
-                                              }
+                                              showAlertDialog(context, "Supprimer de la liste des favoris?",
+                                                  () async {
+                                                bool result = await UserModule
+                                                    .removeFromFavorite(
+                                                        document.id ?? "");
+                                                if (result) {
+                                                  showSimpleNotification(
+                                                      Text(
+                                                          "Supprimé avec succès",
+                                                          style: TextStyle()),
+                                                      duration:
+                                                          Duration(seconds: 2),
+                                                      foreground: Colors.white,
+                                                      background:
+                                                          Colors.greenAccent);
+                                                  setState(() {
+                                                    listDocumentIds = UserPrefs
+                                                        .getListFavorit();
+                                                    DocumentModule
+                                                            .getListDocuments(
+                                                                listDocumentIds)
+                                                        .then((result) => {
+                                                              setState(() {
+                                                                listDocuments =
+                                                                    result;
+                                                              })
+                                                            });
+                                                  });
+                                                } else {
+                                                  showError(
+                                                      'Erreur inconnue');
+                                                }
+                                              });
                                             })
                                         : Container(),
                                     SizedBox(height: height * 0.02),
@@ -275,6 +278,35 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
           SizedBox(height: height * 0.02),
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, String text, Future<void> func()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Attention"),
+          content: Text(text),
+          actions: [
+            TextButton(
+              child: Text("Annuler"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+            TextButton(
+              child: Text("Continue"),
+              onPressed: () {
+                func();
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

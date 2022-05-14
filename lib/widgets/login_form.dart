@@ -69,13 +69,13 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         },
       );
     } on SocketException catch (e) {
-      if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
-        showErrorSlide(
-            "network is unreachable, please make sure you are connected to the internet");
-      }
-      if (e.osError!.errorCode != 101) {
-        showErrorSlide("connection refused, couldn't reach the server");
-      }
+        if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
+          showErrorSlide(
+              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
+        }
+        if (e.osError!.errorCode != 101) {
+          showErrorSlide("Connexion refusée, impossible d'atteindre le serveur");
+        }
     }
   }
 
@@ -194,7 +194,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
                             foreground: Colors.white,
                             background: Colors.greenAccent);
                       } else {
-                        showError("something went wrong!");
+                        showError("Erreur inconnue!");
                       }
                       setState(() {
                         waiting = false;
@@ -269,16 +269,16 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
               context: context,
               builder: (BuildContext context) => _buildErrorPopupDialog(
                   context,
-                  "internal server error",
-                  "something went wrong in the server side please try again later"));
+                  "Oops!",
+                  "Erreur interne du serveur"));
         }
       } on SocketException catch (e) {
         if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
           showErrorSlide(
-              "network is unreachable, please make sure you are connected to the internet");
+              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
         }
         if (e.osError!.errorCode != 101) {
-          showErrorSlide("connection refused, couldn't reach the server");
+          showErrorSlide("Connexion refusée, impossible d'atteindre le serveur");
         }
       }
     }
@@ -316,13 +316,13 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
             });
           }
         } else if (result.statusCode == 401) {
-          showError("Veuller verifier vos identifiants");
+          showError("Veuillez vérifier vos identifiants");
           _emailFocusNode.requestFocus();
           setState(() {
             _emailIsError = true;
           });
         } else if (result.statusCode == 402) {
-          showError("Veuller verifier vos identifiants");
+          showError("Veuillez verifier vos identifiants");
           _passwordFocusNode.requestFocus();
           setState(() {
             _passwordIsError = true;
@@ -332,21 +332,20 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
               context: context,
               builder: (BuildContext context) => _buildErrorPopupDialog(
                   context,
-                  "internal server error",
-                  "something went wrong in the server side please try again later"));
+                  "Oops!",
+                  "Erreur interne du serveur"));
         }
       } on SocketException catch (e) {
         if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
           showErrorSlide(
-              "network is unreachable, please make sure you are connected to the internet");
+              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
         }
         if (e.osError!.errorCode != 101) {
-          showErrorSlide("connection refused, couldn't reach the server");
+          showErrorSlide("Connexion refusée, impossible d'atteindre le serveur");
         }
       }
     }
 
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     Form getFormList() {
       if (login) {
@@ -474,7 +473,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
     }
     if (password.length < 8) {
       _passwordFocusNode.requestFocus();
-      showError("Mot de passe doit etre 8 characters ");
+      showError("Mot de passe doit être 8 characters ");
       setState(() {
         _passwordIsError = true;
       });

@@ -83,7 +83,7 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
-                          child: SecondBarUi("Search", false, fontSize: 24)),
+                          child: SecondBarUi("Recherche", false, fontSize: 24)),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -109,7 +109,7 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
                                       size: 35, color: Colors.green)
                                   : (listModules.length == 0)
                                       ? Container(
-                                          child: Text("No result Found",
+                                          child: Text("Aucun résultat trouvé",
                                               style: TextStyle(fontSize: 24)))
                                       : Container(
                                           child: Column(

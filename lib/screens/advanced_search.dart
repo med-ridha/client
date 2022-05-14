@@ -29,11 +29,11 @@ class AdvancedSearchState extends State<AdvancedSearch>
   bool exacte = false;
 
   String? module;
-  String? category = "Sélectionner une module";
+  String? category = "Sélectionner un module";
 
   List<String> listModules = [];
 
-  List<String> listCategories = ["Sélectionner une module"];
+  List<String> listCategories = ["Sélectionner un module"];
 
   DateTime? apresLe;
   DateTime? avantLe;
@@ -72,7 +72,6 @@ class AdvancedSearchState extends State<AdvancedSearch>
   }
 
   Widget buildModules(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
       height: 50,
       alignment: Alignment.center,
@@ -110,7 +109,6 @@ class AdvancedSearchState extends State<AdvancedSearch>
   }
 
   Widget buildCategory(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
     return Container(
       height: 50,
       alignment: Alignment.center,
@@ -332,8 +330,8 @@ class AdvancedSearchState extends State<AdvancedSearch>
                                   motCle = "";
                                   exacte = false;
                                   module = null;
-                                  listCategories = ["Sélectionner une module"];
-                                  category = "Sélectionner une module";
+                                  listCategories = ["Sélectionner un module"];
+                                  category = "Sélectionner un module";
                                   apresLe = null;
                                   avantLe = null;
                                 });
@@ -388,13 +386,13 @@ class AdvancedSearchState extends State<AdvancedSearch>
           FocusScope.of(context).requestFocus(new FocusNode());
           _formKey.currentState!.save();
           if (motCle.length < 3) {
-            showError("mot cle should be atleast 3 letters long");
+            showError("Au moins 3 lettres sont requises");
             return;
           }
           String query = '?search=$motCle';
           if (exacte) query += '&exacte=$exacte';
           if (module != null) query += '&module=$module';
-          if (category != "Sélectionner une module" &&
+          if (category != "Sélectionner un module" &&
               category != "Sélectionner une categorie") query += '&category=$category';
           if (apresLe != null) query += '&apresLe=$apresLe';
           if (avantLe != null) query += '&avantLe=$avantLe';

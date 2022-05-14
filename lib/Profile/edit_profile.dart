@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
@@ -223,7 +224,7 @@ class EditProfileState extends State<EditProfile> {
       decoration: InputDecoration(
         border: InputBorder.none,
         icon: Icon(Icons.password_sharp),
-        hintText: "mot de passe",
+        hintText: "Mot de passe",
       ),
       onChanged: (String? value) {
         if (value!.length >= 8) {
@@ -249,7 +250,7 @@ class EditProfileState extends State<EditProfile> {
       decoration: InputDecoration(
         border: InputBorder.none,
         icon: Icon(Icons.password_sharp),
-        hintText: "nouveau mot de passe",
+        hintText: "Nouveau mot de passe",
       ),
       onChanged: (String? value) {
         if (value!.length >= 8) {
@@ -274,7 +275,7 @@ class EditProfileState extends State<EditProfile> {
       obscureText: _isObscure,
       decoration: InputDecoration(
         icon: Icon(Icons.password_sharp),
-        hintText: "confirmer mot de passe",
+        hintText: "Confirmer mot de passe",
         border: InputBorder.none,
       ),
       onChanged: (String? value) {
@@ -325,6 +326,7 @@ class EditProfileState extends State<EditProfile> {
     };
 
     //api call
+    try{
     var result = await http.post(
       Uri.parse(updateURL),
       headers: <String, String>{
@@ -340,7 +342,7 @@ class EditProfileState extends State<EditProfile> {
     if (result.statusCode == 200) {
       final user = userModuleFromJson(result.body);
       await UserPrefs.save(user);
-      showSimpleNotification(Text("Information updated ", style: TextStyle()),
+      showSimpleNotification(Text("Informations actualisées ", style: TextStyle()),
           duration: Duration(seconds: 1),
           foreground: Colors.white,
           background: Colors.greenAccent);
@@ -356,14 +358,23 @@ class EditProfileState extends State<EditProfile> {
             ModalRoute.withName('/homescreen'));
       });
     } else if (result.statusCode == 401) {
-      showError("Wrong password");
+      showError("Mot de passe incorrect");
     } else {
       showDialog(
           context: context,
           builder: (BuildContext context) => _buildErrorPopupDialog(
               context,
-              "internal server error",
-              "something went wrong in the server side please try again later"));
+              "Oops!",
+              "Erreur internal du serveur"));
+    }
+    } on SocketException catch(e) {
+        if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
+          showErrorSlide(
+              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
+        }
+        if (e.osError!.errorCode != 101) {
+          showErrorSlide("Connexion refusée, impossible d'atteindre le serveur");
+        }
     }
   }
 
@@ -384,7 +395,7 @@ class EditProfileState extends State<EditProfile> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Close'),
+            child: const Text('Ok'),
           )
         ]);
   }
@@ -460,7 +471,7 @@ class EditProfileState extends State<EditProfile> {
                                     color: Colors.white,
                                   ),
                                   child: SecondBarUi(
-                                      "Mettre a jour profile", false, fontSize: 18)),
+                                      "Mettre à jour profile", false, fontSize: 18)),
                               Container(
                                   height: height * 0.05,
                                   child: (waiting)
@@ -490,7 +501,7 @@ class EditProfileState extends State<EditProfile> {
                                                   title(
                                                       context,
                                                       'SVG/door-lock.svg',
-                                                      "Donnees de connexion",
+                                                      "Données de connexion",
                                                       0.045),
                                                   PasswordIcon(() {
                                                     setState(() {
@@ -537,7 +548,7 @@ class EditProfileState extends State<EditProfile> {
                                               title(
                                                   context,
                                                   'SVG/id.svg',
-                                                  "Donnees personnelles",
+                                                  "Données personnelles",
                                                   0.045),
                                               SizedBox(
                                                 height: height * 0.01,
@@ -583,7 +594,7 @@ class EditProfileState extends State<EditProfile> {
                                               title(
                                                   context,
                                                   'SVG/case.svg',
-                                                  "Donnees professionnelles",
+                                                  "Données professionnelles",
                                                   0.035),
                                               RoundedTextFieldContainer(
                                                   child: _buildNomStructure(),
@@ -750,7 +761,7 @@ class EditProfileState extends State<EditProfile> {
         setState(() {
           _phoneNumberIsError = true;
         });
-        showError("phone number must contains only numbers");
+        showError("Le numéro de téléphone doit contenir uniquement des chiffres");
         return false;
       }
     }
@@ -758,7 +769,7 @@ class EditProfileState extends State<EditProfile> {
       setState(() {
         _phoneNumberIsError = true;
       });
-      showError("phone number must be 8 numbers");
+      showError("Le numéro de téléphone doit être composé de 8 chiffres");
       return false;
     }
     setState(() {
@@ -816,7 +827,7 @@ class EditProfileState extends State<EditProfile> {
   bool validatePassword(String password) {
     if (password.isEmpty) {
       _passwordFNode.requestFocus();
-      showError("Password is required");
+      showError("Le mot de passe est requis");
       setState(() {
         _passwordIsError = true;
       });
@@ -824,7 +835,7 @@ class EditProfileState extends State<EditProfile> {
     }
     if (password.length < 8) {
       _passwordFNode.requestFocus();
-      showError("password should be atleast 8 characters long");
+      showError("Le mot de passe doit comporter au moins 8 caractères");
       setState(() {
         _passwordIsError = true;
       });
@@ -839,7 +850,7 @@ class EditProfileState extends State<EditProfile> {
   bool validateNewPassword(String newPassword) {
     if (newPassword.length >= 1 && newPassword.length < 8) {
       _newPasswordFNode.requestFocus();
-      showError("Password should be atleast 8 characters long");
+      showError("Le mot de passe doit comporter au moins 8 caractères");
       setState(() {
         _newPasswordIsError = true;
       });
@@ -854,7 +865,7 @@ class EditProfileState extends State<EditProfile> {
   bool validateConfirmP(String password, confirmPassword) {
     if (password.length >= 1 && password != confirmPassword) {
       _confirmPFNode.requestFocus();
-      showError("Passwords doesn't match");
+      showError("Les mots de passe ne correspondent pas");
       setState(() {
         _confirmPIsError = true;
       });
@@ -871,5 +882,13 @@ class EditProfileState extends State<EditProfile> {
         duration: Duration(seconds: 3),
         foreground: Colors.white,
         background: Colors.redAccent);
+  }
+  void showErrorSlide(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent,
+        autoDismiss: false,
+        slideDismissDirection: DismissDirection.horizontal);
   }
 }

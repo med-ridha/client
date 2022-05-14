@@ -2,16 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_svg/svg.dart';
 import 'package:grouped_buttons/grouped_buttons.dart';
 import 'package:juridoc/Profile/abonnements.dart';
 import 'package:juridoc/module/UserModule.dart';
-import 'package:juridoc/module/UserPrefs.dart';
 import 'package:juridoc/module/service.dart';
 import 'package:juridoc/screens/cartCheckOut.dart';
 import 'package:juridoc/theme.dart';
-import 'package:juridoc/widgets/RoundedTextFieldContainer.dart';
 import 'package:juridoc/widgets/app_Bar_ui.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:juridoc/widgets/secondBarUI.dart';
@@ -27,27 +24,18 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
   List<String> modules = [];
   String createAbonnURL = Service.url + 'users/createAbonn';
 
-  late FocusNode _creditFNode;
-  bool _creditIsError = false;
-  String? _creditCard;
   List<String> listModules = [];
 
   bool done = false;
 
   @override
   void initState() {
-    _creditFNode = FocusNode();
     UserModule.getModules().then((result) => {
           setState(() => {listModules = result})
         });
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _creditFNode.dispose();
-    super.dispose();
-  }
 
   String? selectedValue;
   List<String> items = [
@@ -381,7 +369,7 @@ class CartState extends State<Cart> with TickerProviderStateMixin {
                       ),
                       (!done)
                           ? Text(
-                              "Submit order",
+                              "Continue",
                               style: const TextStyle(
                                   fontSize: 23,
                                   fontWeight: FontWeight.bold,

@@ -77,7 +77,7 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                             borderRadius: BorderRadius.circular(30),
                             color: Colors.white,
                           ),
-                          child: SecondBarUi("Les derniers parutions", false,
+                          child: SecondBarUi("Les dernières parutions", false,
                               fontSize: 16)),
                     ),
                     Padding(
@@ -95,14 +95,14 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text("les",
+                                  Text("Les",
                                       style: TextStyle(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w500)),
                                   SizedBox(width: 15),
                                   duree(context),
                                   SizedBox(width: 15),
-                                  Text("derniers jour",
+                                  Text("dernières jour",
                                       style: TextStyle(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w500)),
@@ -115,7 +115,7 @@ class ModulesState extends State<Modules> with TickerProviderStateMixin {
                                   ? Container(
                                       child: Column(
                                       children: [
-                                        Text("Aucun nouveau document ajoute",
+                                        Text("Aucun nouveau document ajouté",
                                             style: TextStyle(
                                                 fontSize: 24,
                                                 fontWeight: FontWeight.w500)),

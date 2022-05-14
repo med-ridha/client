@@ -539,7 +539,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
         });
       });
     } else {
-      showError("something went wrong");
+      showError("Erreur de serveur interne");
     }
   }
 
@@ -574,7 +574,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
 
     if (result.statusCode == 200) {
       showSimpleNotification(
-          Text("User add to this collab", style: TextStyle()),
+          Text("Utilisateur ajouté à cette collaboration", style: TextStyle()),
           duration: Duration(seconds: 2),
           foreground: Colors.white,
           background: Colors.greenAccent);
@@ -593,16 +593,17 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
         });
       });
     } else if (result.statusCode == 405) {
-      showError("User already in a collab");
+      showError("Utilisateur déjà dans une collaboration");
     } else if (result.statusCode == 404) {
-      showError("User not found!");
+      showError("L'Email saisit est inexistant!");
     } else {
-      showError("Internal server error");
+      showError("Erreur de serveur interne");
     }
   }
 
   bool validateEmail(String email) {
     if (email.isEmpty) {
+      showError("Veuillez ajouter un Email");
       _emailFocusNode.requestFocus();
       setState(() {
         _emailIsError = true;
@@ -651,11 +652,11 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Warning"),
+          title: Text("Attention"),
           content: Text(text),
           actions: [
             TextButton(
-              child: Text("Cancel"),
+              child: Text("Annuler"),
               onPressed: () {
                 Navigator.of(context).pop();
                 return;

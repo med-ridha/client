@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:juridoc/firebase/services/notifications.dart' as notif;
@@ -131,31 +132,42 @@ class _SignUpFormState extends State<SignUpForm> {
     };
 
     //api call
-    var result = await http.post(
-      Uri.parse(verifyEmailURL),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(data),
-    );
-    setState(() {
-      waiting = false;
-    });
-    if (result.statusCode == 200) {
+    try {
+      var result = await http.post(
+        Uri.parse(verifyEmailURL),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(data),
+      );
       setState(() {
-        etap = 3;
+        waiting = false;
       });
-      return;
-    } else if (result.statusCode == 401) {
-      showError("Email existe deja");
-      return;
-    } else {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) => _buildErrorPopupDialog(
-              context,
-              "internal server error",
-              "something went wrong in the server side please try again later"));
+      if (result.statusCode == 200) {
+        setState(() {
+          etap = 3;
+        });
+        return;
+      } else if (result.statusCode == 401) {
+        showError("Email existe Déjà");
+        return;
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => _buildErrorPopupDialog(
+                context, "Oops!", "Erreur interne du serveur"));
+      }
+    } on SocketException catch (e) {
+      setState(() {
+        waiting = false;
+      });
+      if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
+        showErrorSlide(
+            "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
+      }
+      if (e.osError!.errorCode != 101) {
+        showErrorSlide("Connexion refusée, impossible d'atteindre le serveur");
+      }
     }
   }
 
@@ -378,7 +390,7 @@ class _SignUpFormState extends State<SignUpForm> {
       decoration: InputDecoration(
           border: InputBorder.none,
           icon: Icon(Icons.password_sharp),
-          hintText: "mot de passe",
+          hintText: "Mot de passe",
           suffixIcon: IconButton(
             onPressed: () {
               setState(() {
@@ -418,7 +430,7 @@ class _SignUpFormState extends State<SignUpForm> {
       obscureText: _isObscure,
       decoration: InputDecoration(
           icon: Icon(Icons.password_sharp),
-          hintText: "confirmer mot de passe",
+          hintText: "Confirmer mot de passe",
           border: InputBorder.none,
           suffixIcon: IconButton(
             onPressed: () {
@@ -490,21 +502,33 @@ class _SignUpFormState extends State<SignUpForm> {
                       Map<String, String?> data = {
                         "email": _email!.trim(),
                       };
-                      var result = await http.post(
-                        Uri.parse(verifyEmailURL),
-                        headers: <String, String>{
-                          'Content-Type': 'application/json; charset=UTF-8',
-                        },
-                        body: jsonEncode(data),
-                      );
-                      if (result.statusCode == 200) {
-                        showSimpleNotification(
-                            Text("Sent!", style: TextStyle()),
-                            duration: Duration(seconds: 3),
-                            foreground: Colors.white,
-                            background: Colors.greenAccent);
-                      } else {
-                        showError("something went wrong!");
+                      try {
+                        var result = await http.post(
+                          Uri.parse(verifyEmailURL),
+                          headers: <String, String>{
+                            'Content-Type': 'application/json; charset=UTF-8',
+                          },
+                          body: jsonEncode(data),
+                        );
+                        if (result.statusCode == 200) {
+                          showSimpleNotification(
+                              Text("Sent!", style: TextStyle()),
+                              duration: Duration(seconds: 3),
+                              foreground: Colors.white,
+                              background: Colors.greenAccent);
+                        } else {
+                          showError("Erreur inconnue!");
+                        }
+                      } on SocketException catch (e) {
+                        if (e.osError!.errorCode == 101 ||
+                            e.osError!.errorCode == 110) {
+                          showErrorSlide(
+                              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
+                        }
+                        if (e.osError!.errorCode != 101) {
+                          showErrorSlide(
+                              "Connexion refusée, impossible d'atteindre le serveur");
+                        }
                       }
                       setState(() {
                         isIcon = true;
@@ -645,44 +669,58 @@ class _SignUpFormState extends State<SignUpForm> {
         "numFiscal": _numFiscal!.trim(),
         "adressStructure": _adressStructure!.trim(),
       };
-      var result = await http.post(
-        Uri.parse(createUserURL),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(data),
-      );
-      setState(() {
-        waiting = false;
-      });
-      if (result.statusCode == 200) {
-        setState(() {
-          waiting = true;
-        });
-        final user = userModuleFromJson(result.body);
-        await UserPrefs.clear();
-        await UserPrefs.save(user);
-        //await notif.Notification().initState();
-        await FirebaseMessaging.instance.subscribeToTopic("new");
+      try {
+        var result = await http.post(
+          Uri.parse(createUserURL),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(data),
+        );
         setState(() {
           waiting = false;
         });
-        showSimpleNotification(
-            Text("Compte cree avec succees", style: TextStyle()),
-            duration: Duration(seconds: 2),
-            foreground: Colors.white,
-            background: Colors.greenAccent);
-        Future.delayed(Duration(seconds: 1), () {
-          Navigator.pushAndRemoveUntil<void>(
-              context,
-              MaterialPageRoute<void>(
-                  builder: (BuildContext context) => HomeScreen(0)),
-              ModalRoute.withName('/homescreen'));
+        if (result.statusCode == 200) {
+          setState(() {
+            waiting = true;
+          });
+          final user = userModuleFromJson(result.body);
+          await UserPrefs.clear();
+          await UserPrefs.save(user);
+          //await notif.Notification().initState();
+          await FirebaseMessaging.instance.subscribeToTopic("new");
+          setState(() {
+            waiting = false;
+          });
+          showSimpleNotification(
+              Text("Compte créé avec succès", style: TextStyle()),
+              duration: Duration(seconds: 2),
+              foreground: Colors.white,
+              background: Colors.greenAccent);
+          Future.delayed(Duration(seconds: 1), () {
+            Navigator.pushAndRemoveUntil<void>(
+                context,
+                MaterialPageRoute<void>(
+                    builder: (BuildContext context) => HomeScreen(0)),
+                ModalRoute.withName('/homescreen'));
+          });
+        } else if (result.statusCode == 401) {
+          showError("Veuillez vérifier votre code de confirmation");
+        } else {
+          showError("Erreur inconnue");
+        }
+      } on SocketException catch (e) {
+        setState(() {
+          waiting = false;
         });
-      } else if (result.statusCode == 401) {
-        showError("Veuillez verifier votre code de confirmation");
-      } else {
-        showError("something went wrong");
+        if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
+          showErrorSlide(
+              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
+        }
+        if (e.osError!.errorCode != 101) {
+          showErrorSlide(
+              "Connexion refusée, impossible d'atteindre le serveur");
+        }
       }
     }
 
@@ -768,14 +806,14 @@ class _SignUpFormState extends State<SignUpForm> {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Close'),
+            child: const Text('Ok'),
           )
         ]);
   }
 
   bool validateName(String name) {
     if (name.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _nameFocusNode.requestFocus();
       setState(() {
         _nameIsError = true;
@@ -790,7 +828,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateSurname(String surname) {
     if (surname.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _surnameFocusNode.requestFocus();
       setState(() {
         _surnameIsError = true;
@@ -805,7 +843,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validatePhoneNumber(String phoneNumber) {
     if (phoneNumber.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _phoneNumberFocusNode.requestFocus();
       setState(() {
         _phoneNumberIsError = true;
@@ -820,7 +858,8 @@ class _SignUpFormState extends State<SignUpForm> {
         setState(() {
           _phoneNumberIsError = true;
         });
-        showError("phone number must contains only numbers");
+        showError(
+            "Le numéro de téléphone doit contenir uniquement des chiffres");
         return false;
       }
     }
@@ -828,7 +867,7 @@ class _SignUpFormState extends State<SignUpForm> {
       setState(() {
         _phoneNumberIsError = true;
       });
-      showError("phone number must be 8 numbers");
+      showError("Le numéro de téléphone doit être composé de 8 chiffres");
       return false;
     }
     setState(() {
@@ -840,7 +879,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateNomS(String nomS) {
     if (nomS.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _nomSFocusNode.requestFocus();
       setState(() {
         _nomSIsError = true;
@@ -856,7 +895,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateAdressS(String adressS) {
     if (adressS.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _adressSFocusNode.requestFocus();
       setState(() {
         _adressSIsError = true;
@@ -872,7 +911,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateNumF(String numF) {
     if (numF.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _numFFocusNode.requestFocus();
       setState(() {
         _numFIsError = true;
@@ -889,7 +928,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool validateEmail(String email) {
     if (email.isEmpty) {
       _emailFNode.requestFocus();
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       setState(() {
         _emailIsError = true;
       });
@@ -914,7 +953,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool validatePassword(String password) {
     if (password.isEmpty) {
       _passwordFNode.requestFocus();
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       setState(() {
         _passwordIsError = true;
       });
@@ -922,7 +961,7 @@ class _SignUpFormState extends State<SignUpForm> {
     }
     if (password.length < 8) {
       _passwordFNode.requestFocus();
-      showError("password should be atleast 8 characters long");
+      showError("Le mot de passe doit comporter au moins 8 caractères");
       setState(() {
         _passwordIsError = true;
       });
@@ -936,7 +975,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateConfirmP(String password, confirmPassword) {
     if (password.isEmpty) {
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       _confirmPFNode.requestFocus();
       setState(() {
         _confirmPIsError = true;
@@ -945,7 +984,7 @@ class _SignUpFormState extends State<SignUpForm> {
     }
     if (password != confirmPassword) {
       _confirmPFNode.requestFocus();
-      showError("password doesn't match");
+      showError("Les mots de passe ne correspondent pas");
       setState(() {
         _confirmPIsError = true;
       });
@@ -959,7 +998,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   bool validateTerms() {
     if (!_termsandconditions) {
-      showError("vous dois accepter les terms et conditions");
+      showError("Vous devez accepter les terms et conditions");
       setState(() {
         _termsIsError = true;
       });
@@ -974,7 +1013,7 @@ class _SignUpFormState extends State<SignUpForm> {
   bool validateToken(String token) {
     if (token.isEmpty) {
       _tokenFocusNode.requestFocus();
-      showError("Veuiller remplir les champs");
+      showError("Veuillez vérifier les donnes saisies");
       setState(() {
         _tokenIsError = true;
       });
@@ -991,5 +1030,14 @@ class _SignUpFormState extends State<SignUpForm> {
         duration: Duration(seconds: 3),
         foreground: Colors.white,
         background: Colors.redAccent);
+  }
+
+  void showErrorSlide(String error) {
+    showSimpleNotification(Text(error, style: TextStyle()),
+        duration: Duration(seconds: 3),
+        foreground: Colors.white,
+        background: Colors.redAccent,
+        autoDismiss: false,
+        slideDismissDirection: DismissDirection.horizontal);
   }
 }

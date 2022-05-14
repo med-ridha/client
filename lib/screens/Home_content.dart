@@ -62,8 +62,6 @@ class _HomeContentState extends State<HomeContent>
           Scaffold(
             backgroundColor: Colors.transparent,
             body:
-                // SingleChildScrollView(
-                //   child:
                 Column(
               children: [
                 Padding(
@@ -120,7 +118,6 @@ class _HomeContentState extends State<HomeContent>
               ],
             ),
           ),
-          // )
         ]),
       ),
     );
@@ -224,7 +221,7 @@ class _HomeContentState extends State<HomeContent>
                                               (UserPrefs.getEmail() ?? "")),
                                     ));
                               } else {
-                                showError("atleast 3 letters are requried!");
+                                showError("Au moins 3 lettres sont requises!");
                               }
                             }
                           },
@@ -265,7 +262,7 @@ class _HomeContentState extends State<HomeContent>
                                           (UserPrefs.getEmail() ?? "")),
                                 ));
                           } else {
-                            showError("atleast 3 letters are requried!");
+                            showError("Au moins 3 lettres sont requises!");
                           }
                         },
                         icon: Icon(

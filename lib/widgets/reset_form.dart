@@ -74,7 +74,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
             icon: Icon(Icons.password_sharp),
             border: InputBorder.none,
             errorStyle: TextStyle(fontSize: 16.0),
-            hintText: "mot de passe",
+            hintText: "Mot de passe",
             suffixIcon: IconButton(
               onPressed: () {
                 setState(() {
@@ -109,7 +109,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
       obscureText: _isObscure,
       decoration: InputDecoration(
           icon: Icon(Icons.password_sharp),
-          hintText: "confirmer mot de passe",
+          hintText: "Confirmer mot de passe",
           border: InputBorder.none,
           suffixIcon: IconButton(
             onPressed: () {
@@ -201,7 +201,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
                             foreground: Colors.white,
                             background: Colors.greenAccent);
                       } else {
-                        showError("something went wrong!");
+                        showError("Error inconnue!");
                       }
                       setState(() {
                         waiting = false;
@@ -263,8 +263,8 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
             context: context,
             builder: (BuildContext context) => _buildErrorPopupDialog(
                 context,
-                "internal server error",
-                "something went wrong in the server side please try again later"));
+                "Oops!",
+                "Erreur interne du serveur"));
       }
     }
 
@@ -310,8 +310,8 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
             context: context,
             builder: (BuildContext context) => _buildErrorPopupDialog(
                 context,
-                "internal server error",
-                "something went wrong in the server side please try again later"));
+                "Oops!",
+                "Erreur interne du serveur"));
       }
     }
 
@@ -340,7 +340,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
       });
 
       if (tokenResult.statusCode == 200) {
-        showSimpleNotification(Text("Password updated!"),
+        showSimpleNotification(Text("Mot de passe actualisé!"),
             background: Colors.green);
         Future.delayed(Duration(seconds: 2), () {
           Navigator.pushAndRemoveUntil<void>(
@@ -350,7 +350,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
               ModalRoute.withName('/loginscreen'));
         });
       } else if (tokenResult.statusCode == 400) {
-        showError("invalid token");
+        showError("token invalid");
         setState(() {
           _tokenIsError = true;
         });
@@ -359,8 +359,8 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
             context: context,
             builder: (BuildContext context) => _buildErrorPopupDialog(
                 context,
-                "internal server error",
-                "something went wrong in the server side please try again later"));
+                "Oops!",
+                "Erreur interne du serveur"));
       }
     }
 
@@ -512,7 +512,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: const Text('Close'),
+            child: const Text('Ok'),
           )
         ]);
   }
@@ -527,7 +527,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
     }
     if (password.length < 8) {
       _passwordFocusNode.requestFocus();
-      showError("password should be atleast 8 characters long");
+      showError("Le mot de passe doit comporter au moins 8 caractères");
       setState(() {
         _passwordIsError = true;
       });
@@ -584,7 +584,7 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
     }
     if (password != confirmPassword) {
       _confirmPFNode.requestFocus();
-      showError("password doesn't match");
+      showError("Les mots de passe ne correspondent pas");
       setState(() {
         _confirmPIsError = true;
       });

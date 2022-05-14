@@ -216,7 +216,7 @@ class MonProfileState extends State<MonProfile> {
                                         //      MainAxisAlignment.start,
                                         children: [
                                           title(context, 'SVG/id.svg',
-                                              "Donnees personnelles", 0.045),
+                                              "Données personnelles", 0.045),
                                           SizedBox(
                                             height: height * 0.01,
                                           ),
@@ -279,7 +279,7 @@ class MonProfileState extends State<MonProfile> {
                                           title(
                                               context,
                                               'SVG/case.svg',
-                                              "Donnees professionnelles",
+                                              "Données professionnelles",
                                               0.035),
                                           buildText(
                                               "Nom structure", _nomStructure),
