@@ -491,7 +491,7 @@ class _SignUpFormState extends State<SignUpForm> {
         focusNode: _tokenFocusNode,
         decoration: InputDecoration(
             icon: Icon(Icons.key_sharp),
-            hintText: 'Token',
+            hintText: 'Code',
             border: InputBorder.none,
             suffixIcon: isIcon
                 ? IconButton(
@@ -638,9 +638,14 @@ class _SignUpFormState extends State<SignUpForm> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: height * 0.0435),
+                      SizedBox(height: height * 0.05),
+                      Text("Un e-mail a été envoyé",
+                          style: TextStyle(color: Colors.green)),
+                      SizedBox(height: height * 0.06),
                       RoundedTextFieldContainer(
                           child: _buildToken(), error: _tokenIsError),
+                      //SizedBox(height: 40),
+                      SizedBox(height: height * 0.05),
                     ],
                   ),
                 ),
@@ -687,7 +692,6 @@ class _SignUpFormState extends State<SignUpForm> {
           final user = userModuleFromJson(result.body);
           await UserPrefs.clear();
           await UserPrefs.save(user);
-          //await notif.Notification().initState();
           await FirebaseMessaging.instance.subscribeToTopic("new");
           setState(() {
             waiting = false;

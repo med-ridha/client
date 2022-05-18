@@ -135,7 +135,7 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                           context, "Ajouté aux favoris ?",
                                           () async {
                                         bool result =
-                                            await UserModule.addToFavorite(
+                                            await UserModule.addDocToFav(
                                                 document.id ?? "");
                                         if (result) {
                                           showSimpleNotification(
@@ -156,11 +156,11 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                       });
                                     }
                                   : () async {
-                                      showAlertDialog(
-                                          context, "Supprimer de la liste des favoris?",
+                                      showAlertDialog(context,
+                                          "Supprimer de la liste des favoris?",
                                           () async {
                                         bool result =
-                                            await UserModule.removeFromFavorite(
+                                            await UserModule.deleteFavorite(
                                                 document.id ?? "");
                                         if (result) {
                                           showSimpleNotification(
@@ -313,27 +313,11 @@ class ViewOneDocumentState extends State<ViewOneDocument>
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                        "Vous devez acheter un abonnement pour voir ce document",
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                        )),
-                                                  ],
-                                                ),
-                                                Text("Document",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                    )),
-                                              ],
-                                            )
+                                            Flexible(
+                                                child: Text(
+                                              "Vous devez acheter un abonnement pour voir ce document",
+                                              textAlign: TextAlign.center,
+                                            ))
                                           ],
                                         ),
                                       ],

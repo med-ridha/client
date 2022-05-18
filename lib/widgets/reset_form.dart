@@ -405,7 +405,9 @@ class _ResetFormState extends State<ResetForm> with TickerProviderStateMixin {
                           child: (waiting)
                               ? SpinKitDualRing(size: 40, color: Colors.green)
                               : null),
-                      SizedBox(height: height * 0.05),
+                      SizedBox(height: height * 0.03),
+                      Text("Un e-mail a été envoyé", style: TextStyle(color: Colors.green)),
+                      SizedBox(height: height * 0.02),
                       RoundedTextFieldContainer(
                           child: _buildToken(), error: _tokenIsError),
                     ],

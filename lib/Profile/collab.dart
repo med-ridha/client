@@ -55,7 +55,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
     UserModule.getCollabs().then((res) {
       if (res == null || res.length == 0) {
         setState(() {
-          empty = true;
+            empty = true;
           waiting = false;
         });
       } else {
@@ -79,7 +79,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
         focusNode: _nameFocusNode,
         decoration: InputDecoration(
             icon: Icon(Icons.person),
-            hintText: 'name',
+            hintText: 'Nom',
             border: InputBorder.none),
         onSaved: (String? value) {
           _name = value;
@@ -422,12 +422,12 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                             if (UserPrefs.getEmail() == email &&
                                 UserPrefs.getIsCollabOwner()) {
                               text =
-                                  "this is you, you will be removed from your own collab, are you sure?";
+                                  "C'est vous, vous serez retiré de votre propre collaboration, vous êtes sûr ?";
                             } else if (UserPrefs.getEmail() == email) {
-                              text = "do you really want to leave this collab?";
+                              text = "Tu veux vraiment quitter cette collaboration ?";
                             } else {
                               text =
-                                  "are you sure you want to remove this user from this collab?";
+                                  "Êtes-vous sûr de vouloir retirer cet utilisateur de cette collaboration ?";
                             }
                             showAlertDialog(context, text, () async {
                               bool result =
@@ -447,7 +447,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                     waiting = false;
                                     showSimpleNotification(
                                         Text(
-                                            "Suppression effectuee avec success",
+                                            "Suppression effectuée avec succès",
                                             style: TextStyle()),
                                         duration: Duration(seconds: 2),
                                         foreground: Colors.white,
@@ -455,7 +455,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
                                   });
                                 });
                               } else {
-                                showError('something went wrong');
+                                showError('Erreur interne du serveur');
                               }
                             });
                           }),
@@ -593,9 +593,9 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
         });
       });
     } else if (result.statusCode == 405) {
-      showError("Utilisateur déjà dans une collaboration");
+      showError("Utilisateur déjà dans une autre collaboration");
     } else if (result.statusCode == 404) {
-      showError("L'Email saisit est inexistant!");
+      showError("L'email saisit est inexistant!");
     } else {
       showError("Erreur de serveur interne");
     }
@@ -603,7 +603,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
 
   bool validateEmail(String email) {
     if (email.isEmpty) {
-      showError("Veuillez ajouter un Email");
+      showError("Veuillez ajouter un Email address");
       _emailFocusNode.requestFocus();
       setState(() {
         _emailIsError = true;
@@ -613,7 +613,7 @@ class CollabState extends State<Collab> with TickerProviderStateMixin {
     if (!RegExp(
             r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
         .hasMatch(email)) {
-      showError("Email adress non valid");
+      showError("Email address non valid");
       setState(() {
         _emailIsError = true;
       });

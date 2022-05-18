@@ -182,7 +182,7 @@ class UserModule {
     return listModules;
   }
 
-  static Future<bool> removeFromFavorite(String documentId) async {
+  static Future<bool> deleteFavorite(String documentId) async {
     String email = UserPrefs.getEmail() ?? '';
     String addToFavoriteURL =
         Service.url + 'documents/removeFromFavorite'; // real
@@ -218,7 +218,7 @@ class UserModule {
     }
   }
 
-  static Future<bool> addToFavorite(String documentId) async {
+  static Future<bool> addDocToFav(String documentId) async {
     String email = UserPrefs.getEmail() ?? '';
     String addToFavoriteURL = Service.url + 'documents/addToFavorite'; // real
     Map<String, String> data = {

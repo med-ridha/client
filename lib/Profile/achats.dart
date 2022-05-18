@@ -208,7 +208,7 @@ class AchatsState extends State<Achats> with TickerProviderStateMixin {
                       ),
                   ],
                 )
-              : Text("you don't have any purchases"),
+              : Text("Vous n'avez pas d'achats"),
         ),
       ),
     );

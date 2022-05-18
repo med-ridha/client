@@ -147,7 +147,6 @@ class InitState extends State<Init> {
         showError("Assurez-vous que vous êtes connecté à Internet");
         return Future.value(new NoConnectionScreen());
       }
-      print(err);
     }
     return Future.value(new SomethingWentWrongScreen());
   }

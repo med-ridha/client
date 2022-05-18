@@ -122,9 +122,8 @@ class ProfileScreenState extends State<ProfileScreen> {
                               SizedBox(
                                 height: 15,
                               ),
-                              profileWidget(
-                                  context, 'SVG/users.svg', "Mes collaborateurs",
-                                  () {
+                              profileWidget(context, 'SVG/users.svg',
+                                  "Mes collaborateurs", () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -151,16 +150,19 @@ class ProfileScreenState extends State<ProfileScreen> {
                               profileWidget(
                                   context, 'SVG/logout.svg', 'Se déconnecter',
                                   () {
-                                UserPrefs.clear().then((res) async {
-                                  await FirebaseMessaging.instance
-                                      .unsubscribeFromTopic('new');
-                                  Navigator.pushAndRemoveUntil<void>(
-                                    context,
-                                    MaterialPageRoute<void>(
-                                        builder: (BuildContext context) =>
-                                            LogInScreen()),
-                                    ModalRoute.withName('/homescreen'),
-                                  );
+                                showAlertDialog(context, "Déconnecter ?",
+                                    () async {
+                                  UserPrefs.clear().then((res) async {
+                                    await FirebaseMessaging.instance
+                                        .unsubscribeFromTopic('new');
+                                    Navigator.pushAndRemoveUntil<void>(
+                                      context,
+                                      MaterialPageRoute<void>(
+                                          builder: (BuildContext context) =>
+                                              LogInScreen()),
+                                      ModalRoute.withName('/homescreen'),
+                                    );
+                                  });
                                 });
                                 return;
                               }),
@@ -225,6 +227,35 @@ class ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
           )),
+    );
+  }
+
+  showAlertDialog(BuildContext context, String text, Future<void> func()) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Attention"),
+          content: Text(text),
+          actions: [
+            TextButton(
+              child: Text("Annuler"),
+              onPressed: () {
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+            TextButton(
+              child: Text("Continue"),
+              onPressed: () {
+                func();
+                Navigator.of(context).pop();
+                return;
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

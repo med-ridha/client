@@ -167,7 +167,7 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         focusNode: _tokenFocusNode,
         decoration: InputDecoration(
             icon: Icon(Icons.key_sharp),
-            hintText: 'Token',
+            hintText: 'Code',
             border: InputBorder.none,
             suffixIcon: isIcon
                 ? IconButton(
@@ -245,7 +245,6 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
           final user = userModuleFromJson(tokenResult.body);
           await UserPrefs.clear();
           await UserPrefs.save(user);
-          //await notif.Notification().initState();
           await FirebaseMessaging.instance.subscribeToTopic("new");
           await UserModule.getModules();
           showSimpleNotification(Text("Bienvenue", style: TextStyle()),
@@ -394,7 +393,9 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
                             ? SpinKitDualRing(size: 40, color: Colors.green)
                             : null),
                     //SizedBox(height: 90),
-                    SizedBox(height: height * 0.11),
+                    SizedBox(height: height * 0.05),
+                    Text("Un e-mail a été envoyé", style: TextStyle(color: Colors.green)),
+                    SizedBox(height: height * 0.06),
                     RoundedTextFieldContainer(
                         child: _buildToken(), error: _tokenIsError),
                     //SizedBox(height: 40),

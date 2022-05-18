@@ -124,7 +124,7 @@ class DocumentModule {
     return listDocuments;
   }
 
-  static Future<List<dynamic>> search(String searchTerm) async {
+  static Future<List<dynamic>> getDocument(String searchTerm) async {
     List<dynamic> listModules = [];
     String searchURL = Service.url + "documents/search" + searchTerm;
     try {

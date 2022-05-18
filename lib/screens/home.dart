@@ -91,7 +91,7 @@ class HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
             BottomBarItem(
               icon: Icon(Icons.person),
-              title: Text('Home'),
+              title: Text('Compte'),
               activeColor: Colors.greenAccent.shade700,
               darkActiveColor: Colors.greenAccent.shade400, // Optional
             ),

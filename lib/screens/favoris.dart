@@ -209,7 +209,7 @@ class FavorisState extends State<Favoris> with TickerProviderStateMixin {
                                               showAlertDialog(context, "Supprimer de la liste des favoris?",
                                                   () async {
                                                 bool result = await UserModule
-                                                    .removeFromFavorite(
+                                                    .deleteFavorite(
                                                         document.id ?? "");
                                                 if (result) {
                                                   showSimpleNotification(

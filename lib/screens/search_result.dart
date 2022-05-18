@@ -28,7 +28,7 @@ class SearchState extends State<Search> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    DocumentModule.search(searchTerm).then((value) {
+    DocumentModule.getDocument(searchTerm).then((value) {
       setState(() {
         listModules = value;
         waiting = false;

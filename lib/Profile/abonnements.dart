@@ -201,7 +201,7 @@ class AbonnementsState extends State<Abonnements>
                         ),
                   ],
                 )
-              : Text("you don't have any"),
+              : Text("Vous n'avez pas d'abonnements"),
         ),
       ),
     );
