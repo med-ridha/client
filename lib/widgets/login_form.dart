@@ -43,13 +43,6 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
   late FocusNode _passwordFocusNode;
   late FocusNode _tokenFocusNode;
 
-  OutlineInputBorder border(Color color) {
-    return OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: BorderSide(
-          color: color,
-        ));
-  }
 
   void showErrorSlide(String error) {
     showSimpleNotification(Text(error, style: TextStyle()),
@@ -60,29 +53,10 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
         slideDismissDirection: DismissDirection.horizontal);
   }
 
-  Future<void> checkConnection() async {
-    try {
-      await http.post(
-        Uri.parse(Service.url + "/checkStatus"),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-      );
-    } on SocketException catch (e) {
-        if (e.osError!.errorCode == 101 || e.osError!.errorCode == 110) {
-          showErrorSlide(
-              "Le réseau est inaccessible, assurez-vous que vous êtes connecté à l'Internet.");
-        }
-        if (e.osError!.errorCode != 101) {
-          showErrorSlide("Connexion refusée, impossible d'atteindre le serveur");
-        }
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-    checkConnection();
     _emailFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
     _tokenFocusNode = FocusNode();
@@ -316,14 +290,14 @@ class _LogInFormState extends State<LogInForm> with TickerProviderStateMixin {
           }
         } else if (result.statusCode == 401) {
           showError("Veuillez vérifier vos identifiants");
-          _emailFocusNode.requestFocus();
           setState(() {
+            _passwordIsError = true;
             _emailIsError = true;
           });
         } else if (result.statusCode == 402) {
           showError("Veuillez verifier vos identifiants");
-          _passwordFocusNode.requestFocus();
           setState(() {
+            _emailIsError = true;
             _passwordIsError = true;
           });
         } else {
